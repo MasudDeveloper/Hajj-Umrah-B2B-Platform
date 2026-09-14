@@ -1,0 +1,327 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Agency;
+use App\Models\Post;
+use App\Models\PostInquiry;
+use App\Models\Review;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // 1. Super Admin Agency Account
+        $admin = Agency::create([
+            'agency_name' => 'Ministry / HAAB B2B Super Admin',
+            'company_name' => 'HajjUmrah B2B Network Portal',
+            'license_no' => 'GOVT-ADMIN-001',
+            'haab_no' => 'HAAB-ADMIN',
+            'trade_license_no' => 'TL-2026-9999',
+            'owner_name' => 'Chief B2B Administrator',
+            'nid_number' => '1990887766554',
+            'phone' => '01644416378',
+            'whatsapp' => '01644416378',
+            'email' => 'admin@hajjumrahb2b.com',
+            'password' => Hash::make('admin123456'),
+            'city' => 'Dhaka',
+            'country' => 'Bangladesh',
+            'address' => '53 DIT Extension Road, Naya Paltan, Dhaka',
+            'is_admin' => true,
+            'is_verified' => true,
+            'verification_status' => 'approved',
+            'subscription_plan' => 'free',
+            'rating' => 5.00,
+        ]);
+
+        // 2. Primary Featured Agency (User's Agency: R.B Tours and Travels)
+        $agencyUser = Agency::create([
+            'agency_name' => 'R.B Tours and Travels',
+            'company_name' => 'R.B Tours and Travels Ltd.',
+            'license_no' => '1109',
+            'haab_no' => 'HAAB-1109',
+            'trade_license_no' => 'TL-55421-DHAKA',
+            'owner_name' => 'Managing Director',
+            'nid_number' => '1982269988776',
+            'phone' => '01644416378',
+            'whatsapp' => '01644416378',
+            'email' => 'info@rbtoursandtravels.com',
+            'password' => Hash::make('password123'),
+            'city' => 'Dhaka',
+            'country' => 'Bangladesh',
+            'address' => '53 DIT Extension Road, Naya Paltan, Dhaka',
+            'is_admin' => false,
+            'is_verified' => true,
+            'verification_status' => 'approved',
+            'subscription_plan' => 'free',
+            'rating' => 4.95,
+        ]);
+
+        // 3. Other Verified Licensed Agencies
+        $agency2 = Agency::create([
+            'agency_name' => 'Makkah Royal Express',
+            'company_name' => 'Makkah Royal Travel & Cargo',
+            'license_no' => 'IATA-BG-98213',
+            'haab_no' => 'HAAB-304',
+            'trade_license_no' => 'TL-99120-CTG',
+            'owner_name' => 'Al-Haj Anwar Hossain',
+            'nid_number' => '1975443322110',
+            'phone' => '01819887766',
+            'whatsapp' => '01819887766',
+            'email' => 'makkahroyal@agency.com',
+            'password' => Hash::make('password123'),
+            'city' => 'Chittagong',
+            'country' => 'Bangladesh',
+            'address' => 'Level 3, Royal Tower, Agrabad C/A, Chittagong',
+            'is_admin' => false,
+            'is_verified' => true,
+            'verification_status' => 'approved',
+            'subscription_plan' => 'free',
+            'rating' => 4.85,
+        ]);
+
+        $agency3 = Agency::create([
+            'agency_name' => 'Zamzam Overseas & Aviation',
+            'company_name' => 'Zamzam Air & Hajj Group',
+            'license_no' => 'HAJJ-LIC-1190',
+            'haab_no' => 'HAAB-771',
+            'trade_license_no' => 'TL-44129-SYL',
+            'owner_name' => 'Mufti Shafiur Rahman',
+            'nid_number' => '1987665544332',
+            'phone' => '01977554433',
+            'whatsapp' => '01977554433',
+            'email' => 'zamzam@agency.com',
+            'password' => Hash::make('password123'),
+            'city' => 'Sylhet',
+            'country' => 'Bangladesh',
+            'address' => 'House 12, Road 7, Sector 3, Uttara, Dhaka',
+            'is_admin' => false,
+            'is_verified' => true,
+            'verification_status' => 'approved',
+            'subscription_plan' => 'free',
+            'rating' => 4.90,
+        ]);
+
+        // 4. Pending Verification Agency
+        $agencyPending = Agency::create([
+            'agency_name' => 'Baitul Mamur Travel & Tours',
+            'company_name' => 'Baitul Mamur Aviation',
+            'license_no' => 'HAJJ-LIC-9901',
+            'haab_no' => 'HAAB-1029',
+            'trade_license_no' => 'TL-88210-DHAKA',
+            'owner_name' => 'Maulana Rafiqul Islam',
+            'nid_number' => '1989001122334',
+            'phone' => '01600998877',
+            'whatsapp' => '01600998877',
+            'email' => 'pending@agency.com',
+            'password' => Hash::make('password123'),
+            'city' => 'Dhaka',
+            'country' => 'Bangladesh',
+            'address' => 'Purana Paltan Lane, Dhaka',
+            'is_admin' => false,
+            'is_verified' => false,
+            'verification_status' => 'pending',
+            'subscription_plan' => 'free',
+            'rating' => 4.50,
+        ]);
+
+        // 5. Seed Multi-Category B2B Posts with Enhanced Domain Fields
+        
+        // Category A: Group Seats - Extra Seats Available
+        Post::create([
+            'agency_id' => $agencyUser->id,
+            'title' => '10 Extra Seats Available in 35-Pax Premium Umrah Group',
+            'post_category' => 'group_seats',
+            'requirement_type' => 'have_extra_seats',
+            'total_group_size' => 35,
+            'available_seats' => 10,
+            'flight_date' => '2026-11-15',
+            'return_date' => '2026-11-29',
+            'duration_days' => 14,
+            'airline' => 'Saudia Air Lines',
+            'flight_transit' => 'direct',
+            'departure_city' => 'Dhaka',
+            'package_tier' => 'vip',
+            'room_type' => 'quad',
+            'makkah_hotel' => 'Anjum Hotel Makkah (5 Star)',
+            'makkah_hotel_distance' => 250,
+            'makkah_shuttle' => false, // 250m is direct walk to Haram courtyard
+            'madinah_hotel' => 'Frontel Al Harithia (5 Star)',
+            'madinah_hotel_distance' => 150,
+            'price_per_seat' => 165000.00,
+            'advance_deposit' => 20000.00,
+            'name_deadline' => '2026-10-25',
+            'pnr_code' => 'SV-BG-9982 (GDS Confirmed)',
+            'baggage_allowance' => '46 KG (2 PC) + 7 KG Hand',
+            'meals_included' => true,
+            'visa_included' => true,
+            'transport_included' => true,
+            'ziyarah_included' => true,
+            'guide_included' => true,
+            'zamzam_included' => true,
+            'allowed_gender' => 'any',
+            'passenger_type' => 'mixed_family',
+            'route_sequence' => 'makkah_first',
+            'catering_type' => 'bengali_catering',
+            'transport_vehicle' => 'ac_bus_standard',
+            'haramain_train' => true,
+            'agent_commission' => 2000.00,
+            'name_change_policy' => 'free_replacement',
+            'payment_terms' => 'full_payment',
+            'visa_type' => 'umrah_evisa',
+            'makkah_hotel_type' => 'star_hotel',
+            'madinah_hotel_type' => 'star_hotel',
+            'details' => 'R.B Tours and Travels confirmed 35-pax quota. 25 registered, 10 vacant seats available for partner B2B agencies. 5-star buffet meals, 5L Zamzam water & experienced Alem guide included.',
+            'status' => 'open',
+        ]);
+
+        // Category A: Group Seats - Seats Required / Shortage
+        Post::create([
+            'agency_id' => $agency2->id,
+            'title' => 'URGENT: 8 Passengers Ready - Need Group Booking Slots for Nov Flight',
+            'post_category' => 'group_seats',
+            'requirement_type' => 'need_seats',
+            'total_group_size' => 25,
+            'available_seats' => 8,
+            'flight_date' => '2026-11-20',
+            'return_date' => '2026-12-04',
+            'duration_days' => 14,
+            'airline' => 'Biman Bangladesh Airlines',
+            'flight_transit' => 'direct',
+            'departure_city' => 'Chittagong',
+            'package_tier' => 'standard',
+            'room_type' => 'quad',
+            'makkah_hotel' => 'Kiswah Towers Makkah',
+            'makkah_hotel_distance' => 600,
+            'makkah_shuttle' => true, // Free 24/7 Shuttle Bus available
+            'madinah_hotel' => 'Saja Al Madinah',
+            'madinah_hotel_distance' => 350,
+            'price_per_seat' => 138000.00,
+            'advance_deposit' => 15000.00,
+            'name_deadline' => '2026-10-30',
+            'pnr_code' => 'BG-CGP-8821',
+            'baggage_allowance' => '40 KG + 7 KG Hand',
+            'meals_included' => true,
+            'visa_included' => true,
+            'transport_included' => true,
+            'ziyarah_included' => true,
+            'guide_included' => true,
+            'zamzam_included' => true,
+            'allowed_gender' => 'male_only',
+            'passenger_type' => 'adults_only',
+            'route_sequence' => 'madinah_first',
+            'catering_type' => 'bengali_catering',
+            'transport_vehicle' => 'vip_coaster',
+            'haramain_train' => false,
+            'agent_commission' => 1500.00,
+            'name_change_policy' => 'fee_applies',
+            'payment_terms' => '50_advance_50_saudi',
+            'visa_type' => 'umrah_evisa',
+            'makkah_hotel_type' => 'tashfeer_building',
+            'madinah_hotel_type' => 'star_hotel',
+            'details' => 'We have 8 confirmed male passengers ready in Chittagong. We want to merge our 8 pax with an agency holding a confirmed group flight block.',
+            'status' => 'open',
+        ]);
+
+        // Category B: Ticket / Visa Only (Ticket Sale by R.B Tours and Travels)
+        Post::create([
+            'agency_id' => $agencyUser->id,
+            'title' => '4 Excess Confirmed Group Tickets - Saudia DAC-JED-DAC (Immediate Transfer)',
+            'post_category' => 'ticket_only',
+            'requirement_type' => 'ticket_sale',
+            'total_group_size' => 20,
+            'available_seats' => 4,
+            'flight_date' => '2026-11-15',
+            'return_date' => '2026-11-29',
+            'duration_days' => 14,
+            'airline' => 'Saudia Air Lines',
+            'flight_transit' => 'direct',
+            'departure_city' => 'Dhaka',
+            'package_tier' => 'standard',
+            'room_type' => 'quad',
+            'price_per_seat' => 72000.00,
+            'advance_deposit' => 10000.00,
+            'name_deadline' => '2026-10-25',
+            'pnr_code' => 'SV-BG-9982 (Group PNR Blocked)',
+            'baggage_allowance' => '46 KG (2 PC) + 7 KG Hand',
+            'meals_included' => false,
+            'visa_included' => false,
+            'transport_included' => false,
+            'ziyarah_included' => false,
+            'guide_included' => false,
+            'zamzam_included' => false,
+            'allowed_gender' => 'any',
+            'route_sequence' => 'makkah_first',
+            'agent_commission' => 1000.00,
+            'name_change_policy' => 'free_replacement',
+            'payment_terms' => 'full_payment',
+            'visa_type' => 'none',
+            'details' => 'GDS Group PNR Issued by R.B Tours and Travels. 4 tickets surplus available for instant name change & passport tagging.',
+            'status' => 'open',
+        ]);
+
+        // Category C: Hotel Room Sharing
+        Post::create([
+            'agency_id' => $agency3->id,
+            'title' => 'Makkah Hotel Room Sharing: 2 Quad Rooms in Clock Tower (Dec 1 - Dec 10)',
+            'post_category' => 'hotel_share',
+            'requirement_type' => 'hotel_share',
+            'total_group_size' => 8,
+            'available_seats' => 2,
+            'flight_date' => '2026-12-01',
+            'return_date' => '2026-12-11',
+            'duration_days' => 10,
+            'airline' => 'Flynas Airlines',
+            'flight_transit' => 'connecting', // e.g. via Sharjah
+            'departure_city' => 'Sylhet',
+            'package_tier' => 'vip',
+            'room_type' => 'quad',
+            'makkah_hotel' => 'Swissotel Makkah Clock Tower',
+            'makkah_hotel_distance' => 0,
+            'makkah_shuttle' => false,
+            'madinah_hotel' => 'Oberoi Madinah',
+            'madinah_hotel_distance' => 50,
+            'price_per_seat' => 45000.00,
+            'advance_deposit' => 10000.00,
+            'name_deadline' => '2026-11-15',
+            'pnr_code' => 'XY-ZYL-1002',
+            'baggage_allowance' => '30 KG + 7 KG Hand',
+            'meals_included' => true,
+            'visa_included' => false,
+            'transport_included' => false,
+            'ziyarah_included' => false,
+            'guide_included' => false,
+            'zamzam_included' => false,
+            'allowed_gender' => 'female_only',
+            'route_sequence' => 'makkah_first',
+            'catering_type' => 'hotel_buffet',
+            'agent_commission' => 2500.00,
+            'name_change_policy' => 'free_replacement',
+            'payment_terms' => 'full_payment',
+            'makkah_hotel_type' => 'clock_tower',
+            'details' => 'We have reserved 2 extra Quad Rooms in Swissotel Clock Tower Makkah. Available for sub-letting to partner agency pilgrims.',
+            'status' => 'open',
+        ]);
+
+        // 6. Seed Inquiries & Reviews
+        PostInquiry::create([
+            'post_id' => 1,
+            'inquiring_agency_id' => $agency2->id,
+            'requested_seats' => 5,
+            'message' => 'Salam R.B Tours and Travels, we have 5 ready passengers for your Nov 15 Saudia group. Please check and connect.',
+            'status' => 'pending',
+        ]);
+
+        Review::create([
+            'reviewer_agency_id' => $agency2->id,
+            'target_agency_id' => $agencyUser->id,
+            'rating' => 5,
+            'comment' => 'R.B Tours and Travels provided excellent service! Group flight was on time and hotel distance in Makkah was exactly 250 meters as promised.',
+        ]);
+    }
+}
