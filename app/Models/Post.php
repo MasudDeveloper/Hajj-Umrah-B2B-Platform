@@ -13,14 +13,18 @@ class Post extends Model
         'agency_id',
         'title',
         'post_category',
+        'hajj_or_umrah',
         'requirement_type',
         'total_group_size',
         'available_seats',
         'flight_date',
+        'departure_time',
+        'arrival_time',
         'return_date',
         'duration_days',
         'airline',
         'flight_transit',
+        'transit_duration',
         'departure_city',
         'package_tier',
         'room_type',
@@ -57,6 +61,8 @@ class Post extends Model
         'itinerary_pdf',
         'details',
         'status',
+        'is_special_offer',
+        'special_offer_status',
     ];
 
     protected $casts = [
@@ -71,6 +77,7 @@ class Post extends Model
         'guide_included' => 'boolean',
         'zamzam_included' => 'boolean',
         'haramain_train' => 'boolean',
+        'is_special_offer' => 'boolean',
         'price_per_seat' => 'decimal:2',
         'advance_deposit' => 'decimal:2',
         'agent_commission' => 'decimal:2',
@@ -85,4 +92,12 @@ class Post extends Model
     {
         return $this->hasMany(PostInquiry::class);
     }
+
+    public function pendingSeats()
+    {
+        return (int) $this->inquiries()
+            ->whereIn('status', ['pending', 'accepted'])
+            ->sum('requested_seats');
+    }
 }
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B2B Package Quotation - {{ $post->title }}</title>
+    <title>B2B Package Quotation - B2B Hajj Umrah - {{ $post->title }}</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -114,7 +114,7 @@
         @endif
 
         <div style="border-top: 1px solid #E2E8F0; padding-top: 1rem; font-size: 0.8rem; color: #94A3B8; display: flex; justify-content: space-between; align-items: center;">
-            <p>Generated via Hajj & Umrah B2B SaaS Platform. Facilitated by {{ $post->agency->agency_name }}.</p>
+            <p>Generated via B2B Hajj Umrah SaaS Platform. Facilitated by {{ $post->agency->agency_name }}.</p>
             <button onclick="window.print()" class="btn-print">🖨️ Print B2B Quotation</button>
         </div>
     </div>

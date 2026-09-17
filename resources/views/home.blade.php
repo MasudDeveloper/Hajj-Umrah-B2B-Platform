@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', session('locale', 'bn') == 'bn' ? 'হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম - বাংলাদেশ' : 'Hajj & Umrah B2B SaaS Platform - Bangladesh')
+@section('title', session('locale', 'bn') == 'bn' ? 'B2B Hajj Umrah - হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'B2B Hajj Umrah SaaS Platform - Bangladesh')
 
 @section('content')
     @php
@@ -8,7 +8,7 @@
     @endphp
 
     <!-- Breathtaking Hero Banner with High-Res Makkah Kaaba Imagery & Glassmorphism -->
-    <div style="position: relative; border-radius: 24px; padding: 4.5rem 3rem; color: white; margin-bottom: 3.5rem; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 78, 53, 0.25); border: 1px solid rgba(212, 175, 55, 0.4); background: url('{{ asset('images/makkah_kaaba_hero.jpg') }}') center/cover no-repeat;">
+    <div class="hero-banner-container" style="position: relative; border-radius: 24px; padding: 4.5rem 3rem; color: white; margin-bottom: 3.5rem; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 78, 53, 0.25); border: 1px solid rgba(212, 175, 55, 0.4); background: url('{{ asset('images/makkah_kaaba_hero.jpg') }}') center/cover no-repeat;">
         <!-- Dark Golden Emerald Gradient Overlay -->
         <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(2, 44, 30, 0.92) 0%, rgba(4, 78, 53, 0.85) 50%, rgba(0, 0, 0, 0.88) 100%); z-index: 1;"></div>
 
@@ -24,7 +24,7 @@
                 @if($lang == 'bn')
                     হজ ও ওমরাহ <span style="color: #F3E5AB; background: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">গ্রুপ সিট শেয়ারিং</span>, টিকিট এক্সচেঞ্জ ও হোটেল নেটওয়ার্ক
                 @else
-                    Exclusive <span style="color: #F3E5AB; background: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hajj & Umrah B2B</span> Collaboration & Sharing Portal
+                    Exclusive <span style="color: #F3E5AB; background: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">B2B Hajj Umrah</span> Collaboration & Sharing Portal
                 @endif
             </h1>
             
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Live B2B Platform Stats Bar with Glassmorphism -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px); border-radius: 16px; padding: 1.75rem; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; z-index: 2;">
+        <div class="hero-stats-grid" style="margin-top: 3.5rem; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px); border-radius: 16px; padding: 1.75rem; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; z-index: 2;">
             <div style="display: flex; align-items: center; gap: 1.1rem;">
                 <div style="width: 52px; height: 52px; background: rgba(212, 175, 55, 0.25); border: 1px solid var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--accent-light); font-size: 1.4rem;">
                     <i class="fa-solid fa-building-circle-check"></i>
@@ -82,214 +82,248 @@
         </div>
     </div>
 
-    <!-- Featured Visual Showcase Gallery: Makkah & Madinah B2B Hubs -->
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; margin-bottom: 4rem;">
-        <!-- Madinah Mosque Visual Banner -->
-        <div style="position: relative; border-radius: 20px; overflow: hidden; height: 260px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); background: url('{{ asset('images/madinah_nabawi_hero.jpg') }}') center/cover no-repeat;">
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(2, 44, 30, 0.9) 100%);"></div>
-            <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; color: white; z-index: 2;">
-                <span class="badge badge-ticket" style="background: rgba(212, 175, 55, 0.3); border: 1px solid var(--accent); color: #F3E5AB; margin-bottom: 0.5rem;">
-                    🕌 MADINAH AL-MUNAWWARAH HUB
-                </span>
-                <h3 class="font-heading" style="font-size: 1.4rem; color: white; margin-bottom: 0.35rem;">
-                    {{ $lang == 'bn' ? 'মদিনা হোটেল ও জিয়ারা গ্রুপ শেয়ারিং' : 'Madinah Hotel & Ziyarah Group Network' }}
-                </h3>
-                <p style="font-size: 0.85rem; color: #E2E8F0;">
-                    {{ $lang == 'bn' ? 'মসজিদে নববীর নিকটে (৫০-৩০০ মিটারের মধ্যে) হোটেল রুম শেয়ারিং ডিল।' : 'Hotels within 50m - 300m walk to Masjid an-Nabawi Courtyard.' }}
-                </p>
-            </div>
-        </div>
-
-        <!-- Makkah Clock Tower Visual Banner -->
-        <div style="position: relative; border-radius: 20px; overflow: hidden; height: 260px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); background: url('{{ asset('images/makkah_clock_tower.jpg') }}') center/cover no-repeat;">
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(2, 44, 30, 0.9) 100%);"></div>
-            <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; color: white; z-index: 2;">
-                <span class="badge badge-verified" style="background: rgba(4, 120, 87, 0.4); border: 1px solid #6EE7B7; color: #A7F3D0; margin-bottom: 0.5rem;">
-                    🕋 MAKKAH CLOCK TOWER & HARAM HUB
-                </span>
-                <h3 class="font-heading" style="font-size: 1.4rem; color: white; margin-bottom: 0.35rem;">
-                    {{ $lang == 'bn' ? 'মক্কা ক্লক টাওয়ার ও ৫-তারকা আবাসন' : 'Luxury Makkah Accommodation Deals' }}
-                </h3>
-                <p style="font-size: 0.85rem; color: #E2E8F0;">
-                    {{ $lang == 'bn' ? 'সুইসোটেল, ফেয়ারমন্ট ও আনজুম হোটেলের কোটা শেয়ারিং।' : 'Exclusive luxury quota sharing in Swissotel, Fairmont & Anjum Makkah.' }}
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section 1: How It Works (কিভাবে কাজ করে - ৪টি সহজ ধাপ) -->
-    <div style="margin-bottom: 4rem;">
-        <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem;">
-            <span class="badge badge-verified" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-route"></i> {{ $lang == 'bn' ? 'সহজ কাজের ধারা' : 'How It Works' }}</span>
-            <h2 class="font-heading" style="font-size: 2.2rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                {{ $lang == 'bn' ? 'কিভাবে প্ল্যাটফর্মটি ব্যবহার করবেন?' : '4 Simple Steps for Agency Collaboration' }}
-            </h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">
-                {{ $lang == 'bn' ? 'নিবন্ধন থেকে শুরু করে ডিল সম্পন্ন করা পর্যন্ত মাত্র ৪টি ধাপে সম্পন্ন করুন।' : 'From agency verification to deal closing, easily complete transactions in 4 transparent steps.' }}
-            </p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-            <div class="card" style="padding: 1.75rem; text-align: center; border-top: 4px solid var(--primary);">
-                <div style="width: 60px; height: 60px; background: #ECFDF5; color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">
-                    ১
-                </div>
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                    {{ $lang == 'bn' ? 'এজেন্সি ভেরিফিকেশন' : 'Agency Verification' }}
-                </h3>
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-                    {{ $lang == 'bn' ? 'হাব (HAAB) নম্বর ও গভঃ লাইসেন্স নম্বর দিয়ে অ্যাকাউন্ট রেজিস্ট্রেশন করুন। সুপার এডমিন যাচাই করে অ্যাপ্রুভ করবেন।' : 'Register with HAAB & Govt license number. Admin verifies identity for maximum fraud prevention.' }}
-                </p>
-            </div>
-
-            <div class="card" style="padding: 1.75rem; text-align: center; border-top: 4px solid var(--accent);">
-                <div style="width: 60px; height: 60px; background: #FEF3C7; color: #B45309; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">
-                    ২
-                </div>
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                    {{ $lang == 'bn' ? 'রিকোয়ারমেন্ট পোস্ট করুন' : 'Post Requirements' }}
-                </h3>
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-                    {{ $lang == 'bn' ? 'গ্রুপ সিট ভ্যাকেন্সি (যেমন: ২৫ জন রেডি, ১০ জন প্রয়োজন), অতিরিক্ত টিকিট বা হোটেল রুম শেয়ারের তথ্য পোস্ট করুন।' : 'Post group vacancies, surplus flight ticket blocks, or Makkah/Madinah room sharing.' }}
-                </p>
-            </div>
-
-            <div class="card" style="padding: 1.75rem; text-align: center; border-top: 4px solid #0284C7;">
-                <div style="width: 60px; height: 60px; background: #E0F2FE; color: #0284C7; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">
-                    ৩
-                </div>
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                    {{ $lang == 'bn' ? 'কন্টাক্ট ও হোয়াটসঅ্যাপ' : 'Direct Call & WhatsApp' }}
-                </h3>
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-                    {{ $lang == 'bn' ? 'ভেরিফাইড এজেন্সিরা সরাসরি পোস্টদাতার নম্বর ও ১-ক্লিক হোয়াটসঅ্যাপ বোতামের মাধ্যমে দ্রুত কথা বলুন।' : 'Approved agencies instantly unlock direct phone numbers & pre-formatted WhatsApp chat links.' }}
-                </p>
-            </div>
-
-            <div class="card" style="padding: 1.75rem; text-align: center; border-top: 4px solid #7C3AED;">
-                <div style="width: 60px; height: 60px; background: #F3E8FF; color: #7C3AED; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">
-                    ৪
-                </div>
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                    {{ $lang == 'bn' ? 'PDF কোটেশন ও ডিল' : 'Branded PDF Quotation' }}
-                </h3>
-                <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-                    {{ $lang == 'bn' ? 'আপনার এজেন্সির প্যাড ও লোগোসহ ১-ক্লিকে B2B PDF কোটেশন ডেক ডাউনলোড বা প্রিন্ট করুন।' : 'Generate printable branded B2B quotation decks with hotel distances & rate breakdowns.' }}
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Category A Showcase: Group Seats -->
-    <div style="margin-bottom: 4rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <!-- Public B2B Summary List Table (লাইভ বিটুবি সিট ও টিকিট তালিকা) -->
+    <div style="background: white; border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 3.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
             <div>
-                <span class="badge badge-seats" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-users"></i> {{ $lang == 'bn' ? 'ক্যাটাগরি A: সিট শেয়ারিং' : 'Category A' }}</span>
-                <h2 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark);">
-                    {{ $lang == 'bn' ? 'গ্রুপ সিট প্রয়োজন ও অতিরিক্ত সিট ফাঁকা' : 'Group Seat Requirements & Availability' }}
+                <span class="badge badge-verified" style="margin-bottom: 0.4rem; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">
+                    <i class="fa-solid fa-list-check me-1"></i> {{ $lang == 'bn' ? 'সার্বজনীন B2B তালিকা' : 'Public Live B2B List' }}
+                </span>
+                <h2 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.25rem;">
+                    {{ $lang == 'bn' ? 'হজ ও ওমরাহ B2B সিট ও টিকিটের সাম্প্রতিক তালিকা' : 'Recent B2B Seat & Flight Deals Summary' }}
                 </h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">
-                    {{ $lang == 'bn' ? 'অন্য এজেন্সির সাথে সিট শেয়ার করে ফ্লাইট কোটা পূরণ ও খরচ বাঁচান।' : 'Collaborate with agencies needing extra seats or holding confirmed flight blocks.' }}
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    {{ $lang == 'bn' ? 'সকল ভিজিটরদের জন্য প্রাথমিক পাবলিক সামারি। এজেন্সির বিস্তারিত বিবরণ ও কন্টাক্ট নম্বর ভেরিফাইড মেম্বারদের জন্য সুরক্ষিত।' : 'Public overview list. Agency profile details are encrypted & locked for unverified users.' }}
                 </p>
             </div>
-            <a href="{{ route('posts.index', ['post_category' => 'group_seats']) }}" style="color: var(--primary); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
-                {{ $lang == 'bn' ? 'সকল সিট ডিল দেখুন' : 'View All Group Deals' }} <i class="fa-solid fa-arrow-right"></i>
+            <a href="{{ route('posts.index') }}" class="btn-gold" style="font-size: 0.9rem; padding: 0.65rem 1.25rem;">
+                <i class="fa-solid fa-layer-group me-1"></i> {{ $lang == 'bn' ? 'মার্কেটপ্লেসে সব দেখুন' : 'Explore All Marketplace' }}
             </a>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-            @foreach($featuredGroupSeats as $post)
-                <div class="card" style="display: flex; flex-direction: column;">
-                    <div style="padding: 1.1rem; background: #F8FAFC; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                        <span class="badge badge-seats">GROUP SEATS</span>
-                        <div style="background: {{ $post->requirement_type === 'need_seats' ? '#FEF2F2' : '#ECFDF5' }}; color: {{ $post->requirement_type === 'need_seats' ? '#991B1B' : '#065F46' }}; font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
-                            {{ $post->available_seats }} {{ $post->requirement_type === 'need_seats' ? ($lang == 'bn' ? 'সিট প্রয়োজন' : 'Seats Needed') : ($lang == 'bn' ? 'সিট ফাঁকা' : 'Seats Available') }}
-                        </div>
-                    </div>
-
-                    <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div>
-                            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; line-height: 1.3;">
-                                {{ $post->title }}
-                            </h3>
-
-                            <div style="font-size: 0.85rem; color: var(--text-dark); margin-bottom: 1.25rem;">
-                                <p style="margin-bottom: 0.35rem;"><i class="fa-regular fa-calendar text-emerald-700 me-1"></i> <strong>{{ $lang == 'bn' ? 'ফ্লাইটের তারিখ:' : 'Flight Date:' }}</strong> {{ $post->flight_date->format('d M, Y') }}</p>
-                                <p style="margin-bottom: 0.35rem;"><i class="fa-solid fa-plane text-blue-600 me-1"></i> <strong>{{ $lang == 'bn' ? 'হাব ও এয়ারলাইন:' : 'Hub & Airline:' }}</strong> {{ $post->departure_city }} ({{ $post->airline }})</p>
-                                @if($post->makkah_hotel)
-                                    <p style="margin-bottom: 0.35rem;"><i class="fa-solid fa-hotel me-1 text-amber-600"></i> <strong>{{ $lang == 'bn' ? 'মক্কা হোটেল:' : 'Makkah Hotel:' }}</strong> {{ $post->makkah_hotel }}</p>
-                                    <span style="font-size: 0.75rem; background: #ECFDF5; color: #047857; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 0.2rem;">
-                                        <i class="fa-solid fa-person-walking me-1"></i> {{ $post->makkah_hotel_distance }}m (~{{ ceil($post->makkah_hotel_distance / 80) }} {{ $lang == 'bn' ? 'মিনিট হাঁটার পথ' : 'Mins Walk to Haram' }})
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+                <thead>
+                    <tr style="background: #F8FAFC; border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase;">
+                        <th style="padding: 1rem 0.75rem; text-align: center;">SL</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'ডিল প্যাকেজ' : 'Deal Type' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'তারিখ ও সময়' : 'Date & Time' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'রুট (উড্ডয়ন ➔ গন্তব্য)' : 'Route' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'এয়ারলাইন্স' : 'Airline' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'সিট সংখ্যা' : 'Seats / Pax' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'ফ্লাইট টাইপ' : 'Transit & Duration' }}</th>
+                        <th style="padding: 1rem 0.75rem;">{{ $lang == 'bn' ? 'জনপ্রতি রেট' : 'B2B Price' }}</th>
+                        <th style="padding: 1rem 0.75rem; text-align: right;">{{ $lang == 'bn' ? 'অ্যাকশন' : 'Action' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($allPostsList as $index => $post)
+                        <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 1rem 0.75rem; text-align: center; font-weight: 700; color: var(--text-muted);">
+                                {{ sprintf('%02d', $index + 1) }}
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                @if(($post->hajj_or_umrah ?? 'umrah') === 'hajj')
+                                    <span class="badge" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; font-weight: 800; white-space: nowrap; font-size: 0.8rem; padding: 0.25rem 0.6rem;">
+                                        🕋 {{ $lang == 'bn' ? 'হজ' : 'HAJJ' }}
+                                    </span>
+                                @else
+                                    <span class="badge" style="background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; font-weight: 800; white-space: nowrap; font-size: 0.8rem; padding: 0.25rem 0.6rem;">
+                                        🕌 {{ $lang == 'bn' ? 'ওমরাহ' : 'UMRAH' }}
                                     </span>
                                 @endif
-                            </div>
-                        </div>
-
-                        <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'জনপ্রতি B2B রেট' : 'B2B Rate/Pax' }}</span>
-                                <span style="font-size: 1.3rem; font-weight: 800; color: var(--primary-dark);">৳{{ number_format($post->price_per_seat) }}</span>
-                            </div>
-
-                            <a href="{{ route('posts.show', $post->id) }}" class="btn-gold" style="padding: 0.5rem 0.85rem; font-size: 0.85rem;">
-                                {{ $lang == 'bn' ? 'ডিটেইলস ও কন্টাক্ট' : 'View Contact' }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; white-space: nowrap;">
+                                    {{ strtoupper(str_replace('_', ' ', $post->post_category)) }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <strong style="color: var(--primary-dark); font-size: 0.9rem;"><i class="fa-regular fa-calendar text-emerald-600 me-1"></i> {{ $post->flight_date->format('d M, Y') }}</strong>
+                                @if($post->departure_time)
+                                    <div style="font-size: 0.75rem; color: #0284C7; font-weight: 600;"><i class="fa-solid fa-clock me-1"></i> {{ $post->departure_time }}</div>
+                                @endif
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <div style="font-weight: 700; color: var(--text-dark);">
+                                    {{ $post->departure_city }} ➔ {{ $post->route_sequence == 'madinah_first' ? 'Madinah (MED)' : 'Jeddah (JED)' }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <strong style="color: var(--primary-dark);"><i class="fa-solid fa-plane me-1 text-blue-600"></i> {{ $post->airline }}</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">PNR: {{ $post->pnr_code ?? 'Group Block' }}</div>
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <span class="badge" style="background: {{ $post->requirement_type === 'need_seats' ? '#FEF2F2' : '#ECFDF5' }}; color: {{ $post->requirement_type === 'need_seats' ? '#991B1B' : '#065F46' }}; font-weight: 700; font-size: 0.8rem; padding: 0.35rem 0.65rem; white-space: nowrap;">
+                                    <i class="fa-solid fa-users me-1"></i> {{ $post->available_seats }} {{ $post->requirement_type === 'need_seats' ? ($lang == 'bn' ? 'প্রয়োজন' : 'Needed') : ($lang == 'bn' ? 'ফাঁকা' : 'Available') }}
+                                </span>
+                                @if($post->pendingSeats() > 0)
+                                    <div style="font-size: 0.7rem; color: #D97706; font-weight: 700; margin-top: 0.2rem;">
+                                        <i class="fa-solid fa-clock"></i> {{ $post->pendingSeats() }} {{ $lang == 'bn' ? 'টি সিট পয়েন্ট/প্রক্রিয়াধীন' : 'In-Process' }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <span class="badge" style="background: #F1F5F9; color: #334155; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">
+                                    {{ strtoupper($post->flight_transit ?? 'Direct') }}
+                                    @if($post->transit_duration)
+                                        ({{ $post->transit_duration }})
+                                    @endif
+                                </span>
+                            </td>
+                            <td style="padding: 1rem 0.75rem; white-space: nowrap;">
+                                <strong style="font-size: 1.1rem; color: var(--primary-dark);">৳{{ number_format($post->price_per_seat) }}</strong>
+                            </td>
+                            <td style="padding: 1rem 0.75rem; text-align: right; white-space: nowrap;">
+                                @auth
+                                    @if(Auth::user()->isApproved() || Auth::user()->isAdmin())
+                                        <a href="{{ route('posts.show', $post->id) }}" class="btn-gold" style="padding: 0.45rem 0.95rem; font-size: 0.82rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                            <i class="fa-solid fa-eye"></i> {{ $lang == 'bn' ? 'বিস্তারিত দেখুন' : 'View Details' }}
+                                        </a>
+                                    @else
+                                        <button type="button" onclick="openRestrictedModal()" class="btn-primary" style="padding: 0.45rem 0.95rem; font-size: 0.82rem; background: #0284C7; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                            <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'বিস্তারিত দেখুন' : 'View Details' }}
+                                        </button>
+                                    @endif
+                                @else
+                                    <button type="button" onclick="openRestrictedModal()" class="btn-primary" style="padding: 0.45rem 0.95rem; font-size: 0.82rem; background: #0284C7; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                        <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'বিস্তারিত দেখুন' : 'View Details' }}
+                                    </button>
+                                @endauth
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                                {{ $lang == 'bn' ? 'বর্তমানে কোনো B2B ডিল তালিকাভুক্ত নেই।' : 'No active B2B deals available right now.' }}
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Category B & C Showcase Grid -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
-        <!-- Category B -->
-        <div style="background: white; border-radius: 16px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <span class="badge badge-ticket"><i class="fa-solid fa-ticket"></i> {{ $lang == 'bn' ? 'ক্যাটাগরি B' : 'Category B' }}</span>
-                <a href="{{ route('posts.index', ['post_category' => 'ticket_only']) }}" style="color: var(--primary); font-weight: 600; font-size: 0.85rem; text-decoration: none;">{{ $lang == 'bn' ? 'সব টিকিট দেখুন' : 'View All Tickets' }} <i class="fa-solid fa-arrow-right"></i></a>
+    <!-- Replacement: 2 High-Value B2B Spotlights (Urgent Flight Radar & Special Discount Offers) -->
+    <div class="spotlight-grid" style="margin-bottom: 4rem;">
+        <!-- 1. Urgent Flight Deals Radar (নিকটবর্তী ফ্লাইট অফার) -->
+        <div style="background: white; border-radius: 20px; padding: 2rem; border: 1px solid #FCA5A5; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.08); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, #EF4444, #DC2626); color: white; padding: 0.35rem 1rem; border-bottom-left-radius: 14px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-fire me-1 text-amber-300"></i> {{ $lang == 'bn' ? 'নিকটবর্তী ফ্লাইট স্পটলাইট' : 'Urgent Flight Radar' }}
             </div>
-            <h3 class="font-heading" style="font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 1rem;">
-                {{ $lang == 'bn' ? 'ফ্লাইট টিকিট ও ভিসা প্রসেসিং অনলি' : 'Ticket & Visa Only Offers' }}
-            </h3>
+
+            <div style="margin-bottom: 1.5rem;">
+                <span class="badge" style="background: #FEF2F2; color: #991B1B; font-weight: 700; margin-bottom: 0.5rem; border: 1px solid #FCA5A5;">
+                    <i class="fa-solid fa-clock-rotate-left me-1"></i> {{ $lang == 'bn' ? 'জরুরী সিট পূর্ণকরণ' : 'Fast Filling Seats' }}
+                </span>
+                <h3 class="font-heading" style="font-size: 1.5rem; color: var(--primary-dark);">
+                    {{ $lang == 'bn' ? '🔥 নিকটবর্তী ফ্লাইটের জরুরী ডিলসমূহ' : 'Urgent Flight Vacancies & Deals' }}
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">
+                    {{ $lang == 'bn' ? 'যেসব এজেন্সির ফ্লাইটের তারিখ খুব নিকটে, দ্রুত সিট পূরণ করতে বিশেষ সুযোগ।' : 'High-priority deals for upcoming flights departing soon.' }}
+                </p>
+            </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                @foreach($featuredTickets as $t)
-                    <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                @forelse($urgentDeals as $uPost)
+                    <div style="background: #FFF5F5; border: 1px solid #FECDD3; border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
                         <div>
-                            <h4 style="font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 0.25rem;">{{ $t->title }}</h4>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-plane"></i> {{ $t->airline }} | {{ $t->flight_date->format('d M, Y') }}</p>
+                            <span class="badge" style="background: #FFE4E6; color: #9F1239; font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem;">
+                                <i class="fa-regular fa-calendar me-1"></i> {{ $uPost->flight_date->format('d M, Y') }} ({{ ceil(now()->diffInDays($uPost->flight_date)) }} {{ $lang == 'bn' ? 'দিন বাকি' : 'Days Left' }})
+                            </span>
+                            <h4 style="font-size: 0.95rem; color: var(--primary-dark); font-weight: 700; margin-top: 0.2rem;">
+                                {{ Str::limit($uPost->title, 42) }}
+                            </h4>
+                            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">
+                                <i class="fa-solid fa-plane text-blue-600 me-1"></i> {{ $uPost->departure_city }} ({{ $uPost->airline }}) &bull; <strong style="color: #991B1B;">{{ $uPost->available_seats }} Seats</strong>
+                            </p>
                         </div>
-                        <a href="{{ route('posts.show', $t->id) }}" class="btn-primary" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;">
-                            ৳{{ number_format($t->price_per_seat) }}
-                        </a>
+                        <div style="text-align: right; flex-shrink: 0;">
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #B91C1C;">৳{{ number_format($uPost->price_per_seat) }}</div>
+                            @auth
+                                @if(Auth::user()->isApproved() || Auth::user()->isAdmin())
+                                    <a href="{{ route('posts.show', $uPost->id) }}" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; background: #DC2626; color: white;">
+                                        {{ $lang == 'bn' ? 'গ্র্যাব করুন' : 'Grab Deal' }}
+                                    </a>
+                                @else
+                                    <button type="button" onclick="openRestrictedModal()" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; background: #DC2626; color: white;">
+                                        <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'দেখুন' : 'View' }}
+                                    </button>
+                                @endif
+                            @else
+                                <button type="button" onclick="openRestrictedModal()" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; background: #DC2626; color: white;">
+                                    <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'দেখুন' : 'View' }}
+                                </button>
+                            @endauth
+                        </div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.88rem;">
+                        {{ $lang == 'bn' ? 'বর্তমানে কোনো নিকটবর্তী ফ্লাইটের জরুরী অফার নেই।' : 'No urgent flight deals pending right now.' }}
+                    </div>
+                @endforelse
             </div>
         </div>
 
-        <!-- Category C -->
-        <div style="background: white; border-radius: 16px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <span class="badge badge-hotel"><i class="fa-solid fa-hotel"></i> {{ $lang == 'bn' ? 'ক্যাটাগরি C' : 'Category C' }}</span>
-                <a href="{{ route('posts.index', ['post_category' => 'hotel_share']) }}" style="color: var(--primary); font-weight: 600; font-size: 0.85rem; text-decoration: none;">{{ $lang == 'bn' ? 'সব হোটেল দেখুন' : 'View All Hotels' }} <i class="fa-solid fa-arrow-right"></i></a>
+        <!-- 2. Special Admin Approved Offers Spotlight (বিশেষ মূল্যে অফার) -->
+        <div style="background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%); border-radius: 20px; padding: 2rem; border: 1px solid #FCD34D; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.12); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, #F59E0B, #D97706); color: white; padding: 0.35rem 1rem; border-bottom-left-radius: 14px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-star me-1 text-amber-200"></i> {{ $lang == 'bn' ? 'এডমিন অনুমোদিত অফার' : 'Special Spotlight' }}
             </div>
-            <h3 class="font-heading" style="font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 1rem;">
-                {{ $lang == 'bn' ? 'মক্কা ও মদিনার হোটেল রুম শেয়ারিং' : 'Makkah & Madinah Hotel Sharing' }}
-            </h3>
+
+            <div style="margin-bottom: 1.5rem;">
+                <span class="badge" style="background: #FEF3C7; color: #92400E; font-weight: 700; margin-bottom: 0.5rem; border: 1px solid #FDE68A;">
+                    <i class="fa-solid fa-tag me-1"></i> {{ $lang == 'bn' ? 'বিশেষ ডিসকাউন্ট ডিল' : 'Special B2B Discount' }}
+                </span>
+                <h3 class="font-heading" style="font-size: 1.5rem; color: var(--primary-dark);">
+                    {{ $lang == 'bn' ? '🏷️ স্পেশাল মূল্যে অফারসমূহ' : 'Special Verified B2B Offers' }}
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">
+                    {{ $lang == 'bn' ? 'কেনার চেয়ে কম মূল্যে বা বিশেষ সুবিধায় শেয়ারকৃত অ্যাডমিন ভেরিফাইড বিটুবি ডিল।' : 'Admin-verified special offers released below standard agency market rates.' }}
+                </p>
+            </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                @foreach($featuredHotels as $h)
-                    <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                @forelse($specialOffers as $sPost)
+                    <div style="background: #FFFDF5; border: 1px solid #FDE68A; border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
                         <div>
-                            <h4 style="font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 0.25rem;">{{ $h->title }}</h4>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-hotel"></i> {{ $h->makkah_hotel }} ({{ $h->makkah_hotel_distance }}m)</p>
+                            <span class="badge" style="background: #FEF3C7; color: #78350F; font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem;">
+                                <i class="fa-solid fa-certificate text-amber-600 me-1"></i> Verified Special Offer
+                            </span>
+                            <h4 style="font-size: 0.95rem; color: var(--primary-dark); font-weight: 700; margin-top: 0.2rem;">
+                                {{ Str::limit($sPost->title, 42) }}
+                            </h4>
+                            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">
+                                <i class="fa-solid fa-location-dot text-amber-600 me-1"></i> Hub: {{ $sPost->departure_city }} &bull; 
+                                @if($sPost->agent_commission > 0)
+                                    <strong style="color: #16A34A;">Commission: ৳{{ number_format($sPost->agent_commission) }}/seat</strong>
+                                @else
+                                    <strong style="color: var(--primary-dark);">Discounted Quota</strong>
+                                @endif
+                            </p>
                         </div>
-                        <a href="{{ route('posts.show', $h->id) }}" class="btn-primary" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;">
-                            ৳{{ number_format($h->price_per_seat) }}
-                        </a>
+                        <div style="text-align: right; flex-shrink: 0;">
+                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-dark);">৳{{ number_format($sPost->price_per_seat) }}</div>
+                            @auth
+                                @if(Auth::user()->isApproved() || Auth::user()->isAdmin())
+                                    <a href="{{ route('posts.show', $sPost->id) }}" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;">
+                                        {{ $lang == 'bn' ? 'অফার দেখুন' : 'View Offer' }}
+                                    </a>
+                                @else
+                                    <button type="button" onclick="openRestrictedModal()" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;">
+                                        <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'দেখুন' : 'View' }}
+                                    </button>
+                                @endif
+                            @else
+                                <button type="button" onclick="openRestrictedModal()" class="btn-gold" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;">
+                                    <i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'দেখুন' : 'View' }}
+                                </button>
+                            @endauth
+                        </div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.88rem;">
+                        {{ $lang == 'bn' ? 'বর্তমানে কোনো স্পেশাল ডিসকাউন্ট অফার তালিকাভুক্ত নেই।' : 'No special discount offers available currently.' }}
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -308,7 +342,7 @@
             </p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem;">
+        <div class="why-choose-grid">
             <!-- Feature Card 1 -->
             <div style="background: white; border: 1px solid var(--border-color); border-radius: 18px; padding: 1.75rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-6px)'; this.style.borderColor='var(--accent)';" onmouseout="this.style.transform='none'; this.style.borderColor='var(--border-color)';">
                 <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); color: var(--primary); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; border: 1px solid #A7F3D0;">

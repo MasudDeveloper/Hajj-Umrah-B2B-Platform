@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ session('locale', 'bn') }}">
+@php
+    $lang = session('locale', 'bn');
+@endphp
+<html lang="{{ $lang }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম - বাংলাদেশ')</title>
+    <title>@yield('title', 'B2B Hajj Umrah - ' . ($lang == 'bn' ? 'হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'Agency SaaS Network'))</title>
 
     <!-- Fonts: Outfit, Inter & Noto Serif Bengali / Hind Siliguri -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,10 +16,6 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    @php
-    $lang = session('locale', 'bn'); // Default Bengali language
-    @endphp
 
     <style>
         :root {
@@ -408,42 +407,329 @@
             border: none;
             font-size: 1.2rem;
             color: var(--text-muted);
+        }
+
+        /* Mobile Android App Navigation Bar Styles */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(2, 54, 36, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(212, 175, 55, 0.4);
+            z-index: 9999;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 600;
+            flex: 1;
+            height: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.25rem;
+            margin-bottom: 2px;
+        }
+
+        .mobile-nav-item.active {
+            color: #F3E5AB;
+        }
+
+        .mobile-nav-item.active i {
+            color: #D4AF37;
+            transform: translateY(-2px);
+        }
+
+        .mobile-nav-item.post-btn {
+            position: relative;
+            top: -14px;
+        }
+
+        .post-icon-circle {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #D4AF37, #B38F22);
+            color: #023624;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5);
+            border: 3px solid #023624;
+        }
+
+        /* Mobile Slide Drawer Sidebar */
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-drawer.open {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .drawer-content {
+            width: 300px;
+            max-width: 85%;
+            height: 100%;
+            background: #023624;
+            color: white;
+            padding: 1.5rem;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open .drawer-content {
+            transform: translateX(0);
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
             cursor: pointer;
+        }
+
+        /* Desktop Grids (Default > 768px) */
+        .spotlight-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.75rem;
+        }
+
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .show-details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .key-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .flight-itinerary-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr 140px;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .dashboard-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .filter-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) 110px;
+            gap: 1rem;
+        }
+
+        .posts-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hotel-input-subgrid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 0.5rem;
+        }
+
+        /* Mobile View Rules (Strictly <= 768px) */
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 64px !important;
+                background-color: var(--primary-dark) !important;
+            }
+
+            .test-switcher-bar {
+                display: none !important;
+            }
+
+            .navbar {
+                padding: 0.75rem 1rem !important;
+            }
+
+            .nav-links, .lang-switcher, .desktop-actions {
+                display: none !important;
+            }
+
+            .hamburger-btn {
+                display: block !important;
+            }
+
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+
+            .container {
+                padding: 1rem 0.75rem !important;
+                background-color: var(--bg-light) !important;
+            }
+
+            .footer {
+                margin-top: 2rem !important;
+                padding: 2rem 1.25rem 80px !important;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .hero-banner-container {
+                padding: 2rem 1.25rem !important;
+                border-radius: 16px !important;
+                margin-bottom: 2rem !important;
+            }
+            .hero-banner-container h1 {
+                font-size: 1.8rem !important;
+            }
+            .hero-banner-container p {
+                font-size: 0.95rem !important;
+            }
+
+            .hero-stats-grid,
+            .spotlight-grid,
+            .why-choose-grid,
+            .show-details-grid,
+            .dashboard-stats-grid,
+            .form-grid-2,
+            .form-grid-3,
+            .filter-form-grid,
+            .posts-cards-grid,
+            .hotel-input-subgrid {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+
+            .key-metrics-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.75rem !important;
+                padding: 1rem !important;
+            }
+
+            .flight-itinerary-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.85rem !important;
+                text-align: center !important;
+            }
+
+            .responsive-card-padding {
+                padding: 1.25rem 1rem !important;
+                border-radius: 14px !important;
+            }
+
+            .responsive-header-flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+
+            .responsive-category-tabs {
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                padding-bottom: 0.5rem !important;
+                scrollbar-width: none;
+            }
+
+            .modal-content {
+                margin: 0 1rem;
+                padding: 1.5rem;
+            }
+
+            table {
+                min-width: 650px;
+            }
+
+            /* Responsive Touch Buttons */
+            .btn-primary, .btn-gold {
+                padding: 0.65rem 1rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Quick Role Switcher Bar for Demonstration & Testing -->
-    <div class="test-switcher-bar">
+    @if(session('impersonated_by_admin'))
+    <div style="background: linear-gradient(90deg, #7F1D1D, #991B1B); color: white; padding: 0.65rem 2rem; font-size: 0.88rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 2000;">
         <div>
-            <i class="fa-solid fa-vial-circle-check text-amber-400"></i> {{ $lang == 'bn' ? 'টেস্ট রোল সুইচার:' : 'Role Switcher:' }}
-            <a href="{{ route('quick.switch', 1) }}" title="Super Admin Account"><i class="fa-solid fa-user-shield"></i> {{ $lang == 'bn' ? 'সুপার এডমিন' : 'Super Admin' }}</a>
-            <a href="{{ route('quick.switch', 2) }}" title="R.B Tours and Travels (License: 1109)"><i class="fa-solid fa-circle-check"></i> {{ $lang == 'bn' ? 'আর.বি ট্যুরস (লাইসেন্স ১১০৯)' : 'R.B Tours (License 1109)' }}</a>
-            <a href="{{ route('quick.switch', 5) }}" title="Baitul Mamur Travels (Pending)"><i class="fa-solid fa-clock"></i> {{ $lang == 'bn' ? 'পেন্ডিং এজেন্সি' : 'Pending Agency' }}</a>
-            <a href="{{ route('quick.switch', 0) }}" title="Unauthenticated Public Visitor"><i class="fa-solid fa-user-xmark"></i> {{ $lang == 'bn' ? 'পাবলিক মোড' : 'Public Visitor' }}</a>
+            <i class="fa-solid fa-user-secret me-2 text-amber-300"></i>
+            <strong>ADMIN IMPERSONATION MODE:</strong> Logged in as <u>{{ Auth::user()->agency_name }}</u>
         </div>
-
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <!-- Language Switcher Pill (BN / EN) -->
-            <div class="lang-switcher">
-                <a href="{{ route('lang.switch', 'bn') }}" class="lang-btn {{ $lang == 'bn' ? 'active' : '' }}">বাংলা (BN)</a>
-                <a href="{{ route('lang.switch', 'en') }}" class="lang-btn {{ $lang == 'en' ? 'active' : '' }}">English (EN)</a>
-            </div>
-
-            <div>
-                @auth
-                {{ $lang == 'bn' ? 'লগইন আছেন:' : 'Logged in as:' }} <strong>{{ Auth::user()->agency_name }}</strong>
-                <span class="badge badge-{{ Auth::user()->isAdmin() ? 'admin' : (Auth::user()->isApproved() ? 'verified' : 'pending') }}">
-                    {{ Auth::user()->isAdmin() ? ($lang == 'bn' ? 'এডমিন' : 'Super Admin') : (Auth::user()->isApproved() ? ($lang == 'bn' ? 'ভেরিফাইড এজেন্সি' : 'Verified Agency') : ($lang == 'bn' ? 'পেন্ডিং ভেরিফিকেশন' : 'Pending Approval')) }}
-                </span>
-                @else
-                <span style="color: #94A3B8;"><i class="fa-solid fa-lock me-1"></i> {{ $lang == 'bn' ? 'পাবলিক ভিজিটর (নম্বর লকড)' : 'Public Visitor (Contact Locked)' }}</span>
-                @endauth
-            </div>
-        </div>
+        <a href="{{ route('admin.stop.impersonation') }}" style="background: #FEF3C7; color: #92400E; font-weight: 800; padding: 0.35rem 0.85rem; border-radius: 6px; text-decoration: none; font-size: 0.82rem; border: 1px solid #FCD34D;">
+            <i class="fa-solid fa-right-from-bracket me-1"></i> Exit & Return to Super Admin Panel
+        </a>
     </div>
+    @endif
 
     <!-- Main Navigation Bar -->
     <nav class="navbar">
@@ -452,7 +738,7 @@
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <div class="brand-text">
-                <h1>HajjUmrah B2B</h1>
+                <h1>B2B Hajj Umrah</h1>
                 <span>{{ $lang == 'bn' ? 'বিডি এজেন্সি শেয়ারিং নেটওয়ার্ক' : 'SaaS Collaboration Network' }}</span>
             </div>
         </a>
@@ -474,17 +760,30 @@
                     <i class="fa-solid fa-chart-line"></i> {{ $lang == 'bn' ? 'মাই এজেন্সি ড্যাশবোর্ড' : 'My Agency Control' }}
                 </a>
             </li>
+            @if(!Auth::user()->isApproved())
+            <li>
+                <a href="{{ route('verification.portal') }}" class="nav-link {{ request()->routeIs('verification.*') ? 'active' : '' }}" style="background: rgba(251, 191, 36, 0.25); color: #FDE68A; font-weight: 700;">
+                    <i class="fa-solid fa-shield-halved"></i> {{ $lang == 'bn' ? 'লাইসেন্স ভেরিফিকেশন' : 'Verification Portal' }}
+                </a>
+            </li>
+            @endif
             @endif
             @endauth
         </ul>
 
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div class="desktop-actions" style="display: flex; align-items: center; gap: 0.85rem;">
+            <!-- Language Switcher Pill (BN / EN) -->
+            <div class="lang-switcher">
+                <a href="{{ route('lang.switch', 'bn') }}" class="lang-btn {{ $lang == 'bn' ? 'active' : '' }}">বাংলা</a>
+                <a href="{{ route('lang.switch', 'en') }}" class="lang-btn {{ $lang == 'en' ? 'active' : '' }}">EN</a>
+            </div>
+
             @auth
-            <a href="{{ route('posts.create') }}" class="btn-gold">
+            <a href="{{ route('posts.create') }}" class="btn-gold" style="display: inline-flex;">
                 <i class="fa-solid fa-plus-circle"></i> {{ $lang == 'bn' ? 'পোস্ট করুন' : 'Post Requirement' }}
             </a>
 
-            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0; display: inline-block;">
                 @csrf
                 <button type="submit" class="btn-primary" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; padding: 0.55rem 0.85rem;">
                     <i class="fa-solid fa-right-from-bracket"></i> {{ $lang == 'bn' ? 'লগআউট' : 'Logout' }}
@@ -499,7 +798,116 @@
             </a>
             @endauth
         </div>
+
+        <!-- Mobile Hamburger Menu Button -->
+        <button type="button" class="hamburger-btn" onclick="toggleMobileDrawer()" aria-label="Open Navigation Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </nav>
+
+    <!-- Admin Site Announcement Marquee Ticker Bar -->
+    @php
+        $noticeText = \App\Models\SiteSetting::get('notice_ticker_text');
+        $noticeActive = \App\Models\SiteSetting::get('notice_ticker_active', '1') === '1';
+    @endphp
+
+    @if($noticeActive && !empty($noticeText))
+        <div style="background: linear-gradient(90deg, #023624 0%, #044E35 50%, #023624 100%); color: #F3E5AB; border-bottom: 2px solid var(--accent); padding: 0.45rem 1.5rem; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 990; position: relative;">
+            <div style="background: rgba(212, 175, 55, 0.25); color: #F3E5AB; border: 1px solid rgba(212, 175, 55, 0.6); padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0;">
+                <i class="fa-solid fa-bullhorn text-amber-300"></i> {{ $lang == 'bn' ? 'জরুরী নোটিশ' : 'ANNOUNCEMENT' }}
+            </div>
+            <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop()" onmouseout="this.start()" style="color: #FFFFFF; font-family: 'Hind Siliguri', 'Inter', sans-serif;">
+                {{ $noticeText }}
+            </marquee>
+        </div>
+    @endif
+
+    <!-- Mobile Slide Drawer Sidebar -->
+    <div id="mobileDrawer" class="mobile-drawer" onclick="if(event.target === this) toggleMobileDrawer()">
+        <div class="drawer-content">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 1rem; margin-bottom: 1.25rem;">
+                    <div class="brand">
+                        <div class="brand-icon">
+                            <i class="fa-solid fa-kaaba"></i>
+                        </div>
+                        <div class="brand-text">
+                            <h1 style="color: white; font-size: 1.15rem;">B2B Hajj Umrah</h1>
+                            <span>{{ $lang == 'bn' ? 'বিডি এজেন্সি শেয়ারিং' : 'Agency SaaS Network' }}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="toggleMobileDrawer()" style="background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                @auth
+                    <div style="background: rgba(255,255,255,0.08); padding: 0.85rem; border-radius: 10px; margin-bottom: 1.25rem; border: 1px solid rgba(212,175,55,0.3);">
+                        <div style="font-weight: 700; color: #F3E5AB; font-size: 0.95rem;">{{ Auth::user()->agency_name }}</div>
+                        <div style="font-size: 0.78rem; color: #CBD5E1; margin-top: 0.15rem;"><i class="fa-solid fa-certificate text-amber-400 me-1"></i> License: {{ Auth::user()->license_no }}</div>
+                    </div>
+                @endauth
+
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem; padding: 0;">
+                    <li>
+                        <a href="{{ route('home') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: {{ request()->routeIs('home') ? 'rgba(212,175,55,0.2)' : 'transparent' }};">
+                            <i class="fa-solid fa-house text-amber-400"></i> {{ $lang == 'bn' ? 'হোম পেজ' : 'Home' }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('posts.index') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: {{ request()->routeIs('posts.*') ? 'rgba(212,175,55,0.2)' : 'transparent' }};">
+                            <i class="fa-solid fa-store text-sky-400"></i> {{ $lang == 'bn' ? 'B2B মার্কেটপ্লেস' : 'B2B Marketplace' }}
+                        </a>
+                    </li>
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                            <li>
+                                <a href="{{ route('admin.dashboard') }}" style="color: #FBCFE8; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(244, 114, 182, 0.2);">
+                                    <i class="fa-solid fa-user-shield"></i> {{ $lang == 'bn' ? 'এডমিন প্যানেল' : 'Admin Panel' }}
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ route('dashboard.index') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: {{ request()->routeIs('dashboard.*') ? 'rgba(212,175,55,0.2)' : 'transparent' }};">
+                                    <i class="fa-solid fa-chart-line text-emerald-400"></i> {{ $lang == 'bn' ? 'মাই এজেন্সি ড্যাশবোর্ড' : 'My Agency Control' }}
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
+                    <li>
+                        <a href="{{ route('posts.create') }}" style="color: #F3E5AB; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3);">
+                            <i class="fa-solid fa-plus-circle text-amber-400"></i> {{ $lang == 'bn' ? 'পোস্ট তৈরি করুন' : 'Post Requirement' }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <a href="{{ route('lang.switch', 'bn') }}" style="flex: 1; text-align: center; padding: 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 700; background: {{ $lang == 'bn' ? 'var(--accent)' : 'rgba(255,255,255,0.1)' }}; color: {{ $lang == 'bn' ? 'var(--primary-dark)' : 'white' }};">বাংলা</a>
+                    <a href="{{ route('lang.switch', 'en') }}" style="flex: 1; text-align: center; padding: 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 700; background: {{ $lang == 'en' ? 'var(--accent)' : 'rgba(255,255,255,0.1)' }}; color: {{ $lang == 'en' ? 'var(--primary-dark)' : 'white' }};">English</a>
+                </div>
+
+                @auth
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" style="width: 100%; padding: 0.65rem; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer;">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i> {{ $lang == 'bn' ? 'লগআউট' : 'Logout' }}
+                        </button>
+                    </form>
+                @else
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="{{ route('login') }}" class="btn-primary" style="justify-content: center; background: rgba(255,255,255,0.15);">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> {{ $lang == 'bn' ? 'এজেন্সি লগইন' : 'Agency Login' }}
+                        </a>
+                        <a href="{{ route('register') }}" class="btn-gold" style="justify-content: center;">
+                            <i class="fa-solid fa-user-plus me-1"></i> {{ $lang == 'bn' ? 'ফ্রি রেজিস্ট্রেশন' : 'Register Agency' }}
+                        </a>
+                    </div>
+                @endauth
+            </div>
+        </div>
+    </div>
 
     <!-- Main Container -->
     <main class="container">
@@ -529,7 +937,7 @@
                         <i class="fa-solid fa-kaaba"></i>
                     </div>
                     <div class="brand-text">
-                        <h1 style="color: white;">HajjUmrah B2B SaaS</h1>
+                        <h1 style="color: white;">B2B Hajj Umrah SaaS</h1>
                         <span>{{ $lang == 'bn' ? 'বাংলাদেশ ট্রাভেল নেটওয়ার্ক' : 'Bangladesh Travel Network' }}</span>
                     </div>
                 </div>
@@ -564,12 +972,12 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} Hajj & Umrah B2B SaaS Platform. {{ $lang == 'bn' ? 'পরিচালনায়' : 'Powered by' }} <strong>R.B Tours and Travels</strong> ({{ $lang == 'bn' ? 'লাইসেন্স: ১১০৯' : 'License: 1109' }}). &nbsp;|&nbsp; Design & Developed by <a href="https://mrdeveloper.xyz" target="_blank" style="color: #F3E5AB; font-weight: 700; text-decoration: none;">MR Developer</a> . {{ $lang == 'bn' ? '১০০% ফ্রি এক্সেস প্ল্যাটফর্ম।' : '100% Free Access Platform.' }} All Rights Reserved.</p>
+            <p>&copy; {{ date('Y') }} B2B Hajj Umrah. &nbsp;|&nbsp; Design & Developed by <a href="https://mrdeveloper.xyz" target="_blank" style="color: #F3E5AB; font-weight: 700; text-decoration: none;">MR Developer</a> . {{ $lang == 'bn' ? '১০০% ফ্রি এক্সেস প্ল্যাটফর্ম।' : '100% Free Access Platform.' }} All Rights Reserved.</p>
         </div>
     </footer>
 
     <!-- Terms & Disclaimer Modal -->
-    <div id="termsModal" class="modal">
+    <div id="termsModal" class="modal" onclick="if(event.target === this) closeTermsModal()">
         <div class="modal-content">
             <button class="close-btn" onclick="closeTermsModal()"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="font-heading" style="color: var(--primary-dark); margin-bottom: 0.5rem;"><i class="fa-solid fa-shield-halved text-amber-500"></i> {{ $lang == 'bn' ? 'প্ল্যাটফর্মের শর্তাবলী ও নিয়মাবলী' : 'Platform Terms & Matchmaker Disclaimer' }}</h3>
@@ -583,7 +991,75 @@
         </div>
     </div>
 
+    <!-- Restricted Access Modal for Unverified / Guest Users -->
+    <div id="restrictedAccessModal" class="modal" onclick="if(event.target === this) closeRestrictedModal()">
+        <div class="modal-content" style="max-width: 540px; text-align: center; padding: 2.25rem;">
+            <button class="close-btn" onclick="closeRestrictedModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div style="width: 64px; height: 64px; background: #FEF3C7; border: 2px solid #FDE68A; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #D97706; font-size: 1.8rem; margin: 0 auto 1.25rem;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <h3 class="font-heading" style="color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 0.75rem;">
+                {{ $lang == 'bn' ? 'এজেন্সি বিবরণী ও কন্টাক্ট নম্বর সুরক্ষিত!' : 'Confidential Agency Details Protected!' }}
+            </h3>
+
+            <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; font-size: 0.9rem; color: var(--text-dark); line-height: 1.6; margin-bottom: 1.5rem; text-align: left;">
+                <p style="margin-bottom: 0.75rem;">
+                    {{ $lang == 'bn' 
+                        ? 'এই B2B ডিলটির পূর্ণাঙ্গ এজেন্সির নাম, মালিকের তথ্য, ফোন নম্বর ও ১-ক্লিক হোয়াটসঅ্যাপ লিঙ্ক শুধুমাত্র বাংলাদেশ সরকারের হাব (HAAB) / ধর্ম মন্ত্রণালয় কর্তৃক অনুমোদিত ভেরিফাইড এজেন্সিরাই দেখতে পারেন।' 
+                        : 'Full agency name, phone contact, office address, and WhatsApp links are strictly restricted to approved HAAB verified agencies in Bangladesh.' 
+                    }}
+                </p>
+                <p style="margin: 0; color: #B45309; font-size: 0.85rem; font-weight: 600;">
+                    <i class="fa-solid fa-circle-info me-1"></i> {{ $lang == 'bn' ? 'আপনি যদি একজন লাইসেন্সধারী এজেন্সির মালিক হয়ে থাকেন, তবে বিনামূল্যে রেজিস্ট্রেশন করে তাৎক্ষণিক এক্সেস পান।' : 'If you own a licensed travel agency, register for free to instant unlock all B2B leads.' }}
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ route('register') }}" class="btn-gold" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                    <i class="fa-solid fa-user-plus me-1"></i> {{ $lang == 'bn' ? 'এজেন্সি রেজিস্ট্রেশন করুন (ফ্রি)' : 'Register Agency (Free)' }}
+                </a>
+                <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> {{ $lang == 'bn' ? 'এজেন্সি লগইন' : 'Agency Login' }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Android App Style Persistent Bottom Bar -->
+    <nav class="mobile-bottom-nav">
+        <a href="{{ route('home') }}" class="mobile-nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="fa-solid fa-house"></i>
+            <span>{{ $lang == 'bn' ? 'হোম' : 'Home' }}</span>
+        </a>
+        <a href="{{ route('posts.index') }}" class="mobile-nav-item {{ request()->routeIs('posts.*') ? 'active' : '' }}">
+            <i class="fa-solid fa-store"></i>
+            <span>{{ $lang == 'bn' ? 'মার্কেটপ্লেস' : 'Market' }}</span>
+        </a>
+        <a href="{{ route('posts.create') }}" class="mobile-nav-item {{ request()->routeIs('posts.create') ? 'active' : '' }}">
+            <i class="fa-solid fa-square-plus"></i>
+            <span>{{ $lang == 'bn' ? 'পোস্ট' : 'Post' }}</span>
+        </a>
+        @auth
+            <a href="{{ route('dashboard.index') }}" class="mobile-nav-item {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>{{ $lang == 'bn' ? 'ড্যাশবোর্ড' : 'Account' }}</span>
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="mobile-nav-item {{ request()->routeIs('login') ? 'active' : '' }}">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>{{ $lang == 'bn' ? 'লগইন' : 'Login' }}</span>
+            </a>
+        @endauth
+    </nav>
+
     <script>
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            drawer.classList.toggle('open');
+        }
+
         function openTermsModal() {
             document.getElementById('termsModal').classList.add('open');
         }
@@ -591,6 +1067,25 @@
         function closeTermsModal() {
             document.getElementById('termsModal').classList.remove('open');
         }
+
+        function openRestrictedModal() {
+            document.getElementById('restrictedAccessModal').classList.add('open');
+        }
+
+        function closeRestrictedModal() {
+            document.getElementById('restrictedAccessModal').classList.remove('open');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const drawer = document.getElementById('mobileDrawer');
+                if (drawer && drawer.classList.contains('open')) {
+                    drawer.classList.remove('open');
+                }
+                closeTermsModal();
+                closeRestrictedModal();
+            }
+        });
     </script>
 </body>
 

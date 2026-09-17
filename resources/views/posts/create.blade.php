@@ -7,7 +7,7 @@
         $lang = session('locale', 'bn');
     @endphp
 
-    <div style="max-width: 860px; margin: 0 auto; background: white; border-radius: 16px; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
+    <div class="responsive-card-padding" style="max-width: 880px; margin: 0 auto; background: white; border-radius: 16px; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
         <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--accent); padding-bottom: 1rem;">
             <span class="badge badge-verified" style="margin-bottom: 0.5rem;"><i class="fa-solid fa-building"></i> {{ Auth::user()->agency_name }}</span>
             <h1 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark);">
@@ -31,6 +31,31 @@
         <form action="{{ route('posts.store') }}" method="POST">
             @csrf
 
+            <!-- Step 1: Hajj or Umrah Selection (High Priority Toggle) -->
+            <div style="margin-bottom: 1.75rem; background: #F8FAFC; border: 2px solid #E2E8F0; padding: 1.25rem; border-radius: 12px;">
+                <label style="display: block; font-weight: 700; font-size: 0.95rem; color: var(--primary-dark); margin-bottom: 0.75rem;">
+                    <i class="fa-solid fa-layer-group me-1 text-amber-600"></i> {{ $lang == 'bn' ? '১. পোস্টের ধরণ নির্বাচন করুন (হজ নাকি ওমরাহ) *' : '1. Select Deal Package Type (Hajj or Umrah) *' }}
+                </label>
+
+                <div class="form-grid-2">
+                    <label id="label_umrah" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.25rem; border: 2px solid #6366F1; background: #EEF2FF; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="hajj_or_umrah" value="umrah" checked onchange="toggleHajjUmrahFields('umrah')" style="width: 20px; height: 20px; accent-color: #4F46E5;">
+                        <div>
+                            <strong style="font-size: 1.05rem; color: #3730A3; display: block;">🕌 UMRAH DEAL (ওমরাহ ডিল)</strong>
+                            <span style="font-size: 0.78rem; color: #4338CA;">Umrah group seat vacancy, excess ticket or hotel share</span>
+                        </div>
+                    </label>
+
+                    <label id="label_hajj" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.25rem; border: 2px solid #E2E8F0; background: #FFFFFF; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                        <input type="radio" name="hajj_or_umrah" value="hajj" onchange="toggleHajjUmrahFields('hajj')" style="width: 20px; height: 20px; accent-color: #D97706;">
+                        <div>
+                            <strong style="font-size: 1.05rem; color: #92400E; display: block;">🕋 HAJJ DEAL (হজ ডিল)</strong>
+                            <span style="font-size: 0.78rem; color: #B45309;">Hajj pre-registration pax swap, tent allotment & visa quota</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
             <!-- Post Title -->
             <div style="margin-bottom: 1.5rem;">
                 <label style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem;">
@@ -40,7 +65,7 @@
             </div>
 
             <!-- Grid 1: Category & Requirement Type -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-grid-2" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মূল ক্যাটাগরি *' : 'Main Category *' }}
@@ -64,9 +89,7 @@
                     </select>
                 </div>
             </div>
-
-            <!-- Grid 2: Group Quantities & Departure Hub -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-grid-3" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মোট গ্রুপের সাইজ *' : 'Total Group Block Size *' }}
@@ -93,8 +116,8 @@
                 </div>
             </div>
 
-            <!-- Grid 3: Flight Details & Transit -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- Grid 3: Flight Details, Airline Select, Time, Arrival & Transit -->
+            <div class="form-grid-2" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'ফ্লাইটের তারিখ *' : 'Flight Date *' }}
@@ -104,31 +127,67 @@
 
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                        {{ $lang == 'bn' ? 'ছাড়ার সময় (Departure Time)' : 'Departure Time' }}
+                    </label>
+                    <input type="text" name="departure_time" value="16:00" placeholder="e.g. 16:00 / 10:30 AM" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                        {{ $lang == 'bn' ? 'পৌঁছানোর সময় (Arrival Time)' : 'Arrival Time' }}
+                    </label>
+                    <input type="text" name="arrival_time" value="04:45 +1Day" placeholder="e.g. 04:45 +1Day / 22:15" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'রিটার্ন তারিখ' : 'Return Date' }}
                     </label>
                     <input type="date" name="return_date" value="{{ date('Y-m-d', strtotime('+44 days')) }}" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
                 </div>
+            </div>
 
+            <div class="form-grid-3" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'এয়ারলাইন *' : 'Airline *' }}
+                        {{ $lang == 'bn' ? 'এয়ারলাইন কোম্পানি *' : 'Airline Company *' }}
                     </label>
-                    <input type="text" name="airline" value="Saudia Air Lines" required placeholder="e.g. Saudia / Biman" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                    <select name="airline" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                        <option value="Saudia (Saudi Arabian Airlines)">Saudia (Saudi Arabian Airlines)</option>
+                        <option value="Biman Bangladesh Airlines">Biman Bangladesh Airlines</option>
+                        <option value="Oman Air">Oman Air</option>
+                        <option value="Flynas">Flynas</option>
+                        <option value="Qatar Airways">Qatar Airways</option>
+                        <option value="Emirates">Emirates</option>
+                        <option value="Kuwait Airways">Kuwait Airways</option>
+                        <option value="Gulf Air">Gulf Air</option>
+                        <option value="Air Arabia">Air Arabia</option>
+                        <option value="US-Bangla Airlines">US-Bangla Airlines</option>
+                        <option value="Jazeera Airways">Jazeera Airways</option>
+                        <option value="EgyptAir">EgyptAir</option>
+                    </select>
                 </div>
 
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'ফ্লাইট টাইপ *' : 'Flight Transit *' }}
+                        {{ $lang == 'bn' ? 'ফ্লাইট টাইপ *' : 'Flight Type *' }}
                     </label>
                     <select name="flight_transit" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
                         <option value="direct">Direct Flight (ডিরেক্ট ফ্লাইট)</option>
                         <option value="connecting">Connecting Flight (ট্রানজিট ফ্লাইট)</option>
                     </select>
                 </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                        {{ $lang == 'bn' ? 'ট্রানজিটের সময় / ডিউরেশন' : 'Transit Duration' }}
+                    </label>
+                    <input type="text" name="transit_duration" placeholder="e.g. 15h 45m / 1 Stop" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
             </div>
 
             <!-- Grid 4: Package Tier, Room Type & Duration -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-grid-3" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'প্যাকেজের ক্যাটাগরি *' : 'Package Tier *' }}
@@ -159,13 +218,41 @@
                 </div>
             </div>
 
+            <!-- Dynamic Section: Hajj Specific Fields vs Umrah Specific Fields -->
+            <div id="hajj_specific_box" style="display: none; margin-bottom: 1.5rem; background: #FFFBEB; border: 1px solid #FCD34D; padding: 1.25rem; border-radius: 12px;">
+                <h4 style="font-size: 1rem; color: #92400E; margin-bottom: 0.75rem; border-bottom: 1px solid #FDE68A; padding-bottom: 0.35rem;">
+                    <i class="fa-solid fa-kaaba me-1"></i> {{ $lang == 'bn' ? 'হজ সংক্রান্ত বিশেষ ফিল্ডসমূহ' : 'Hajj Specific Requirements' }}
+                </h4>
+                <div class="form-grid-2">
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                            {{ $lang == 'bn' ? 'মিনার খيمة (Tent Category)' : 'Mina Tent Category' }}
+                        </label>
+                        <select name="hajj_tent_category" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                            <option value="Zone A (VIP Mina Tents)">Zone A (VIP Mina Tents)</option>
+                            <option value="Zone B (Standard Mina Tents)">Zone B (Standard Mina Tents)</option>
+                            <option value="Zone C (Economy Mina Tents)">Zone C (Economy Mina Tents)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                            {{ $lang == 'bn' ? 'ভিসা ও মোফা প্রসেসিং (Visa Category)' : 'Hajj Visa / Moafa Category' }}
+                        </label>
+                        <select name="visa_type" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                            <option value="hajj_moafa">Hajj Pilgrim Moafa (সরকারী/বেসরকারী হজ মোফা)</option>
+                            <option value="hajj_pre_reg">Hajj Pre-Registration Transfer (প্রাক-নিবন্ধন)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hotels & Haram Distance -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-grid-2" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মক্কা হোটেল ও হারাম দূরত্ব (মিটারে)' : 'Makkah Hotel & Haram Distance (Meters)' }}
                     </label>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.5rem;">
+                    <div class="hotel-input-subgrid">
                         <input type="text" name="makkah_hotel" placeholder="e.g. Anjum Hotel Makkah" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                         <input type="number" name="makkah_hotel_distance" value="250" placeholder="Meters" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                     </div>
@@ -175,7 +262,7 @@
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মদিনা হোটেল ও দূরত্ব (মিটারে)' : 'Madinah Hotel & Distance (Meters)' }}
                     </label>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.5rem;">
+                    <div class="hotel-input-subgrid">
                         <input type="text" name="madinah_hotel" placeholder="e.g. Frontel Al Harithia" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                         <input type="number" name="madinah_hotel_distance" value="200" placeholder="Meters" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                     </div>
@@ -183,7 +270,7 @@
             </div>
 
             <!-- Pricing, Deposit, PNR & Baggage -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-grid-2" style="margin-bottom: 1.5rem;">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'জনপ্রতি রেট (BDT) *' : 'Price per Seat (BDT) *' }}
@@ -220,7 +307,7 @@
                 <input type="text" name="baggage_allowance" value="46 KG (2 PC) + 7 KG Hand Baggage" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
             </div>
 
-            <!-- Extended B2B Trading Specifications Grid -->
+            <!-- Extended B2B Trading Specifications Grid (Simplified) -->
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; background: #FFFDF5; padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
@@ -269,49 +356,6 @@
                 </div>
             </div>
 
-            <!-- B2B Agent Commission & Name Policy Grid -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'পার্টনার সিট কমিশন (BDT)' : 'B2B Agent Commission' }}
-                    </label>
-                    <input type="number" name="agent_commission" value="2000" placeholder="e.g. 2000 BDT/Pax" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
-                </div>
-
-                <div>
-                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'নাম পরিবর্তন নীতি' : 'Name Change Policy' }}
-                    </label>
-                    <select name="name_change_policy" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
-                        <option value="free_replacement">Free Swap (ফ্রি নাম পরিবর্তন)</option>
-                        <option value="fee_applies">Fee Applies (ফি সাপেক্ষ)</option>
-                        <option value="strictly_non_changeable">Non-Changeable (অপরিবর্তনযোগ্য)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'পেমেন্ট টার্মস' : 'Payment Terms' }}
-                    </label>
-                    <select name="payment_terms" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
-                        <option value="full_payment">Full Payment Before Flight</option>
-                        <option value="50_advance_50_saudi">50% Deposit + 50% at Saudi</option>
-                        <option value="token_booking_only">Token Booking Only</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'ভিসার ধরণ' : 'Visa Type' }}
-                    </label>
-                    <select name="visa_type" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
-                        <option value="umrah_evisa">Umrah E-Visa (নুশুক ওমরাহ)</option>
-                        <option value="saudi_tourist_1yr">1-Year Tourist Visa (মাল্টিপল)</option>
-                        <option value="hajj_moafa">Hajj Pilgrim Moafa (হজ ভিসা)</option>
-                    </select>
-                </div>
-            </div>
-
             <!-- Comprehensive Service Inclusions Checkboxes -->
             <div style="margin-bottom: 1.5rem; background: #F8FAFC; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color);">
                 <label style="display: block; font-weight: 600; font-size: 0.9rem; color: var(--primary-dark); margin-bottom: 0.75rem;">
@@ -353,12 +397,19 @@
                 </div>
             </div>
 
-            <!-- Details -->
-            <div style="margin-bottom: 2rem;">
-                <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                    {{ $lang == 'bn' ? 'অতিরিক্ত B2B নোট ও শর্তাবলী' : 'Additional Notes / Transfer Terms' }}
+            <!-- Special Offer Request Spotlight Box -->
+            <div style="margin-bottom: 1.75rem; background: #FFFDF5; border: 1px solid #FCD34D; padding: 1.25rem; border-radius: 12px;">
+                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+                    <input type="checkbox" name="request_special_offer" value="1" style="width: 20px; height: 20px; margin-top: 0.15rem; accent-color: #D97706;">
+                    <div>
+                        <strong style="color: #92400E; font-size: 0.95rem; display: block;">
+                            <i class="fa-solid fa-star text-amber-500 me-1"></i> {{ $lang == 'bn' ? '🔥 স্পেশাল ডিসকাউন্ট অফার আবেদন (এডমিন অ্যাপ্রুভড স্পটলাইট)' : '🔥 Request Special Offer Spotlight' }}
+                        </strong>
+                        <span style="font-size: 0.83rem; color: #B45309; line-height: 1.4; display: block; margin-top: 0.2rem;">
+                            {{ $lang == 'bn' ? 'কেনা দামের চেয়ে কমে বা জরুরী প্রয়োজনে অতিরিক্ত ছাড়ে সিট/টিকিট বিক্রি করতে চাইলে টিক দিন। সুপার এডমিন রিভিউ করে হোমপেজের "স্পেশাল অফার" হাইলাইটে প্রদর্শন করবেন।' : 'Check if you are offering tickets/seats below cost price. Super Admin will verify and highlight it in the Special Discount Offers section.' }}
+                        </span>
+                    </div>
                 </label>
-                <textarea name="details" rows="4" placeholder="Mention PNR conditions, group payment terms, or special requirements..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; font-family: inherit;"></textarea>
             </div>
 
             <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; font-size: 1.05rem; padding: 0.9rem;">
@@ -366,4 +417,26 @@
             </button>
         </form>
     </div>
+
+    <script>
+        function toggleHajjUmrahFields(type) {
+            const hajjBox = document.getElementById('hajj_specific_box');
+            const labelUmrah = document.getElementById('label_umrah');
+            const labelHajj = document.getElementById('label_hajj');
+
+            if (type === 'hajj') {
+                hajjBox.style.display = 'block';
+                labelHajj.style.borderColor = '#D97706';
+                labelHajj.style.background = '#FFFBEB';
+                labelUmrah.style.borderColor = '#E2E8F0';
+                labelUmrah.style.background = '#FFFFFF';
+            } else {
+                hajjBox.style.display = 'none';
+                labelUmrah.style.borderColor = '#6366F1';
+                labelUmrah.style.background = '#EEF2FF';
+                labelHajj.style.borderColor = '#E2E8F0';
+                labelHajj.style.background = '#FFFFFF';
+            }
+        }
+    </script>
 @endsection

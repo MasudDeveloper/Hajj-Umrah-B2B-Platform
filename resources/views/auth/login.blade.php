@@ -9,7 +9,7 @@
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <h1 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.25rem;">Verified Agency Login</h1>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Access exclusive Hajj & Umrah B2B deals, group shortages, and partner contacts.</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Access exclusive B2B Hajj Umrah deals, group shortages, and partner contacts.</p>
         </div>
 
         @if ($errors->any())
@@ -45,7 +45,7 @@
 
         <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.82rem; color: var(--text-muted);">
             <p><i class="fa-solid fa-lightbulb text-amber-500"></i> Demo Credentials: <code>alharamain@agency.com</code> / <code>password123</code></p>
-            <p>Admin Login: <code>admin@hajjumrahb2b.com</code> / <code>admin123456</code></p>
+            <p>Admin Login: <code>admin@b2bhajjumrah.com</code> / <code>admin123456</code></p>
         </div>
     </div>
 @endsection

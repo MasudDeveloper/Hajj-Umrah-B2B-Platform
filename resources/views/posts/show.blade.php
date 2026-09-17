@@ -17,11 +17,21 @@
         </a>
     </div>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <div class="show-details-grid">
         <!-- Left Main Post Details -->
         <div>
-            <div style="background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+            <div class="responsive-card-padding" style="background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
                 <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+                    @if(($post->hajj_or_umrah ?? 'umrah') === 'hajj')
+                        <span class="badge" style="background: #FEF3C7; color: #92400E; font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 12px; border: 1px solid #FDE68A;">
+                            <i class="fa-solid fa-kaaba me-1"></i> 🕋 HAJJ DEAL
+                        </span>
+                    @else
+                        <span class="badge" style="background: #E0E7FF; color: #3730A3; font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 12px; border: 1px solid #C7D2FE;">
+                            <i class="fa-solid fa-mosque me-1"></i> 🕌 UMRAH DEAL
+                        </span>
+                    @endif
+
                     <span class="badge badge-{{ $post->post_category === 'group_seats' ? 'seats' : ($post->post_category === 'ticket_only' ? 'ticket' : 'hotel') }}">
                         {{ strtoupper(str_replace('_', ' ', $post->post_category)) }}
                     </span>
@@ -37,7 +47,7 @@
                 </h1>
 
                 <!-- Key Metrics Bar -->
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; background: #F8FAFC; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.75rem; border: 1px solid var(--border-color);">
+                <div class="key-metrics-grid" style="background: #F8FAFC; padding: 1.25rem; border-radius: 12px; margin-bottom: 1.75rem; border: 1px solid var(--border-color);">
                     <div>
                         <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'টাইপ' : 'Type' }}</span>
                         <strong style="font-size: 0.95rem; color: var(--primary-dark);">
@@ -47,6 +57,11 @@
                     <div>
                         <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'সিট সংখ্যা' : 'Available Pax' }}</span>
                         <strong style="font-size: 1.15rem; color: #DC2626;"><i class="fa-solid fa-users"></i> {{ $post->available_seats }} Pax</strong>
+                        @if($post->pendingSeats() > 0)
+                            <div style="font-size: 0.72rem; color: #D97706; font-weight: 700; margin-top: 0.2rem; background: #FEF3C7; padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block;">
+                                <i class="fa-solid fa-clock"></i> {{ $post->pendingSeats() }} {{ $lang == 'bn' ? 'টি সিট প্রক্রিয়াধীন' : 'In-Process' }}
+                            </div>
+                        @endif
                     </div>
                     <div>
                         <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'জনপ্রতি রেট' : 'B2B Rate' }}</span>
@@ -58,27 +73,72 @@
                     </div>
                 </div>
 
-                <!-- Flight & Itinerary Schedule -->
-                <h3 class="font-heading" style="font-size: 1.2rem; color: var(--primary-dark); margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; display: inline-block;">
-                    <i class="fa-solid fa-plane-departure"></i> {{ $lang == 'bn' ? 'ফ্লাইট ও ভ্রমণ সমস্যানুসূচী' : 'Flight & Travel Specifications' }}
-                </h3>
+                <!-- Visual Airline Flight Itinerary Timeline Component -->
+                <div style="background: white; border: 1px solid #CBD5E1; border-radius: 14px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 0.85rem; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 42px; height: 42px; background: #0F172A; color: #F59E0B; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                <i class="fa-solid fa-plane-departure"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; color: #0F172A; font-weight: 700;">{{ $post->airline }}</h4>
+                                <span style="font-size: 0.78rem; color: #64748B;">PNR: {{ $post->pnr_code ?? 'Group Block Reserved' }}</span>
+                            </div>
+                        </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
-                    <div style="background: #F1F5F9; padding: 1rem; border-radius: 10px;">
-                        <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'ফ্লাইটের তারিখ' : 'Departure Date' }}</span>
-                        <strong style="font-size: 0.95rem; color: var(--text-dark);"><i class="fa-regular fa-calendar me-1"></i> {{ $post->flight_date->format('F d, Y (l)') }}</strong>
+                        <span class="badge" style="background: #F1F5F9; color: #334155; font-size: 0.8rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 20px;">
+                            <i class="fa-solid fa-plane me-1 text-sky-600"></i> {{ strtoupper($post->flight_transit ?? 'Direct') }} FLIGHT
+                        </span>
                     </div>
-                    <div style="background: #F1F5F9; padding: 1rem; border-radius: 10px;">
-                        <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'রিটার্ন তারিখ' : 'Return Date' }}</span>
-                        <strong style="font-size: 0.95rem; color: var(--text-dark);"><i class="fa-regular fa-calendar-check me-1"></i> {{ $post->return_date ? $post->return_date->format('F d, Y (l)') : 'N/A' }}</strong>
-                    </div>
-                    <div style="background: #F1F5F9; padding: 1rem; border-radius: 10px;">
-                        <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'এয়ারলাইন ও ট্রানজিট' : 'Airline & Transit' }}</span>
-                        <strong style="font-size: 0.95rem; color: var(--primary-dark);"><i class="fa-solid fa-plane me-1"></i> {{ $post->airline }} ({{ strtoupper($post->flight_transit) }})</strong>
-                    </div>
-                    <div style="background: #F1F5F9; padding: 1rem; border-radius: 10px;">
-                        <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">{{ $lang == 'bn' ? 'নাম প্রদানের শেষ তারিখ' : 'Name Submission Deadline' }}</span>
-                        <strong style="font-size: 0.95rem; color: #DC2626;"><i class="fa-solid fa-clock me-1"></i> {{ $post->name_deadline ? $post->name_deadline->format('F d, Y') : 'N/A' }}</strong>
+
+                    <!-- Visual Departure to Destination Flight Progress Graph Bar -->
+                    <div class="flight-itinerary-grid" style="padding: 0.5rem 0;">
+                        <!-- Departure Column -->
+                        <div>
+                            <span style="font-size: 0.78rem; color: #64748B; font-weight: 600; display: block; margin-bottom: 0.2rem;">
+                                {{ $post->flight_date->format('D, d M \'y') }}
+                            </span>
+                            <div style="font-size: 1.6rem; font-weight: 800; color: #0F172A; line-height: 1;">
+                                {{ $post->departure_time ?? '16:00' }}
+                            </div>
+                            <div style="font-size: 0.95rem; font-weight: 700; color: #0284C7; margin-top: 0.25rem;">
+                                {{ strtoupper(substr($post->departure_city ?? 'Dhaka', 0, 3)) }} ({{ $post->departure_city }})
+                            </div>
+                        </div>
+
+                        <!-- Center Timeline Line Graphic with Transit / Stops Indicator -->
+                        <div style="text-align: center; position: relative;">
+                            <span style="font-size: 0.78rem; color: #64748B; font-weight: 600; display: block; margin-bottom: 0.4rem;">
+                                {{ $post->transit_duration ?? ($post->flight_transit === 'direct' ? 'Direct Flight' : '1 Stop Transit') }}
+                            </span>
+
+                            <div style="display: flex; align-items: center; justify-content: center; position: relative; margin: 0.5rem 0;">
+                                <div style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0284C7; background: white; z-index: 2;"></div>
+                                <div style="flex: 1; height: 2px; background: linear-gradient(90deg, #0284C7, #047857); position: relative;">
+                                    @if($post->flight_transit !== 'direct')
+                                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #047857; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                    @endif
+                                </div>
+                                <div style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #047857; background: white; z-index: 2;"></div>
+                            </div>
+
+                            <span style="font-size: 0.78rem; color: #334155; font-weight: 700; background: #F8FAFC; padding: 0.15rem 0.6rem; border-radius: 12px; border: 1px solid #E2E8F0; display: inline-block;">
+                                {{ $post->flight_transit === 'direct' ? 'Direct Non-Stop' : '1 Stop Transit' }}
+                            </span>
+                        </div>
+
+                        <!-- Arrival Column -->
+                        <div style="text-align: right;">
+                            <span style="font-size: 0.78rem; color: #64748B; font-weight: 600; display: block; margin-bottom: 0.2rem;">
+                                {{ $post->flight_date->format('D, d M \'y') }}
+                            </span>
+                            <div style="font-size: 1.6rem; font-weight: 800; color: #0F172A; line-height: 1;">
+                                {{ $post->arrival_time ?? '04:45 +1Day' }}
+                            </div>
+                            <div style="font-size: 0.95rem; font-weight: 700; color: #047857; margin-top: 0.25rem;">
+                                {{ $post->route_sequence === 'madinah_first' ? 'MED (Madinah)' : 'JED (Jeddah)' }}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -97,10 +157,10 @@
                 <!-- Extended B2B Specifications Grid -->
                 <div style="background: #FFFDF5; border: 1px solid rgba(212, 175, 55, 0.3); padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
                     <h4 style="font-size: 1.05rem; color: var(--primary-dark); margin-bottom: 0.75rem; border-bottom: 1px solid var(--accent); padding-bottom: 0.35rem;">
-                        <i class="fa-solid fa-sliders me-1"></i> B2B ট্রেডিং স্পেসিফিকেশন ও কমিশন শর্ত
+                        <i class="fa-solid fa-sliders me-1"></i> B2B ট্রেডিং স্পেসিফিকেশন
                     </h4>
                     
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
                         <div>
                             <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">যাত্রীর জেন্ডার</span>
                             <strong style="font-size: 0.9rem; color: var(--text-dark);">
@@ -121,23 +181,9 @@
                                 @if($post->catering_type == 'bengali_catering') 🍱 বাংলা খাবার @elseif($post->catering_type == 'hotel_buffet') 🍽️ আন্তর্জাতিক বুফে @else ☕ হালকা নাস্তা / খাবার ছাড়া @endif
                             </strong>
                         </div>
-
-                        <div>
-                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">পার্টনার সিট কমিশন</span>
-                            <strong style="font-size: 0.95rem; color: #16A34A; background: #DCFCE7; padding: 0.15rem 0.4rem; border-radius: 6px;">
-                                ৳{{ number_format($post->agent_commission ?? 0) }} / সিট
-                            </strong>
-                        </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
-                        <div>
-                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">নাম পরিবর্তন নীতি</span>
-                            <strong style="font-size: 0.85rem; color: var(--text-dark);">
-                                @if($post->name_change_policy == 'free_replacement') 🔄 বিনামূল্যে নাম পরিবর্তন @elseif($post->name_change_policy == 'fee_applies') ⚠️ ফি সাপেক্ষ @else 🚫 নাম পরিবর্তন অযোগ্য @endif
-                            </strong>
-                        </div>
-
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
                         <div>
                             <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">সৌদি ট্রান্সপোর্ট</span>
                             <strong style="font-size: 0.85rem; color: var(--text-dark);">
@@ -267,20 +313,53 @@
                             <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
                         </a>
 
-                        <form action="{{ route('posts.inquiry') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="post_id" value="{{ $post->id }}">
-                            <div style="margin-bottom: 0.75rem;">
-                                <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem;">Pax / Seats You Have *</label>
-                                <input type="number" name="requested_seats" required value="2" min="1" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem;">
+                        @if($existingInquiry)
+                            <div style="background: #FEF3C7; border: 1px solid #FCD34D; padding: 1.25rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; color: #B45309; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.5rem;">
+                                    <i class="fa-solid fa-hourglass-half text-amber-600"></i>
+                                    আপনার প্রস্তাবটি পেন্ডিং রয়েছে
+                                </div>
+                                <p style="font-size: 0.83rem; color: #78350F; margin-bottom: 0.75rem; line-height: 1.5;">
+                                    আপনার জমা দেওয়া প্রস্তাবটি সেলার এজেন্সি পর্যবেক্ষণ করছেন। পুনরায় প্রস্তাব না পাঠিয়ে সিদ্ধান্তের জন্য অপেক্ষা করুন অথবা ফোন/হোয়াটসঅ্যাপে অবহিত করুন।
+                                </p>
+                                <div style="background: white; border: 1px solid #FDE68A; padding: 0.75rem; border-radius: 8px; font-size: 0.8rem; color: #92400E;">
+                                    <div style="margin-bottom: 0.25rem;"><strong>অনুরোধকৃত সিট:</strong> {{ $existingInquiry->requested_seats }} টি</div>
+                                    <div style="margin-bottom: 0.25rem;"><strong>অফার রেট:</strong> ৳{{ number_format($existingInquiry->offered_price_per_seat) }}/সিট</div>
+                                    <div><strong>মেসেজ:</strong> "{{ $existingInquiry->message }}"</div>
+                                </div>
+                                <a href="{{ route('dashboard.index') }}" class="btn-primary" style="display: block; text-align: center; margin-top: 0.75rem; font-size: 0.82rem; padding: 0.5rem; text-decoration: none;">
+                                    <i class="fa-solid fa-chart-line me-1"></i> ড্যাশবোর্ডে স্ট্যাটাস দেখুন
+                                </a>
                             </div>
-                            <div style="margin-bottom: 0.75rem;">
-                                <textarea name="message" rows="2" required placeholder="Write message to agency owner..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; font-family: inherit;"></textarea>
-                            </div>
-                            <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; font-size: 0.95rem; padding: 0.75rem;">
-                                <i class="fa-solid fa-paper-plane"></i> Express Interest Deal
-                            </button>
-                        </form>
+                        @else
+                            <form action="{{ route('posts.inquiry') }}" method="POST" style="background: #F8FAFC; border: 1px solid var(--border-color); padding: 1rem; border-radius: 10px;">
+                                @csrf
+                                <input type="hidden" name="post_id" value="{{ $post->id }}">
+                                <div style="font-weight: 700; font-size: 0.88rem; color: var(--primary-dark); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.35rem;">
+                                    <i class="fa-solid fa-handshake me-1 text-amber-600"></i> B2B Deal Proposal Form
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                    <div>
+                                        <label style="display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem;">Pax / Seats *</label>
+                                        <input type="number" name="requested_seats" required value="2" min="1" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem;">Offered Rate (BDT)</label>
+                                        <input type="number" name="offered_price_per_seat" value="{{ $post->price_per_seat }}" placeholder="Rate" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem;">
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <label style="display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem;">Deal Note / Terms *</label>
+                                    <textarea name="message" rows="2" required placeholder="Write custom proposal note to agency..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; font-family: inherit;"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.65rem;">
+                                    <i class="fa-solid fa-paper-plane me-1"></i> Send B2B Quotation Offer
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 @else
                     <!-- LOCKED OVERLAY FOR GUESTS / PENDING AGENCIES -->

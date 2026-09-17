@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Super Admin Control Center - Hajj & Umrah B2B')</title>
+    <title>@yield('title', 'Super Admin Control Center - B2B Hajj Umrah')</title>
     
     <!-- Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,6 +138,68 @@
             background: #DC2626; color: white; border: none; padding: 0.4rem 0.8rem;
             border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.8rem;
         }
+
+        /* Modal Overlay System */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.25rem;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            animation: modalSlideUp 0.25s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: #F1F5F9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
     </style>
 </head>
 <body>
@@ -150,19 +212,34 @@
             </div>
             <div>
                 <h3 style="font-size: 1.1rem; line-height: 1.1;">Admin Center</h3>
-                <span style="font-size: 0.7rem; color: var(--admin-accent); text-transform: uppercase; letter-spacing: 0.5px;">B2B Governance</span>
+                <span style="font-size: 0.7rem; color: var(--admin-accent); text-transform: uppercase; letter-spacing: 0.5px;">B2B Hajj Umrah Governance</span>
             </div>
         </a>
 
         <ul class="sidebar-menu">
             <li>
-                <a href="{{ route('admin.dashboard') }}" class="active">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard & Approvals
+                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-pie text-amber-400"></i> Analytics Dashboard
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.verifications') }}" class="{{ request()->routeIs('admin.verifications') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user-clock text-amber-400"></i> Verification Queue
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.agencies') }}" class="{{ request()->routeIs('admin.agencies') ? 'active' : '' }}">
+                    <i class="fa-solid fa-building-circle-check text-emerald-400"></i> Agency Directory
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                    <i class="fa-solid fa-sliders text-blue-400"></i> Platform Settings
+                </a>
+            </li>
+            <li style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem;">
                 <a href="{{ route('posts.index') }}" target="_blank">
-                    <i class="fa-solid fa-globe"></i> View Live B2B Site
+                    <i class="fa-solid fa-globe text-cyan-400"></i> View Live B2B Site
                 </a>
             </li>
             <li>

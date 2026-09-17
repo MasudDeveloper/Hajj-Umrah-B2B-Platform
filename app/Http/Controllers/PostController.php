@@ -37,13 +37,39 @@ class PostController extends Controller
             ->take(4)
             ->get();
 
+        $allPostsList = Post::with('agency')
+            ->where('status', '!=', 'closed')
+            ->orderBy('flight_date', 'asc')
+            ->take(10)
+            ->get();
+
+        // Urgent Flight Deals (Flight date nearest to today)
+        $urgentDeals = Post::with('agency')
+            ->where('status', '!=', 'closed')
+            ->where('flight_date', '>=', now()->startOfDay())
+            ->orderBy('flight_date', 'asc')
+            ->take(3)
+            ->get();
+
+        // Special Admin Approved Offers
+        $specialOffers = Post::with('agency')
+            ->where('status', '!=', 'closed')
+            ->where(function($q) {
+                $q->where('is_special_offer', true)
+                  ->orWhere('special_offer_status', 'pending')
+                  ->orWhere('agent_commission', '>', 0);
+            })
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
         return view('home', compact(
             'totalAgencies',
             'totalVacantPax',
             'totalActivePosts',
-            'featuredGroupSeats',
-            'featuredTickets',
-            'featuredHotels'
+            'allPostsList',
+            'urgentDeals',
+            'specialOffers'
         ));
     }
 
@@ -122,7 +148,16 @@ class PostController extends Controller
         $currentUser = Auth::user();
         $isCanViewContact = $currentUser && $currentUser->isApproved();
 
-        return view('posts.show', compact('post', 'relatedPosts', 'isCanViewContact'));
+        $existingInquiry = null;
+        if ($currentUser) {
+            $existingInquiry = PostInquiry::where('post_id', $id)
+                ->where('inquiring_agency_id', $currentUser->id)
+                ->whereIn('status', ['pending', 'accepted'])
+                ->latest()
+                ->first();
+        }
+
+        return view('posts.show', compact('post', 'relatedPosts', 'isCanViewContact', 'existingInquiry'));
     }
 
     public function quotation($id)
@@ -154,11 +189,15 @@ class PostController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'hajj_or_umrah' => 'required|string|in:hajj,umrah',
             'post_category' => 'required|string',
             'requirement_type' => 'required|string',
             'total_group_size' => 'required|integer|min:1',
             'available_seats' => 'required|integer|min:1',
             'flight_date' => 'required|date',
+            'departure_time' => 'nullable|string|max:255',
+            'arrival_time' => 'nullable|string|max:255',
+            'transit_duration' => 'nullable|string|max:255',
             'return_date' => 'nullable|date|after_or_equal:flight_date',
             'duration_days' => 'required|integer|min:1',
             'airline' => 'required|string|max:255',
@@ -203,6 +242,10 @@ class PostController extends Controller
         $validated['currency'] = 'BDT';
         $validated['status'] = 'open';
 
+        if ($request->has('request_special_offer')) {
+            $validated['special_offer_status'] = 'pending';
+        }
+
         Post::create($validated);
 
         return redirect()->route('posts.index')->with('success', 'B2B Post published successfully!');
@@ -217,15 +260,151 @@ class PostController extends Controller
         $validated = $request->validate([
             'post_id' => 'required|exists:posts,id',
             'requested_seats' => 'required|integer|min:1',
+            'offered_price_per_seat' => 'nullable|numeric|min:0',
             'message' => 'required|string',
         ]);
+
+        $existingInquiry = PostInquiry::where('post_id', $request->post_id)
+            ->where('inquiring_agency_id', Auth::id())
+            ->whereIn('status', ['pending', 'accepted'])
+            ->first();
+
+        if ($existingInquiry) {
+            return back()->with('error', 'আপনার একটি প্রস্তাব ইতিমধ্যেই সেলার এজেন্সির কাছে পেন্ডিং অবস্থায় রয়েছে। অনুগ্রহ করে পূর্বের প্রস্তাবের সিদ্ধান্তের জন্য অপেক্ষা করুন।');
+        }
 
         $validated['inquiring_agency_id'] = Auth::id();
         $validated['status'] = 'pending';
 
         PostInquiry::create($validated);
 
-        return back()->with('success', 'Express Interest inquiry submitted! The seller agency has been notified.');
+        return back()->with('success', 'B2B Deal proposal submitted! The seller agency has been notified.');
+    }
+
+    public function respondInquiry(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return back()->with('error', 'Unauthorized.');
+        }
+
+        $inquiry = PostInquiry::with('post')->findOrFail($id);
+
+        if ($inquiry->post->agency_id !== Auth::id()) {
+            return back()->with('error', 'Unauthorized access to this B2B deal inquiry.');
+        }
+
+        $validated = $request->validate([
+            'seller_note' => 'nullable|string',
+            'advance_amount_agreed' => 'nullable|numeric|min:0',
+            'offered_price_per_seat' => 'nullable|numeric|min:0',
+            'status' => 'required|string|in:accepted,rejected,pending',
+        ]);
+
+        $inquiry->update([
+            'seller_note' => $request->input('seller_note'),
+            'advance_amount_agreed' => $request->input('advance_amount_agreed'),
+            'offered_price_per_seat' => $request->input('offered_price_per_seat') ?: $inquiry->offered_price_per_seat,
+            'status' => $request->input('status'),
+        ]);
+
+        return back()->with('success', 'Quotation response sent to buyer agency!');
+    }
+
+    public function confirmDeal(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return back()->with('error', 'Unauthorized.');
+        }
+
+        $inquiry = PostInquiry::with(['post', 'inquiringAgency', 'post.agency'])->findOrFail($id);
+        $currentAgencyId = Auth::id();
+
+        $isSeller = ($inquiry->post->agency_id === $currentAgencyId);
+        $isBuyer = ($inquiry->inquiring_agency_id === $currentAgencyId);
+
+        if (!$isSeller && !$isBuyer) {
+            return back()->with('error', 'Unauthorized access to confirm this deal.');
+        }
+
+        if ($inquiry->status === 'pending') {
+            return back()->with('error', 'পেন্ডিং অবস্থায় ডিল ডান কনফার্ম করা সম্ভব নয়। সেলার এজেন্সিকে প্রথমে কোটেশন রেসপন্স পাঠাতে হবে।');
+        }
+
+        if ($isSeller) {
+            $inquiry->seller_deal_done = true;
+        }
+
+        if ($isBuyer) {
+            $inquiry->buyer_deal_done = true;
+        }
+
+        if ($inquiry->seller_deal_done && $inquiry->buyer_deal_done) {
+            $inquiry->status = 'completed';
+            if (!$inquiry->contract_number) {
+                $inquiry->contract_number = PostInquiry::generateContractNumber();
+                $inquiry->deal_completed_at = now();
+
+                // Deduct requested seats from post's available seats
+                $post = $inquiry->post;
+                if ($post) {
+                    $post->available_seats = max(0, $post->available_seats - $inquiry->requested_seats);
+                    if ($post->available_seats === 0) {
+                        $post->status = 'closed';
+                    } else {
+                        $post->status = 'partially_filled';
+                    }
+                    $post->save();
+                }
+            }
+        }
+
+        $inquiry->save();
+
+        if ($inquiry->status === 'completed') {
+            return back()->with('success', '🎉 DEAL COMPLETED! Both agencies have confirmed advance payment. Official B2B Contract Agreement #' . $inquiry->contract_number . ' is ready!');
+        }
+
+        return back()->with('success', 'Your "Deal Done" confirmation has been recorded. Waiting for partner agency confirmation.');
+    }
+
+    public function quotationLetterView($id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $inquiry = PostInquiry::with(['post.agency', 'inquiringAgency'])->findOrFail($id);
+        $currentAgencyId = Auth::id();
+
+        $isSeller = ($inquiry->post->agency_id === $currentAgencyId);
+        $isBuyer = ($inquiry->inquiring_agency_id === $currentAgencyId);
+        $isAdmin = Auth::user()->isAdmin();
+
+        if (!$isSeller && !$isBuyer && !$isAdmin) {
+            return redirect()->route('home')->with('error', 'Unauthorized access to B2B Quotation Letter.');
+        }
+
+        return view('posts.inquiry_quotation_letter', compact('inquiry'));
+    }
+
+    public function contractView($id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $inquiry = PostInquiry::with(['post.agency', 'inquiringAgency'])->findOrFail($id);
+        $currentAgencyId = Auth::id();
+
+        $isSeller = ($inquiry->post->agency_id === $currentAgencyId);
+        $isBuyer = ($inquiry->inquiring_agency_id === $currentAgencyId);
+        $isAdmin = Auth::user()->isAdmin();
+
+        if (!$isSeller && !$isBuyer && !$isAdmin) {
+            return redirect()->route('home')->with('error', 'Unauthorized access to B2B Contract Agreement.');
+        }
+
+        return view('posts.contract', compact('inquiry'));
     }
 
     public function dashboard()
@@ -243,7 +422,12 @@ class PostController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('dashboard.index', compact('agency', 'myPosts', 'myInquiries'));
+        $sentInquiries = PostInquiry::with(['post.agency', 'post'])
+            ->where('inquiring_agency_id', $agency->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('dashboard.index', compact('agency', 'myPosts', 'myInquiries', 'sentInquiries'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -253,5 +437,35 @@ class PostController extends Controller
         $post->save();
 
         return back()->with('success', 'Post status updated to ' . strtoupper($post->status));
+    }
+
+    public function adjustSeats(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return back()->with('error', 'Unauthorized.');
+        }
+
+        $post = Post::where('agency_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'seats_count' => 'required|integer|min:0',
+            'adjustment_type' => 'required|string|in:set,reduce',
+        ]);
+
+        if ($validated['adjustment_type'] === 'reduce') {
+            $post->available_seats = max(0, $post->available_seats - (int)$validated['seats_count']);
+        } else {
+            $post->available_seats = (int)$validated['seats_count'];
+        }
+
+        if ($post->available_seats === 0) {
+            $post->status = 'closed';
+        } else if ($post->status === 'closed' && $post->available_seats > 0) {
+            $post->status = 'open';
+        }
+
+        $post->save();
+
+        return back()->with('success', 'সিট সংখ্যা সফলভাবে আপডেট/এডজাস্ট করা হয়েছে!');
     }
 }
