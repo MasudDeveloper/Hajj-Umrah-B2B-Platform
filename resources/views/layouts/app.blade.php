@@ -90,16 +90,16 @@
 
         /* Main Navigation */
         .navbar {
-            background-color: var(--primary);
+            background-color: #0b1521; /* Match the dark hero color */
             color: white;
-            padding: 0.85rem 2rem;
+            padding: 1rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .brand {
@@ -111,55 +111,49 @@
         }
 
         .brand-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--accent), #B38F22);
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-dark);
-            font-size: 1.4rem;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+            color: #D4AF37;
+            font-size: 2.2rem;
         }
 
         .brand-text h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
             line-height: 1.1;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            font-family: 'Outfit', sans-serif;
         }
 
         .brand-text span {
-            font-size: 0.72rem;
-            color: var(--accent-light);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: #94A3B8;
+            letter-spacing: 0.5px;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 2rem;
             list-style: none;
         }
 
         .nav-link {
-            color: #E2E8F0;
+            color: #CBD5E1;
             text-decoration: none;
-            font-size: 0.92rem;
-            font-weight: 500;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
         }
 
         .nav-link:hover,
         .nav-link.active {
             color: white;
-            background-color: rgba(255, 255, 255, 0.12);
+            border-bottom: 2px solid var(--accent);
         }
 
         .btn-gold {
@@ -738,63 +732,37 @@
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <div class="brand-text">
-                <h1>B2B Hajj Umrah</h1>
-                <span>{{ $lang == 'bn' ? 'বিডি এজেন্সি শেয়ারিং নেটওয়ার্ক' : 'SaaS Collaboration Network' }}</span>
+                <h1>UMRAH B2B</h1>
+                <span>Seat Exchange Platform</span>
             </div>
         </a>
 
         <ul class="nav-links">
-            <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"><i class="fa-solid fa-house"></i> {{ $lang == 'bn' ? 'হোম পেজ' : 'Home' }}</a></li>
-            <li><a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}"><i class="fa-solid fa-layer-group"></i> {{ $lang == 'bn' ? 'B2B মার্কেটপ্লেস' : 'B2B Marketplace' }}</a></li>
-
-            @auth
-            @if(Auth::user()->isAdmin())
-            <li>
-                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" style="background: rgba(244, 114, 182, 0.2); color: #FBCFE8;">
-                    <i class="fa-solid fa-user-shield"></i> {{ $lang == 'bn' ? 'এডমিন প্যানেল' : 'Admin Panel' }}
-                </a>
-            </li>
-            @else
-            <li>
-                <a href="{{ route('dashboard.index') }}" class="nav-link {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-chart-line"></i> {{ $lang == 'bn' ? 'মাই এজেন্সি ড্যাশবোর্ড' : 'My Agency Control' }}
-                </a>
-            </li>
-            @if(!Auth::user()->isApproved())
-            <li>
-                <a href="{{ route('verification.portal') }}" class="nav-link {{ request()->routeIs('verification.*') ? 'active' : '' }}" style="background: rgba(251, 191, 36, 0.25); color: #FDE68A; font-weight: 700;">
-                    <i class="fa-solid fa-shield-halved"></i> {{ $lang == 'bn' ? 'লাইসেন্স ভেরিফিকেশন' : 'Verification Portal' }}
-                </a>
-            </li>
-            @endif
-            @endif
-            @endauth
+            <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
+            <li><a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}">Available Seats</a></li>
+            <li><a href="{{ route('posts.create') }}" class="nav-link">Post a Seat</a></li>
+            <li><a href="#" class="nav-link">Need Seats</a></li>
+            <li><a href="{{ route('pages.how-it-works') }}" class="nav-link {{ request()->routeIs('pages.how-it-works') ? 'active' : '' }}">How It Works</a></li>
+            <li><a href="{{ route('pages.about-us') }}" class="nav-link {{ request()->routeIs('pages.about-us') ? 'active' : '' }}">About Us</a></li>
         </ul>
 
-        <div class="desktop-actions" style="display: flex; align-items: center; gap: 0.85rem;">
-            <!-- Language Switcher Pill (BN / EN) -->
-            <div class="lang-switcher">
-                <a href="{{ route('lang.switch', 'bn') }}" class="lang-btn {{ $lang == 'bn' ? 'active' : '' }}">বাংলা</a>
-                <a href="{{ route('lang.switch', 'en') }}" class="lang-btn {{ $lang == 'en' ? 'active' : '' }}">EN</a>
-            </div>
-
+        <div class="desktop-actions" style="display: flex; align-items: center; gap: 1rem;">
             @auth
-            <a href="{{ route('posts.create') }}" class="btn-gold" style="display: inline-flex;">
-                <i class="fa-solid fa-plus-circle"></i> {{ $lang == 'bn' ? 'পোস্ট করুন' : 'Post Requirement' }}
+            <a href="{{ route('dashboard.index') }}" class="btn-primary" style="background: transparent; border: 1px solid rgba(255,255,255,0.4); border-radius: 30px; padding: 0.5rem 1.25rem;">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
             </a>
-
             <form action="{{ route('logout') }}" method="POST" style="margin: 0; display: inline-block;">
                 @csrf
-                <button type="submit" class="btn-primary" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; padding: 0.55rem 0.85rem;">
-                    <i class="fa-solid fa-right-from-bracket"></i> {{ $lang == 'bn' ? 'লগআউট' : 'Logout' }}
+                <button type="submit" class="btn-gold" style="border-radius: 30px; padding: 0.5rem 1.25rem;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
             </form>
             @else
-            <a href="{{ route('login') }}" class="btn-primary" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);">
-                <i class="fa-solid fa-right-to-bracket"></i> {{ $lang == 'bn' ? 'এজেন্সি লগইন' : 'Agency Login' }}
+            <a href="{{ route('login') }}" class="btn-primary" style="background: transparent; border: 1px solid rgba(255,255,255,0.4); border-radius: 30px; padding: 0.5rem 1.25rem;">
+                <i class="fa-solid fa-user"></i> Login
             </a>
-            <a href="{{ route('register') }}" class="btn-gold">
-                <i class="fa-solid fa-user-plus"></i> {{ $lang == 'bn' ? 'ফ্রি রেজিস্ট্রেশন' : 'Register Agency' }}
+            <a href="{{ route('register') }}" class="btn-gold" style="border-radius: 30px; padding: 0.5rem 1.25rem; font-weight: 700; color: #1E293B;">
+                <i class="fa-solid fa-user-plus"></i> Register Agency
             </a>
             @endauth
         </div>

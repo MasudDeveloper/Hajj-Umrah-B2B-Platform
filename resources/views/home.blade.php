@@ -7,81 +7,311 @@
         $lang = session('locale', 'bn');
     @endphp
 
-    <!-- Breathtaking Hero Banner with High-Res Makkah Kaaba Imagery & Glassmorphism -->
-    <div class="hero-banner-container" style="position: relative; border-radius: 24px; padding: 4.5rem 3rem; color: white; margin-bottom: 3.5rem; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 78, 53, 0.25); border: 1px solid rgba(212, 175, 55, 0.4); background: url('{{ asset('images/makkah_kaaba_hero.jpg') }}') center/cover no-repeat;">
-        <!-- Dark Golden Emerald Gradient Overlay -->
-        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(2, 44, 30, 0.92) 0%, rgba(4, 78, 53, 0.85) 50%, rgba(0, 0, 0, 0.88) 100%); z-index: 1;"></div>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        /* Homepage Specific Styles */
+        .full-hero {
+            position: relative;
+            background: url('{{ asset("images/makkah_kaaba_hero.jpg") }}') center/cover no-repeat;
+            margin: -2rem calc(-50vw + 50%) 0; /* Overrides the .container padding from layout */
+            min-height: 550px;
+            color: white;
+            padding: 5rem 2rem 8rem;
+        }
 
-        <!-- Glowing Decorative Elements -->
-        <div style="position: absolute; top: -100px; right: -100px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: 1;"></div>
+        .full-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #0b1521 0%, rgba(11,21,33,0.85) 45%, rgba(11,21,33,0.1) 100%);
+            z-index: 1;
+        }
 
-        <div style="max-width: 850px; position: relative; z-index: 2;">
-            <div style="display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.6); padding: 0.45rem 1.1rem; border-radius: 30px; font-size: 0.88rem; color: #F3E5AB; font-weight: 700; margin-bottom: 1.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
-                <i class="fa-solid fa-kaaba text-amber-300"></i> {{ $lang == 'bn' ? 'বাংলাদেশের নিবন্ধিত হজ ও ওমরাহ এজেন্সি সমূহের জন্য ১০০% ভেরিফাইড B2B পোর্টাল' : 'Strictly Verified Agency-to-Agency B2B SaaS Portal' }}
-            </div>
-            
-            <h1 class="font-heading" style="font-size: 3.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.25rem; color: #FFFFFF; text-shadow: 0 4px 12px rgba(0,0,0,0.6);">
-                @if($lang == 'bn')
-                    হজ ও ওমরাহ <span style="color: #F3E5AB; background: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">গ্রুপ সিট শেয়ারিং</span>, টিকিট এক্সচেঞ্জ ও হোটেল নেটওয়ার্ক
-                @else
-                    Exclusive <span style="color: #F3E5AB; background: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">B2B Hajj Umrah</span> Collaboration & Sharing Portal
-                @endif
-            </h1>
-            
-            <p style="font-size: 1.15rem; line-height: 1.7; color: #E2E8F0; margin-bottom: 2.25rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); max-width: 760px;">
-                @if($lang == 'bn')
-                    আপনার গ্রুপের সিট শর্টেজ পূরণ করুন (যেমন: ২৫ জনের গ্রুপ রেডি, ১০ জন প্রয়োজন), কনফার্মড অতিরিক্ত ফ্লাইট টিকিট বেচাকেনা করুন এবং মক্কা-মদিনায় হোটেল রুম শেয়ারিং করুন সম্পূর্ণ নিরাপদ B2B মাধ্যমে।
-                @else
-                    Fill group seat shortages (25 pax ready + 10 seats needed), trade surplus flight tickets, and share Makkah/Madinah hotel rooms securely among licensed HAAB agencies in Bangladesh.
-                @endif
-            </p>
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
 
-            <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
-                <a href="{{ route('posts.index') }}" class="btn-gold" style="font-size: 1.1rem; padding: 0.95rem 2rem; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);">
-                    <i class="fa-solid fa-layer-group"></i> {{ $lang == 'bn' ? 'B2B মার্কেটপ্লেস দেখুন' : 'Explore B2B Marketplace' }}
-                </a>
-                @guest
-                    <a href="{{ route('register') }}" class="btn-primary" style="background: rgba(255,255,255,0.18); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); font-size: 1.1rem; padding: 0.95rem 2rem;">
-                        <i class="fa-solid fa-user-plus"></i> {{ $lang == 'bn' ? 'এজেন্সি অ্যাকাউন্ট খুলুন (ফ্রি)' : 'Register Agency Account' }}
+        @media (max-width: 768px) {
+            .search-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box > div {
+                border-right: none !important;
+                border-bottom: 1px solid #E2E8F0;
+            }
+            .features-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .how-it-works-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .steps-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .step-line {
+                display: none;
+            }
+        }
+    </style>
+
+    <!-- HERO SECTION -->
+    <div class="full-hero">
+        <div class="hero-content">
+            <div style="max-width: 650px;">
+                <div style="display: inline-flex; align-items: center; gap: 0.6rem; border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 1.2rem; border-radius: 30px; font-size: 0.85rem; color: #E2E8F0; margin-bottom: 1.5rem; background: rgba(0,0,0,0.25);">
+                    <i class="fa-solid fa-shield-halved" style="color: #D4AF37;"></i> Trusted by 300+ Verified Travel Agencies
+                </div>
+                
+                <h1 style="font-size: 3.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 1rem; font-family: 'Outfit', sans-serif;">
+                    Buy & Sell <span style="color: #D4AF37;">Umrah Group Seats</span>
+                </h1>
+                
+                <h2 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 1.2rem; color: #F8FAFC; line-height: 1.4;">
+                    The First B2B Platform for Umrah Seat Exchange
+                </h2>
+                
+                <p style="font-size: 1.05rem; line-height: 1.6; color: #CBD5E1; margin-bottom: 2.5rem; max-width: 520px;">
+                    Connect with verified travel agencies, find available seats, or post your extra seats — all in one place.
+                </p>
+
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <a href="{{ route('posts.index') }}" style="background: #D4AF37; color: #0b1521; font-weight: 700; padding: 0.85rem 1.75rem; border-radius: 30px; font-size: 1.05rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(212,175,55,0.3);">
+                        <i class="fa-solid fa-magnifying-glass"></i> Find Available Seats
                     </a>
-                @endguest
-            </div>
-        </div>
-
-        <!-- Live B2B Platform Stats Bar with Glassmorphism -->
-        <div class="hero-stats-grid" style="margin-top: 3.5rem; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px); border-radius: 16px; padding: 1.75rem; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 1.1rem;">
-                <div style="width: 52px; height: 52px; background: rgba(212, 175, 55, 0.25); border: 1px solid var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--accent-light); font-size: 1.4rem;">
-                    <i class="fa-solid fa-building-circle-check"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.9rem; font-weight: 800; color: #FFFFFF; font-family: 'Outfit', sans-serif;">{{ $totalAgencies }}</h3>
-                    <p style="font-size: 0.85rem; color: #CBD5E1; font-weight: 500;">{{ $lang == 'bn' ? 'অনুমোদিত ভেরিফাইড এজেন্সি' : 'Verified Licensed Agencies' }}</p>
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 1.1rem;">
-                <div style="width: 52px; height: 52px; background: rgba(59, 130, 246, 0.25); border: 1px solid #93C5FD; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #93C5FD; font-size: 1.4rem;">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.9rem; font-weight: 800; color: #FFFFFF; font-family: 'Outfit', sans-serif;">{{ $totalVacantPax }}</h3>
-                    <p style="font-size: 0.85rem; color: #CBD5E1; font-weight: 500;">{{ $lang == 'bn' ? 'ফাঁকা/প্রয়োজনীয় প্যাক্স সিট' : 'Group Seat Shortages' }}</p>
-                </div>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 1.1rem;">
-                <div style="width: 52px; height: 52px; background: rgba(16, 185, 129, 0.25); border: 1px solid #6EE7B7; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #6EE7B7; font-size: 1.4rem;">
-                    <i class="fa-solid fa-handshake"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.9rem; font-weight: 800; color: #FFFFFF; font-family: 'Outfit', sans-serif;">{{ $totalActivePosts }}</h3>
-                    <p style="font-size: 0.85rem; color: #CBD5E1; font-weight: 500;">{{ $lang == 'bn' ? 'সক্রিয় B2B ডিল' : 'Active B2B Deals' }}</p>
+                    <a href="{{ route('posts.create') }}" style="padding: 0.85rem 1.75rem; border-radius: 30px; font-size: 1.05rem; border: 1px solid rgba(255,255,255,0.6); color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
+                        <i class="fa-solid fa-plus"></i> Post Your Seat
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- SEARCH BOX -->
+    <div style="max-width: 1240px; margin: -4rem auto 0; position: relative; z-index: 10;">
+        <form action="{{ route('posts.index') }}" method="GET" class="search-box" style="background: white; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); padding: 1rem; display: flex; align-items: center; justify-content: space-between; margin: 0;">
+            
+            <!-- From -->
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; padding: 0.5rem 1.5rem; border-right: 1px solid #E2E8F0;">
+                <i class="fa-solid fa-plane-departure" style="color: #64748B; font-size: 1.3rem;"></i>
+                <div style="width: 100%;">
+                    <div style="font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 0.2rem;">From</div>
+                    <select name="departure_city" style="font-weight: 700; color: #1E293B; font-size: 1rem; border: none; outline: none; width: 100%; background: transparent; cursor: pointer; appearance: none; box-shadow: none;">
+                        <option value="Dhaka">Dhaka (DAC)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- To -->
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; padding: 0.5rem 1.5rem; border-right: 1px solid #E2E8F0;">
+                <i class="fa-solid fa-location-dot" style="color: #64748B; font-size: 1.3rem;"></i>
+                <div style="width: 100%;">
+                    <div style="font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 0.2rem;">To</div>
+                    <select name="destination_city" style="font-weight: 700; color: #1E293B; font-size: 1rem; border: none; outline: none; width: 100%; background: transparent; cursor: pointer; appearance: none; box-shadow: none;">
+                        <option value="Jeddah">Jeddah (JED)</option>
+                        <option value="Madinah">Madinah (MED)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Departure Date -->
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; padding: 0.5rem 1.5rem; border-right: 1px solid #E2E8F0;">
+                <i class="fa-regular fa-calendar" style="color: #64748B; font-size: 1.3rem;"></i>
+                <div style="width: 100%;">
+                    <div style="font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 0.2rem;">Departure Date</div>
+                    <input type="date" name="flight_date" style="font-weight: 600; color: #1E293B; font-size: 1rem; border: none; outline: none; width: 100%; background: transparent; cursor: pointer; font-family: inherit; box-shadow: none;">
+                </div>
+            </div>
+
+            <!-- Seats -->
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; padding: 0.5rem 1.5rem;">
+                <i class="fa-solid fa-users" style="color: #64748B; font-size: 1.3rem;"></i>
+                <div style="width: 100%;">
+                    <div style="font-size: 0.8rem; color: #64748B; font-weight: 600; margin-bottom: 0.2rem;">Seats</div>
+                    <input type="number" name="min_seats" min="1" placeholder="e.g. 2 Seats" style="font-weight: 700; color: #1E293B; font-size: 1rem; border: none; outline: none; width: 100%; background: transparent; font-family: inherit; box-shadow: none;">
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div style="padding: 0.5rem;">
+                <button type="submit" style="background: #044E35; color: white; padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s; border: none; cursor: pointer; font-size: 1rem;">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <div style="max-width: 1240px; margin: 4rem auto;">
+        <div class="features-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5rem;">
+            
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #044E35; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(4,78,53,0.2);">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h4 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Verified Agencies</h4>
+                    <p style="font-size: 0.88rem; color: #64748B; line-height: 1.5;">Work only with trusted, verified travel agencies.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #044E35; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(4,78,53,0.2);">
+                    <i class="fa-solid fa-plane-circle-check"></i>
+                </div>
+                <div>
+                    <h4 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Wide Selection</h4>
+                    <p style="font-size: 0.88rem; color: #64748B; line-height: 1.5;">Find or offer seats from multiple group packages.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #044E35; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(4,78,53,0.2);">
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+                <div>
+                    <h4 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Save Time</h4>
+                    <p style="font-size: 0.88rem; color: #64748B; line-height: 1.5;">Get quick responses and faster deals.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: #044E35; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(4,78,53,0.2);">
+                    <i class="fa-solid fa-handshake-angle"></i>
+                </div>
+                <div>
+                    <h4 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Safe & Secure</h4>
+                    <p style="font-size: 0.88rem; color: #64748B; line-height: 1.5;">Built for B2B trust and transparent transactions.</p>
+                </div>
+            </div>
+
+        </div>
+        <hr style="border: 0; border-top: 1px solid #E2E8F0; margin-top: 4rem;">
+    </div>
+
+    <!-- HOW IT WORKS & OPPORTUNITIES SECTION -->
+    <div style="max-width: 1240px; margin: 0 auto 5rem;">
+        <div class="how-it-works-grid" style="display: grid; grid-template-columns: 1fr 480px; gap: 3rem; align-items: stretch;">
+            
+            <!-- How it works -->
+            <div>
+                <h2 style="font-size: 2.2rem; font-weight: 800; color: #1E293B; margin-bottom: 0.5rem; font-family: 'Outfit', sans-serif;">How It Works</h2>
+                <p style="color: #64748B; margin-bottom: 3.5rem; font-size: 1rem;">A simple process to help you find or offer Umrah seats.</p>
+
+                <div class="steps-container" style="display: flex; justify-content: space-between; position: relative;">
+                    <!-- Connecting Line -->
+                    <div class="step-line" style="position: absolute; top: 16px; left: 30px; right: 40px; height: 2px; background: #E2E8F0; z-index: 1;">
+                        <!-- Arrow tips on the line could be added here, but simple line matches design best -->
+                    </div>
+                    
+                    <!-- Step 1 -->
+                    <div style="position: relative; z-index: 2; width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; background: white; width: max-content; padding-right: 10px;">
+                            <div style="width: 34px; height: 34px; background: #044E35; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">1</div>
+                            <i class="fa-regular fa-file-lines" style="color: #044E35; font-size: 1.6rem;"></i>
+                        </div>
+                        <h5 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Browse or Post</h5>
+                        <p style="font-size: 0.85rem; color: #64748B; line-height: 1.5;">Search available seats or list your extra seats.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div style="position: relative; z-index: 2; width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; background: white; width: max-content; padding-right: 10px;">
+                            <div style="width: 34px; height: 34px; background: #044E35; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">2</div>
+                            <i class="fa-regular fa-comments" style="color: #044E35; font-size: 1.6rem;"></i>
+                        </div>
+                        <h5 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Connect</h5>
+                        <p style="font-size: 0.85rem; color: #64748B; line-height: 1.5;">Get in touch with verified agencies via the platform.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div style="position: relative; z-index: 2; width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; background: white; width: max-content; padding-right: 10px;">
+                            <div style="width: 34px; height: 34px; background: #044E35; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">3</div>
+                            <i class="fa-solid fa-handshake-simple" style="color: #044E35; font-size: 1.6rem;"></i>
+                        </div>
+                        <h5 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Confirm</h5>
+                        <p style="font-size: 0.85rem; color: #64748B; line-height: 1.5;">Finalize the deal and hold the seats.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div style="position: relative; z-index: 2; width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; background: white; width: max-content; padding-right: 10px;">
+                            <div style="width: 34px; height: 34px; background: #044E35; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">4</div>
+                            <i class="fa-solid fa-plane-up" style="color: #044E35; font-size: 1.6rem;"></i>
+                        </div>
+                        <h5 style="font-weight: 800; color: #1E293B; margin-bottom: 0.35rem; font-size: 1.05rem;">Travel</h5>
+                        <p style="font-size: 0.85rem; color: #64748B; line-height: 1.5;">Complete the booking and prepare for your Umrah journey.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Opportunities/Stats -->
+            <div style="display: flex; gap: 1rem; height: 100%;">
+                
+                <!-- Left Panel (Opportunities) -->
+                <div style="flex: 1; border-radius: 16px; overflow: hidden; position: relative; background: url('{{ asset("images/madinah_bg.jpg") }}') center right/cover no-repeat; background-color: #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 68%; background: white; clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%); z-index: 1;"></div>
+                    <div style="position: relative; z-index: 2; padding: 2.5rem 2rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 70%;">
+                        <h3 style="font-size: 1.8rem; font-weight: 800; color: #044E35; line-height: 1.3; font-family: 'Outfit', sans-serif;">
+                            <span style="font-style: italic; font-weight: 600; font-size: 1.4rem;">More</span><br>
+                            Opportunities<br>
+                            <span style="font-weight: 600; font-size: 1.4rem;">for Your</span><br>
+                            Umrah Business
+                        </h3>
+                        <div style="margin-top: 3rem;">
+                            <p style="color: #044E35; font-weight: 700; font-size: 1rem; margin-bottom: 0;">Together We Make</p>
+                            <p style="color: #D4AF37; font-size: 0.95rem; font-style: italic; font-weight: 800;">Umrah Easier</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel (Stats) -->
+                <div style="width: 220px; background: #0B1521; border-radius: 16px; padding: 2rem 1.5rem; color: white; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+                    
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <i class="fa-solid fa-building text-amber-500" style="font-size: 1.3rem; margin-top: 0.2rem;"></i>
+                        <div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: white;">300+</div>
+                            <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 2px;">Verified Agencies</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <i class="fa-solid fa-chair text-amber-500" style="font-size: 1.3rem; margin-top: 0.2rem;"></i>
+                        <div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: white;">1,200+</div>
+                            <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 2px;">Available Seats</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <i class="fa-solid fa-handshake text-amber-500" style="font-size: 1.3rem; margin-top: 0.2rem;"></i>
+                        <div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: white;">850+</div>
+                            <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 2px; line-height: 1.3;">Successful Transactions</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <i class="fa-solid fa-star text-amber-500" style="font-size: 1.3rem; margin-top: 0.2rem;"></i>
+                        <div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: white;">4.8/5</div>
+                            <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 2px;">Average Rating</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Public B2B Summary List Table (লাইভ বিটুবি সিট ও টিকিট তালিকা) -->
     <div style="background: white; border-radius: 20px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 3.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">

@@ -8,6 +8,10 @@ use App\Http\Controllers\PostController;
 // 1. Home / Landing Page
 Route::get('/', [PostController::class, 'home'])->name('home');
 
+// Static Pages
+Route::view('/how-it-works', 'pages.how-it-works')->name('pages.how-it-works');
+Route::view('/about-us', 'pages.about-us')->name('pages.about-us');
+
 // Language Switcher Route
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['bn', 'en'])) {
