@@ -73,17 +73,17 @@
                             <td style="padding: 1rem 0.85rem;">
                                 <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                                     @if($agency->license_document)
-                                        <a href="{{ asset('storage/' . $agency->license_document) }}" target="_blank" class="badge" style="background: #D1FAE5; color: #065F46; text-decoration: none; border: 1px solid #A7F3D0; font-size: 0.75rem;">
+                                        <button type="button" onclick="viewDocument('{{ asset('storage/' . $agency->license_document) }}')" class="badge" style="background: #D1FAE5; color: #065F46; text-decoration: none; border: 1px solid #A7F3D0; font-size: 0.75rem; cursor: pointer; padding: 0.4rem 0.6rem;">
                                             <i class="fa-solid fa-file-image me-1"></i> View License Photo
-                                        </a>
+                                        </button>
                                     @else
                                         <span style="color: #94A3B8; font-size: 0.75rem; italic;"><i class="fa-solid fa-triangle-exclamation text-amber-500 me-1"></i> License Copy Missing</span>
                                     @endif
 
                                     @if($agency->trade_license_document)
-                                        <a href="{{ asset('storage/' . $agency->trade_license_document) }}" target="_blank" class="badge" style="background: #E0F2FE; color: #0369A1; text-decoration: none; border: 1px solid #BAE6FD; font-size: 0.75rem;">
+                                        <button type="button" onclick="viewDocument('{{ asset('storage/' . $agency->trade_license_document) }}')" class="badge" style="background: #E0F2FE; color: #0369A1; text-decoration: none; border: 1px solid #BAE6FD; font-size: 0.75rem; cursor: pointer; padding: 0.4rem 0.6rem;">
                                             <i class="fa-solid fa-file-invoice me-1"></i> View Trade Copy
-                                        </a>
+                                        </button>
                                     @else
                                         <span style="color: #94A3B8; font-size: 0.75rem; italic;"><i class="fa-solid fa-triangle-exclamation text-amber-500 me-1"></i> Trade Copy Missing</span>
                                     @endif
@@ -99,12 +99,13 @@
                                         </button>
                                     </form>
 
-                                    <form action="{{ route('admin.reject', $agency->id) }}" method="POST" style="display: inline;">
+                                    <form id="reject-form-{{ $agency->id }}" action="{{ route('admin.reject', $agency->id) }}" method="POST" style="display: none;">
                                         @csrf
-                                        <button type="submit" class="btn-danger" style="font-size: 0.82rem; padding: 0.45rem 0.85rem;">
-                                            <i class="fa-solid fa-xmark me-1"></i> Reject
-                                        </button>
+                                        <input type="hidden" name="rejection_reason" id="rejection_reason_{{ $agency->id }}">
                                     </form>
+                                    <button type="button" onclick="openRejectModal({{ $agency->id }})" class="btn-danger" style="font-size: 0.82rem; padding: 0.45rem 0.85rem;">
+                                        <i class="fa-solid fa-xmark me-1"></i> Reject
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -121,4 +122,63 @@
             </table>
         </div>
     </div>
+    <!-- SweetAlert2 Scripts for Modals -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function viewDocument(url) {
+            Swal.fire({
+                title: 'Document Viewer',
+                html: `
+                    <div style="margin-bottom: 1rem; background: #f8fafc; padding: 10px; border-radius: 8px;">
+                        <img src="${url}" style="max-width: 100%; max-height: 65vh; object-fit: contain; border-radius: 4px; border: 1px solid #e2e8f0; display: block; margin: 0 auto;">
+                    </div>
+                    <a href="${url}" download class="btn-success" style="padding: 0.6rem 1.5rem; text-decoration: none; display: inline-block; font-weight: 600;">
+                        <i class="fa-solid fa-download"></i> Download File
+                    </a>
+                `,
+                width: '60%',
+                showCloseButton: true,
+                showConfirmButton: false,
+                background: '#fff',
+            });
+        }
+
+        function openRejectModal(agencyId) {
+            Swal.fire({
+                title: 'Reject Agency',
+                html: `
+                    <p style="margin-bottom: 15px; font-size: 14px; color: #64748B;">Please provide a reason for rejecting this application:</p>
+                    
+                    <!-- Quick Reason Badges -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; justify-content: center;">
+                        <span class="badge" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; cursor:pointer;" onclick="document.getElementById('reject_reason_input').value = 'Invalid or expired License Document.'"><i class="fa-solid fa-paste me-1"></i>Invalid License</span>
+                        <span class="badge" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; cursor:pointer;" onclick="document.getElementById('reject_reason_input').value = 'HAAB Number does not match our records.'"><i class="fa-solid fa-hashtag me-1"></i>Invalid HAAB</span>
+                        <span class="badge" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; cursor:pointer;" onclick="document.getElementById('reject_reason_input').value = 'Uploaded documents are blurry or unreadable.'"><i class="fa-solid fa-eye-slash me-1"></i>Blurry Image</span>
+                        <span class="badge" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; cursor:pointer;" onclick="document.getElementById('reject_reason_input').value = 'Owner name mismatch with Trade License.'"><i class="fa-solid fa-user-xmark me-1"></i>Name Mismatch</span>
+                    </div>
+
+                    <textarea id="reject_reason_input" class="swal2-textarea" placeholder="Type custom rejection reason here..." style="margin-top: 0; min-height: 100px; padding: 10px; font-size: 14px; width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;"></textarea>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#94A3B8',
+                confirmButtonText: '<i class="fa-solid fa-xmark"></i> Confirm Reject',
+                preConfirm: () => {
+                    const reason = document.getElementById('reject_reason_input').value;
+                    if (!reason) {
+                        Swal.showValidationMessage('Please provide a rejection reason');
+                        return false;
+                    }
+                    return reason;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById('reject-form-' + agencyId);
+                    document.getElementById('rejection_reason_' + agencyId).value = result.value;
+                    form.submit();
+                }
+            });
+        }
+    </script>
 @endsection

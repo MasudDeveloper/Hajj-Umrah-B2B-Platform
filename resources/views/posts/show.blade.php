@@ -203,6 +203,49 @@
                     </div>
                 </div>
 
+                @if(($post->hajj_or_umrah ?? 'umrah') === 'hajj')
+                    <div style="background: #FFFBEB; border: 1px solid #FCD34D; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <h4 style="font-size: 1.05rem; color: #92400E; margin-bottom: 0.75rem; border-bottom: 1px solid #FDE68A; padding-bottom: 0.35rem;">
+                            <i class="fa-solid fa-kaaba me-1"></i> হজ স্পেসিফিকেশন
+                        </h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div>
+                                <span style="font-size: 0.75rem; color: #B45309; display: block;">মিনার খيمة (Tent)</span>
+                                <strong style="font-size: 0.9rem; color: #78350F;">
+                                    {{ $post->hajj_tent_category ?? 'N/A' }}
+                                </strong>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: #B45309; display: block;">আরাফাতের টেন্ট</span>
+                                <strong style="font-size: 0.9rem; color: #78350F;">
+                                    {{ $post->arafat_tent_details ?? 'N/A' }}
+                                </strong>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: #B45309; display: block;">মোয়াল্লেম/মাকতাব নং</span>
+                                <strong style="font-size: 0.9rem; color: #78350F;">
+                                    {{ $post->moallem_number ?? 'N/A' }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed #FDE68A; flex-wrap: wrap;">
+                            @if($post->aziziyah_accommodation)
+                                <span style="background: white; color: #B45309; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; border: 1px solid #FDE68A;">🏢 আজিজিয়া অ্যাকোমোডেশন</span>
+                            @endif
+                            @if($post->shifting_package)
+                                <span style="background: white; color: #B45309; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; border: 1px solid #FDE68A;">🚌 ফিতরা / শিফটিং (দূরের হোটেল)</span>
+                            @else
+                                <span style="background: white; color: #B45309; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; border: 1px solid #FDE68A;">🏨 স্থায়ী প্যাকেজ (কাছের হোটেল)</span>
+                            @endif
+                            @if($post->qurbani_included)
+                                <span style="background: white; color: #B45309; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; border: 1px solid #FDE68A;">🥩 কুরবানি অন্তর্ভুক্ত</span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Accommodation Details & Haram Walk-Time Calculation -->
                 @if($post->makkah_hotel || $post->madinah_hotel)
                     <h3 class="font-heading" style="font-size: 1.2rem; color: var(--primary-dark); margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; display: inline-block;">
@@ -283,19 +326,40 @@
                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 0.75rem;">POSTING AGENCY</span>
 
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
-                    <div style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.3rem;">
-                        {{ strtoupper(substr($post->agency->agency_name, 0, 1)) }}
-                    </div>
+                    <a href="{{ route('agencies.show', $post->agency->id) }}" style="text-decoration: none;">
+                        <div style="width: 52px; height: 52px; background: var(--primary); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.3rem; overflow: hidden; border: 2px solid #E2E8F0;">
+                            @if($post->agency->logo && file_exists(public_path($post->agency->logo)))
+                                <img src="{{ asset($post->agency->logo) }}" alt="{{ $post->agency->agency_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                {{ strtoupper(substr($post->agency->agency_name, 0, 1)) }}
+                            @endif
+                        </div>
+                    </a>
                     <div>
-                        <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark);">{{ $post->agency->agency_name }}</h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-certificate text-amber-500"></i> License: {{ $post->agency->license_no }}</p>
+                        <a href="{{ route('agencies.show', $post->agency->id) }}" style="text-decoration: none; color: inherit;">
+                            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--primary-dark); margin: 0; line-height: 1.3;">
+                                {{ $post->agency->agency_name }}
+                            </h3>
+                        </a>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;"><i class="fa-solid fa-certificate text-amber-500"></i> License: {{ $post->agency->license_no }}</p>
                     </div>
                 </div>
 
-                <div style="background: #F8FAFC; padding: 1rem; border-radius: 10px; font-size: 0.85rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
-                    <p style="margin-bottom: 0.5rem;"><i class="fa-solid fa-id-card text-amber-600 me-2"></i> <strong>HAAB No:</strong> {{ $post->agency->haab_no ?? 'N/A' }}</p>
+                    <p style="margin-bottom: 0.5rem;"><i class="fa-solid fa-certificate text-emerald-600 me-2"></i> <strong>Govt License:</strong> {{ $post->agency->license_no }}</p>
+                    @if($post->agency->haab_no)
+                        <p style="margin-bottom: 0.5rem;"><i class="fa-solid fa-id-card text-amber-600 me-2"></i> <strong>HAAB No:</strong> {{ $post->agency->haab_no }} <span style="font-size: 0.72rem; color: var(--text-muted);">(ঐচ্ছিক)</span></p>
+                    @endif
                     <p style="margin-bottom: 0.5rem;"><i class="fa-solid fa-location-dot text-red-500 me-2"></i> <strong>Address:</strong> {{ $post->agency->address }}</p>
-                    <p style="margin-bottom: 0.5rem;"><i class="fa-solid fa-star text-amber-400 me-2"></i> <strong>Trust Score:</strong> {{ $post->agency->rating }} / 5.0</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-color);">
+                        <div>
+                            <span style="color: #F59E0B; font-size: 0.85rem;"><i class="fa-solid fa-star"></i></span>
+                            <strong style="color: var(--primary-dark);">{{ number_format($post->agency->average_rating, 1) }}</strong> / 5.0
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">({{ $post->agency->reviews_count }} {{ $lang == 'bn' ? 'রিভিউ' : 'reviews' }})</span>
+                        </div>
+                        <a href="{{ route('agencies.show', $post->agency->id) }}" style="font-size: 0.75rem; color: var(--primary); font-weight: 700; text-decoration: none;">
+                            {{ $lang == 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile' }} &rarr;
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Privacy Contact Lock Condition -->
@@ -369,7 +433,7 @@
                         </div>
                         <h4 style="font-size: 1rem; color: #92400E; margin-bottom: 0.5rem;">Agency Contact Info Locked</h4>
                         <p style="font-size: 0.82rem; color: #B45309; line-height: 1.5; margin-bottom: 1rem;">
-                            To prevent fraud, phone numbers and direct WhatsApp links are restricted exclusively to <strong>Approved HAAB Verified Agencies</strong>.
+                            নিরাপত্তার স্বার্থে ফোন নম্বর ও হোয়াটসঅ্যাপ লিংক শুধুমাত্র <strong>সরকার অনুমোদিত ভেরিফাইড এজেন্সিদের (Govt Licensed Verified Agencies)</strong> জন্য উন্মুক্ত।
                         </p>
 
                         @auth

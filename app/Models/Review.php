@@ -12,8 +12,13 @@ class Review extends Model
     protected $fillable = [
         'reviewer_agency_id',
         'target_agency_id',
+        'post_inquiry_id',
         'rating',
         'comment',
+    ];
+
+    protected $casts = [
+        'rating' => 'integer',
     ];
 
     public function reviewerAgency()
@@ -24,5 +29,10 @@ class Review extends Model
     public function targetAgency()
     {
         return $this->belongsTo(Agency::class, 'target_agency_id');
+    }
+
+    public function postInquiry()
+    {
+        return $this->belongsTo(PostInquiry::class, 'post_inquiry_id');
     }
 }

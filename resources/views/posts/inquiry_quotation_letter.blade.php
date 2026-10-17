@@ -185,11 +185,11 @@
 <body>
 
     <!-- No Print Action Bar -->
-    <div class="no-print">
-        <button onclick="window.print()" style="background: var(--primary); color: white; border: none; padding: 0.75rem 1.75rem; border-radius: 30px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(4,78,53,0.3); display: inline-flex; align-items: center; gap: 0.5rem;">
-            <i class="fa-solid fa-print"></i> অফিসিয়াল কোটেশন লেটার প্রিন্ট / PDF ডাউনলোড
+    <div class="no-print" style="display: flex; justify-content: center; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <button onclick="window.print()" style="background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 30px; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 12px rgba(4,78,53,0.3); display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-file-pdf"></i> কোটেশন লেটার PDF সেভ / প্রিন্ট করুন
         </button>
-        <a href="{{ route('dashboard.index') }}" style="margin-left: 1rem; color: #475569; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+        <a href="{{ route('dashboard.index') }}" style="background: white; border: 1px solid var(--border-color); color: #475569; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.75rem 1.25rem; border-radius: 30px; display: inline-flex; align-items: center; gap: 0.4rem;">
             <i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ডে ফিরে যান
         </a>
     </div>

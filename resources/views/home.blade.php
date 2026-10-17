@@ -568,7 +568,7 @@
                 {{ $lang == 'bn' ? 'কেন আপনার এজেন্সি এই B2B পোর্টাল ব্যবহার করবে?' : 'Why Licensed Agencies Choose Our B2B Portal' }}
             </h2>
             <p style="color: var(--text-muted); font-size: 0.98rem; margin-top: 0.5rem;">
-                {{ $lang == 'bn' ? 'বাংলাদেশ সরকারের লাইসেন্সপ্রাপ্ত ও হাব নিবন্ধিত এজেন্সি সমূহের নিরাপদ ব্যবসায়িক কোলাবরেশনের সেরা মাধ্যম।' : 'Designed specifically for licensed HAAB Agencies in Bangladesh to trade group seats & rooms.' }}
+                {{ $lang == 'bn' ? 'বাংলাদেশ সরকারের ধর্ম বিষয়ক মন্ত্রণালয় অনুমোদিত হজ্ব ও ওমরাহ লাইসেন্সধারী এজেন্সিদের নিরাপদ ব্যবসায়িক কোলাবরেশনের সেরা মাধ্যম।' : 'Designed specifically for Govt Approved Hajj & Umrah licensed agencies in Bangladesh to trade group seats & rooms.' }}
             </p>
         </div>
 
@@ -579,13 +579,13 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h3 class="font-heading" style="font-size: 1.2rem; color: var(--primary-dark); margin-bottom: 0.5rem;">
-                    {{ $lang == 'bn' ? '১০০% ভেরিফাইড এজেন্সি স্পেস' : '100% Verified HAAB Space' }}
+                    {{ $lang == 'bn' ? '১০০% সরকার অনুমোদিত এজেন্সি স্পেস' : '100% Govt Licensed Agency Space' }}
                 </h3>
                 <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
-                    {{ $lang == 'bn' ? 'হাব (HAAB) ও ধর্ম মন্ত্রণালয়ের ভেরিফাইড অনুমোদন ছাড়া কোনো দালাল বা সাধারণ কাস্টমার এজেন্সির মোবাইল নম্বর ও বিটুবি রেট দেখতে পারে না।' : 'Strict license checking blocks unauthorized brokers. Agency numbers & rates are strictly hidden from public.' }}
+                    {{ $lang == 'bn' ? 'বাংলাদেশ সরকারের অনুমোদিত বৈধ হজ্ব ও ওমরাহ লাইসেন্স ছাড়া কোনো দালাল বা সাধারণ কাস্টমার এজেন্সির মোবাইল নম্বর ও বিটুবি রেট দেখতে পারে না (হাব ঐচ্ছিক)।' : 'Strict government Hajj/Umrah license checking blocks unauthorized brokers. Agency numbers & rates are strictly hidden from public.' }}
                 </p>
                 <span style="font-size: 0.78rem; font-weight: 700; color: var(--primary); display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1rem;">
-                    <i class="fa-solid fa-circle-check"></i> {{ $lang == 'bn' ? 'হাব লাইসেন্স ভেরিফাইড' : 'HAAB Verified' }}
+                    <i class="fa-solid fa-circle-check"></i> {{ $lang == 'bn' ? 'সরকারি লাইসেন্স ভেরিফাইড (হাব ঐচ্ছিক)' : 'Govt License Verified' }}
                 </span>
             </div>
 
@@ -695,7 +695,7 @@
                 </summary>
                 <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed var(--border-color); color: var(--text-muted); font-size: 0.93rem; line-height: 1.6;">
                     <p>
-                        {{ $lang == 'bn' ? 'না, এটি সম্পূর্ণভাবে শুধুমাত্র বাংলাদেশ সরকারের লাইসেন্সপ্রাপ্ত ও হাব (HAAB) নিবন্ধিত হজ ও ওমরাহ এজেন্সিগুলোর B2B শেয়ারিংয়ের জন্য। সাধারণ পাবলিক বা আন-ভেরিফাইড কোনো কাস্টমার এখানে মোবাইল নম্বর, হোয়াটসঅ্যাপ ডিরেক্ট ডায়াল বা ডিল প্রাইসিং দেখতে পারে না।' : 'No, this portal is strictly for licensed Hajj & Umrah agency owners to collaborate B2B. Phone numbers and deal pricing are locked from public visitors.' }}
+                        {{ $lang == 'bn' ? 'না, এটি সম্পূর্ণভাবে শুধুমাত্র বাংলাদেশ সরকারের ধর্ম বিষয়ক মন্ত্রণালয় অনুমোদিত হজ্ব ও ওমরাহ লাইসেন্সধারী এজেন্সিগুলোর B2B শেয়ারিংয়ের জন্য (হাব ঐচ্ছিক)। সাধারণ পাবলিক বা আন-ভেরিফাইড কোনো কাস্টমার এখানে মোবাইল নম্বর, হোয়াটসঅ্যাপ ডিরেক্ট ডায়াল বা ডিল প্রাইসিং দেখতে পারে না।' : 'No, this portal is strictly for licensed Hajj & Umrah agency owners to collaborate B2B. Phone numbers and deal pricing are locked from public visitors.' }}
                     </p>
                 </div>
             </details>
@@ -759,7 +759,7 @@
                 </summary>
                 <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed var(--border-color); color: var(--text-muted); font-size: 0.93rem; line-height: 1.6;">
                     <p>
-                        {{ $lang == 'bn' ? 'নতুন সাইন-আপের সময় হাব (HAAB) নম্বর, ট্রেড লাইসেন্স ও মালিকের NID প্রদান করলে সুপার এডমিন দ্রুত তথ্য ভেরিফাই করে ৩০ মিনিট থেকে সর্বোচ্চ ২ ঘণ্টার মধ্যে অ্যাকাউন্ট অ্যাপ্রুভ করেন।' : 'Super Admin verifies your HAAB license and trade license number usually within 30 minutes to 2 hours.' }}
+                        {{ $lang == 'bn' ? 'নতুন সাইন-আপের সময় সরকারি হজ্ব/ওমরাহ লাইসেন্স নম্বর, ট্রেড লাইসেন্স ও মালিকের এনআইডি প্রদান করলে সুপার এডমিন দ্রুত তথ্য ভেরিফাই করে ৩০ মিনিট থেকে সর্বোচ্চ ২ ঘণ্টার মধ্যে অ্যাকাউন্ট অ্যাপ্রুভ করেন (হাব নম্বর ঐচ্ছিক)।' : 'Super Admin verifies your Government Hajj/Umrah license and trade license usually within 30 minutes to 2 hours.' }}
                     </p>
                 </div>
             </details>

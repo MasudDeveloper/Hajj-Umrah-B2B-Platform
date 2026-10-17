@@ -30,4 +30,20 @@ class SiteSetting extends Model
             ['value' => $value]
         );
     }
+
+    /**
+     * Check if platform is running in 100% Free Mode
+     */
+    public static function isFreeMode(): bool
+    {
+        return self::get('platform_monetization_mode', 'free') === 'free';
+    }
+
+    /**
+     * Check if platform is running in Paid VIP Subscription Mode
+     */
+    public static function isPaidMode(): bool
+    {
+        return self::get('platform_monetization_mode', 'free') === 'paid';
+    }
 }

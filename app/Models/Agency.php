@@ -35,9 +35,14 @@ class Agency extends Authenticatable
         'is_admin',
         'is_verified',
         'verification_status',
+        'rejection_reason',
         'verification_submitted_at',
         'subscription_plan',
         'rating',
+        'logo',
+        'bio',
+        'website',
+        'atab_no',
     ];
 
     protected $hidden = [
@@ -64,7 +69,32 @@ class Agency extends Authenticatable
 
     public function reviewsReceived()
     {
-        return $this->hasMany(Review::class, 'target_agency_id');
+        return $this->hasMany(Review::class, 'target_agency_id')->latest();
+    }
+
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'reviewer_agency_id')->latest();
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        $avg = $this->reviewsReceived()->avg('rating');
+        return $avg ? round((float)$avg, 1) : (float)($this->rating ?: 5.0);
+    }
+
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviewsReceived()->count();
+    }
+
+    public function recalculateRating(): void
+    {
+        $avg = $this->reviewsReceived()->avg('rating');
+        if ($avg) {
+            $this->rating = round((float)$avg, 1);
+            $this->save();
+        }
     }
 
     public static function formatLicensePrefixed(?string $number, string $prefix): ?string
@@ -110,5 +140,10 @@ class Agency extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin === true;
+    }
+
+    public function isVip(): bool
+    {
+        return in_array($this->subscription_plan, ['monthly_b2b', 'yearly_b2b', 'vip', 'premium']);
     }
 }

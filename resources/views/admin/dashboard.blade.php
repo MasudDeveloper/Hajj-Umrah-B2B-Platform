@@ -1,274 +1,388 @@
 @extends('layouts.admin')
 
-@section('title', 'Super Admin Overview & Analytics Dashboard')
+@section('title', 'Super Admin Governance Dashboard & Real-Time Analytics')
 
 @section('content')
     <!-- Top Header Banner -->
-    <div style="background: white; border-radius: 16px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="background: white; border-radius: 18px; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
             <div>
-                <span class="badge" style="background: #FCE7F3; color: #831843; margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-pie me-1"></i> Governance Analytics</span>
-                <h1 class="font-heading" style="font-size: 2rem; color: var(--admin-dark);">Super Admin Control Dashboard</h1>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Real-time platform metrics, agency verification breakdowns, category share analytics, and recent network activity.</p>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <span class="badge" style="background: #FCE7F3; color: #831843; font-weight: 800;">
+                        <i class="fa-solid fa-chart-pie me-1"></i> GOVERNANCE & ANALYTICS
+                    </span>
+                    <span class="badge" style="background: {{ \App\Models\SiteSetting::isFreeMode() ? '#D1FAE5' : '#FEF3C7' }}; color: {{ \App\Models\SiteSetting::isFreeMode() ? '#065F46' : '#92400E' }}; font-weight: 800;">
+                        {{ \App\Models\SiteSetting::isFreeMode() ? '🟢 100% FREE MODE ACTIVE' : '🟡 PAID SUBSCRIPTION ACTIVE' }}
+                    </span>
+                </div>
+                <h1 class="font-heading" style="font-size: 2.1rem; color: var(--admin-dark); margin: 0; line-height: 1.2;">
+                    Super Admin Control Center
+                </h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">
+                    বাংলাদেশ হজ ও ওমরাহ B2B নেটওয়ার্কের রিয়েল-টাইম অডিট, লাইসেন্স ভেরিফিকেশন, ক্যাটাগরি শেয়ার এবং সার্বিক নিয়ন্ত্রণ ড্যাশবোর্ড।
+                </p>
             </div>
             
-            <div style="display: flex; gap: 0.75rem;">
-                <a href="{{ route('admin.verifications') }}" class="btn-gold" style="font-size: 0.9rem; padding: 0.65rem 1.25rem;">
-                    <i class="fa-solid fa-user-clock me-1"></i> Verification Queue ({{ $totalPendingCount }})
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button type="button" onclick="document.getElementById('platformModeModal').style.display='flex'" class="btn-primary" style="background: #0F172A; font-size: 0.88rem; padding: 0.65rem 1.25rem;">
+                    <i class="fa-solid fa-sliders me-1"></i> মোড পরিবর্তন করুন
+                </button>
+                <a href="{{ route('admin.verifications') }}" class="btn-gold" style="font-size: 0.88rem; padding: 0.65rem 1.25rem;">
+                    <i class="fa-solid fa-user-clock me-1"></i> ভেরিফিকেশন কিউ ({{ $totalPendingCount }})
                 </a>
-                <a href="{{ route('admin.agencies') }}" class="btn-primary" style="background: #0284C7; font-size: 0.9rem; padding: 0.65rem 1.25rem;">
-                    <i class="fa-solid fa-building me-1"></i> Agency Directory
+                <a href="{{ route('admin.agencies') }}" class="btn-primary" style="background: #0284C7; font-size: 0.88rem; padding: 0.65rem 1.25rem;">
+                    <i class="fa-solid fa-building me-1"></i> এজেন্সি ডিরেক্টরি
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Admin Site Announcement Marquee Control Box -->
-    <div style="background: white; border-radius: 16px; padding: 1.5rem 2rem; border: 1px solid #FCD34D; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.12); margin-bottom: 2rem;">
-        <form action="{{ route('admin.notice.ticker') }}" method="POST">
-            @csrf
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                <h3 style="font-size: 1.15rem; color: #78350F; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fa-solid fa-bullhorn text-amber-600"></i> Homepage Notice Ticker Manager (জরুরী নোটিশ বার)
-                </h3>
-                <label style="display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; font-weight: 700; color: #92400E; cursor: pointer;">
-                    <input type="checkbox" name="notice_ticker_active" value="1" {{ \App\Models\SiteSetting::get('notice_ticker_active', '1') === '1' ? 'checked' : '' }} style="width: 18px; height: 18px; accent-color: #D97706;">
-                    Enable Scrolling Notice Bar
-                </label>
+    <!-- Quick Control Bar: Notice Ticker & Platform Monetization Mode -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <!-- 1. Notice Ticker Manager -->
+        <div style="background: white; border-radius: 16px; padding: 1.5rem 1.75rem; border: 1px solid #FCD34D; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);">
+            <form action="{{ route('admin.notice.ticker') }}" method="POST">
+                @csrf
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <h3 style="font-size: 1.1rem; color: #78350F; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <i class="fa-solid fa-bullhorn text-amber-600"></i> হোমপেজ জরুরী নোটিশ বার (Notice Ticker)
+                    </h3>
+                    <label style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 700; color: #92400E; cursor: pointer;">
+                        <input type="checkbox" name="notice_ticker_active" value="1" {{ \App\Models\SiteSetting::get('notice_ticker_active', '1') === '1' ? 'checked' : '' }} style="width: 17px; height: 17px; accent-color: #D97706;">
+                        স্ক্রলিং নোটিশ চালু রাখুন
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <input type="text" name="notice_ticker_text" value="{{ \App\Models\SiteSetting::get('notice_ticker_text', '📢 জরুরী বিজ্ঞপ্তি: হজ ও ওমরাহ ২০২৬ নীতিমালার আওতায় সকল এজেন্সিকে ট্রেড লাইসেন্স ও হাব সনদ আপডেট করার বিনীত অনুরোধ করা হচ্ছে।') }}" placeholder="বিজ্ঞপ্তি লিখুন..." style="flex: 1; padding: 0.65rem 1rem; border: 1px solid #FDE68A; border-radius: 8px; font-size: 0.9rem; background: #FFFDF5; outline: none;">
+                    <button type="submit" class="btn-gold" style="padding: 0.65rem 1.25rem; font-size: 0.88rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> আপডেট করুন
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 2. Platform Mode Card -->
+        <div style="background: white; border-radius: 16px; padding: 1.5rem 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">PLATFORM ACCESS STATE</span>
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-top: 0.25rem;">
+                    <h3 style="font-size: 1.2rem; font-weight: 800; color: {{ \App\Models\SiteSetting::isFreeMode() ? '#059669' : '#D97706' }}; margin: 0;">
+                        {{ \App\Models\SiteSetting::isFreeMode() ? '🟢 100% Free Mode' : '🟡 Paid VIP Mode' }}
+                    </h3>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.35rem 0 0 0;">
+                    {{ \App\Models\SiteSetting::isFreeMode() ? 'সকল এজেন্সির জন্য পোস্ট ও যোগাযোগ সম্পূর্ণ ফ্রি।' : 'এজেন্সিদের সাবস্ক্রিপশন ফি দিয়ে ব্যবহার করতে হবে।' }}
+                </p>
             </div>
 
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <input type="text" name="notice_ticker_text" value="{{ \App\Models\SiteSetting::get('notice_ticker_text', '📢 জরুরী বিজ্ঞপ্তি: হজ ও ওমরাহ ২০২৬ নীতিমালার আওতায় সকল এজেন্সিকে ট্রেড লাইসেন্স ও হাব সনদ আপডেট করার বিনীত অনুরোধ করা হচ্ছে।') }}" placeholder="Enter announcement text to scroll on top header..." style="flex: 1; padding: 0.75rem 1rem; border: 1px solid #FDE68A; border-radius: 8px; font-size: 0.92rem; background: #FFFDF5;">
-                <button type="submit" class="btn-gold" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; flex-shrink: 0;">
-                    <i class="fa-solid fa-floppy-disk me-1"></i> Update Notice Ticker
+            <div style="margin-top: 1rem;">
+                <button type="button" onclick="document.getElementById('platformModeModal').style.display='flex'" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.82rem; padding: 0.5rem;">
+                    <i class="fa-solid fa-rotate me-1"></i> মোড পরিবর্তন করুন
                 </button>
             </div>
-        </form>
-    </div>
-
-    <!-- KPI Metric Cards -->
-    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 2.5rem;">
-        <div style="background: white; padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
-            <div>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Total Registered</span>
-                <strong style="font-size: 1.85rem; color: var(--admin-dark);">{{ $totalAgencies }}</strong>
-            </div>
-            <div style="width: 46px; height: 46px; background: #F1F5F9; color: var(--admin-dark); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
-                <i class="fa-solid fa-building"></i>
-            </div>
-        </div>
-
-        <div style="background: white; padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
-            <div>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Pending Review</span>
-                <strong style="font-size: 1.85rem; color: #D97706;">{{ $totalPendingCount }}</strong>
-            </div>
-            <div style="width: 46px; height: 46px; background: #FEF3C7; color: #D97706; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-            </div>
-        </div>
-
-        <div style="background: white; padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
-            <div>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Approved Verified</span>
-                <strong style="font-size: 1.85rem; color: #047857;">{{ $totalVerifiedCount }}</strong>
-            </div>
-            <div style="width: 46px; height: 46px; background: #ECFDF5; color: #047857; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
-                <i class="fa-solid fa-shield-check"></i>
-            </div>
-        </div>
-
-        <div style="background: white; padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
-            <div>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Active B2B Posts</span>
-                <strong style="font-size: 1.85rem; color: #0284C7;">{{ $totalPostsCount }}</strong>
-            </div>
-            <div style="width: 46px; height: 46px; background: #E0F2FE; color: #0284C7; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
-                <i class="fa-solid fa-layer-group"></i>
-            </div>
-        </div>
-
-        <div style="background: white; padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm);">
-            <div>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">Total B2B Leads</span>
-                <strong style="font-size: 1.85rem; color: #7C3AED;">{{ $totalInquiriesCount }}</strong>
-            </div>
-            <div style="width: 46px; height: 46px; background: #F3E8FF; color: #7C3AED; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
-                <i class="fa-solid fa-handshake"></i>
-            </div>
         </div>
     </div>
 
-    <!-- Visual Analytics Distribution Charts Grid -->
+    <!-- 6 Executive KPI Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-bottom: 2.25rem;" class="admin-kpi-grid">
+        <!-- 1 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">TOTAL AGENCIES</span>
+                <div style="width: 36px; height: 36px; background: #F1F5F9; color: var(--admin-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.85rem; color: var(--admin-dark); display: block; line-height: 1.1;">{{ $totalAgencies }}</strong>
+            <span style="font-size: 0.72rem; color: #059669; font-weight: 600;"><i class="fa-solid fa-users"></i> Registered</span>
+        </div>
+
+        <!-- 2 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: #B45309; font-weight: 700;">PENDING QUEUE</span>
+                <div style="width: 36px; height: 36px; background: #FEF3C7; color: #D97706; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-user-clock"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.85rem; color: #D97706; display: block; line-height: 1.1;">{{ $totalPendingCount }}</strong>
+            <span style="font-size: 0.72rem; color: #B45309; font-weight: 600;">Needs Verification</span>
+        </div>
+
+        <!-- 3 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: #065F46; font-weight: 700;">VERIFIED MEMBERS</span>
+                <div style="width: 36px; height: 36px; background: #ECFDF5; color: #047857; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.85rem; color: #047857; display: block; line-height: 1.1;">{{ $totalVerifiedCount }}</strong>
+            <span style="font-size: 0.72rem; color: #059669; font-weight: 600;">Gov & HAAB Verified</span>
+        </div>
+
+        <!-- 4 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: #075985; font-weight: 700;">ACTIVE B2B POSTS</span>
+                <div style="width: 36px; height: 36px; background: #E0F2FE; color: #0284C7; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.85rem; color: #0284C7; display: block; line-height: 1.1;">{{ $totalPostsCount }}</strong>
+            <span style="font-size: 0.72rem; color: #0284C7; font-weight: 600;">Live Marketplace</span>
+        </div>
+
+        <!-- 5 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: #5B21B6; font-weight: 700;">COMPLETED DEALS</span>
+                <div style="width: 36px; height: 36px; background: #F3E8FF; color: #7C3AED; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.85rem; color: #7C3AED; display: block; line-height: 1.1;">{{ $totalCompletedDeals }}</strong>
+            <span style="font-size: 0.72rem; color: #7C3AED; font-weight: 600;">Signed Contracts</span>
+        </div>
+
+        <!-- 6 -->
+        <div style="background: white; padding: 1.25rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.78rem; color: #1E3A8A; font-weight: 700;">TOTAL REVENUE</span>
+                <div style="width: 36px; height: 36px; background: #EEF2FF; color: #4F46E5; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+            </div>
+            <strong style="font-size: 1.55rem; color: #4F46E5; display: block; line-height: 1.2;">৳{{ number_format($totalRevenue) }}</strong>
+            <span style="font-size: 0.72rem; color: #4F46E5; font-weight: 600;">Approved Subscriptions</span>
+        </div>
+    </div>
+
+    <!-- Chart.js Advanced Visual Analytics Grid -->
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
         
-        <!-- Chart 1: Verification Status Distribution -->
-        <div style="background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fa-solid fa-shield-halved text-emerald-600 me-2"></i> Verification Ratio</span>
-                <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Status Shares</span>
+        <!-- Chart 1: Verification Status Doughnut -->
+        <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fa-solid fa-shield-halved text-emerald-600 me-2"></i> ভেরিফিকেশন অনুপাত</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Status Ratio</span>
             </h3>
-
-            @php
-                $totalAg = max($totalAgencies, 1);
-                $approvedPct = round(($verificationChart['approved'] / $totalAg) * 100);
-                $pendingPct = round(($verificationChart['pending'] / $totalAg) * 100);
-                $rejectedPct = round(($verificationChart['rejected'] / $totalAg) * 100);
-            @endphp
-
-            <!-- Progress Bar Visualization -->
-            <div style="height: 14px; background: #E2E8F0; border-radius: 10px; overflow: hidden; display: flex; margin-bottom: 1.5rem;">
-                <div style="width: {{ $approvedPct }}%; background: #059669;" title="Approved: {{ $verificationChart['approved'] }}"></div>
-                <div style="width: {{ $pendingPct }}%; background: #D97706;" title="Pending: {{ $verificationChart['pending'] }}"></div>
-                <div style="width: {{ $rejectedPct }}%; background: #DC2626;" title="Rejected: {{ $verificationChart['rejected'] }}"></div>
+            <div style="position: relative; height: 210px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="verificationDoughnutChart"></canvas>
             </div>
-
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #059669;"></span> Approved Agencies</span>
-                    <strong style="color: #059669;">{{ $verificationChart['approved'] }} ({{ $approvedPct }}%)</strong>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #D97706;"></span> Pending Queue</span>
-                    <strong style="color: #D97706;">{{ $verificationChart['pending'] }} ({{ $pendingPct }}%)</strong>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #DC2626;"></span> Rejected Applications</span>
-                    <strong style="color: #DC2626;">{{ $verificationChart['rejected'] }} ({{ $rejectedPct }}%)</strong>
-                </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.8rem; border-top: 1px solid #F1F5F9; padding-top: 0.75rem;">
+                <span style="color: #059669; font-weight: 700;">● Approved: {{ $verificationChart['approved'] }}</span>
+                <span style="color: #D97706; font-weight: 700;">● Pending: {{ $verificationChart['pending'] }}</span>
+                <span style="color: #DC2626; font-weight: 700;">● Rejected: {{ $verificationChart['rejected'] }}</span>
             </div>
         </div>
 
-        <!-- Chart 2: Category Breakdown -->
-        <div style="background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fa-solid fa-layer-group text-blue-600 me-2"></i> B2B Category Share</span>
-                <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Post Shares</span>
+        <!-- Chart 2: Post Category Distribution -->
+        <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fa-solid fa-chart-pie text-indigo-600 me-2"></i> ক্যাটাগরি শেয়ারিং</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Inventory Share</span>
             </h3>
-
-            @php
-                $totalP = max($totalPostsCount, 1);
-                $groupPct = round(($categoryChart['group_seats'] / $totalP) * 100);
-                $ticketPct = round(($categoryChart['ticket_only'] / $totalP) * 100);
-                $hotelPct = round(($categoryChart['hotel_share'] / $totalP) * 100);
-            @endphp
-
-            <div style="height: 14px; background: #E2E8F0; border-radius: 10px; overflow: hidden; display: flex; margin-bottom: 1.5rem;">
-                <div style="width: {{ $groupPct }}%; background: #044E35;" title="Group Seats"></div>
-                <div style="width: {{ $ticketPct }}%; background: #0284C7;" title="Ticket Only"></div>
-                <div style="width: {{ $hotelPct }}%; background: #D4AF37;" title="Hotel Share"></div>
+            <div style="position: relative; height: 210px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="categoryPieChart"></canvas>
             </div>
-
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #044E35;"></span> Group Seats</span>
-                    <strong style="color: #044E35;">{{ $categoryChart['group_seats'] }} ({{ $groupPct }}%)</strong>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #0284C7;"></span> Flight Tickets</span>
-                    <strong style="color: #0284C7;">{{ $categoryChart['ticket_only'] }} ({{ $ticketPct }}%)</strong>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.5rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #D4AF37;"></span> Hotel Sharing</span>
-                    <strong style="color: #B45309;">{{ $categoryChart['hotel_share'] }} ({{ $hotelPct }}%)</strong>
-                </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.8rem; border-top: 1px solid #F1F5F9; padding-top: 0.75rem;">
+                <span style="color: #4F46E5; font-weight: 700;">● Seats: {{ $categoryChart['group_seats'] }}</span>
+                <span style="color: #0284C7; font-weight: 700;">● Tickets: {{ $categoryChart['ticket_only'] }}</span>
+                <span style="color: #D97706; font-weight: 700;">● Hotels: {{ $categoryChart['hotel_share'] }}</span>
             </div>
         </div>
 
-        <!-- Chart 3: City Hub Distribution -->
-        <div style="background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fa-solid fa-city text-amber-600 me-2"></i> Regional City Hubs</span>
-                <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Agency Locations</span>
+        <!-- Chart 3: City Hub Bar Distribution -->
+        <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fa-solid fa-location-dot text-red-500 me-2"></i> ডিপার্চার হাব ডিস্ট্রিবিউশন</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Hubs</span>
             </h3>
-
-            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.88rem;">
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                        <span>Dhaka Hub</span>
-                        <strong>{{ $cityChart['Dhaka'] }} Agencies</strong>
-                    </div>
-                    <div style="height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
-                        <div style="width: {{ round(($cityChart['Dhaka'] / $totalAg) * 100) }}%; height: 100%; background: #047857;"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                        <span>Chittagong Hub</span>
-                        <strong>{{ $cityChart['Chittagong'] }} Agencies</strong>
-                    </div>
-                    <div style="height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
-                        <div style="width: {{ round(($cityChart['Chittagong'] / $totalAg) * 100) }}%; height: 100%; background: #0284C7;"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                        <span>Sylhet Hub</span>
-                        <strong>{{ $cityChart['Sylhet'] }} Agencies</strong>
-                    </div>
-                    <div style="height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
-                        <div style="width: {{ round(($cityChart['Sylhet'] / $totalAg) * 100) }}%; height: 100%; background: #D97706;"></div>
-                    </div>
-                </div>
+            <div style="position: relative; height: 210px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="cityBarChart"></canvas>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.8rem; border-top: 1px solid #F1F5F9; padding-top: 0.75rem;">
+                <span style="color: #047857; font-weight: 700;">● Dhaka: {{ $cityChart['Dhaka'] }}</span>
+                <span style="color: #0284C7; font-weight: 700;">● Ctg: {{ $cityChart['Chittagong'] }}</span>
+                <span style="color: #7C3AED; font-weight: 700;">● Sylhet: {{ $cityChart['Sylhet'] }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Grids: Recent Registrations & Marketplace Feed -->
+    <!-- Recent Registrations & Active Posts Split Tables -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-        
-        <!-- Widget 1: Recent Agency Registrations -->
-        <div style="background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <!-- Recent Agency Registrations -->
+        <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark);">
-                    <i class="fa-solid fa-user-plus text-emerald-600 me-2"></i> Recent Agency Registrations
+                <h3 class="font-heading" style="font-size: 1.2rem; color: var(--admin-dark); margin: 0;">
+                    <i class="fa-solid fa-building me-2 text-emerald-600"></i> সাম্প্রতিক এজেন্সিসমূহ
                 </h3>
-                <a href="{{ route('admin.agencies') }}" style="font-size: 0.8rem; color: var(--admin-primary); font-weight: 700; text-decoration: none;">View All Directory &rarr;</a>
+                <a href="{{ route('admin.agencies') }}" style="font-size: 0.82rem; color: var(--admin-primary); font-weight: 700; text-decoration: none;">
+                    সবগুলো দেখুন &rarr;
+                </a>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-                @foreach($recentRegistrations as $reg)
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #F8FAFC; border-radius: 10px; border: 1px solid var(--border-color);">
-                        <div>
-                            <strong style="display: block; font-size: 0.9rem; color: var(--admin-dark);">{{ $reg->agency_name }}</strong>
-                            <span style="font-size: 0.78rem; color: var(--text-muted);">{{ $reg->formatted_license_display }} | {{ $reg->city }}</span>
-                        </div>
-                        <span class="badge" style="background: {{ $reg->isApproved() ? '#D1FAE5' : '#FEF3C7' }}; color: {{ $reg->isApproved() ? '#065F46' : '#92400E' }}; font-size: 0.75rem;">
-                            {{ ucfirst($reg->verification_status) }}
-                        </span>
-                    </div>
-                @endforeach
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #F1F5F9; color: var(--text-muted); text-align: left;">
+                            <th style="padding: 0.65rem 0.5rem;">Agency</th>
+                            <th style="padding: 0.65rem 0.5rem;">License</th>
+                            <th style="padding: 0.65rem 0.5rem;">Status</th>
+                            <th style="padding: 0.65rem 0.5rem; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentRegistrations as $ag)
+                            <tr style="border-bottom: 1px solid #F8FAFC;">
+                                <td style="padding: 0.75rem 0.5rem;">
+                                    <strong style="color: var(--admin-dark); display: block;">{{ $ag->agency_name }}</strong>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">{{ $ag->city }}</span>
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem; font-size: 0.82rem; color: #475569;">
+                                    {{ $ag->license_no }}
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem;">
+                                    <span class="badge" style="background: {{ $ag->verification_status === 'approved' ? '#D1FAE5' : ($ag->verification_status === 'pending' ? '#FEF3C7' : '#FEE2E2') }}; color: {{ $ag->verification_status === 'approved' ? '#065F46' : ($ag->verification_status === 'pending' ? '#92400E' : '#991B1B') }}; font-size: 0.7rem;">
+                                        {{ strtoupper($ag->verification_status) }}
+                                    </span>
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                                    <a href="{{ route('agencies.show', $ag->id) }}" target="_blank" class="btn-primary" style="padding: 0.35rem 0.7rem; font-size: 0.75rem; background: #0284C7;">
+                                        প্রোফাইল
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Widget 2: Recent B2B Posts Feed -->
-        <div style="background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <!-- Recent B2B Posts -->
+        <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark);">
-                    <i class="fa-solid fa-list-check text-blue-600 me-2"></i> Recent B2B Listings Feed
+                <h3 class="font-heading" style="font-size: 1.2rem; color: var(--admin-dark); margin: 0;">
+                    <i class="fa-solid fa-ticket me-2 text-indigo-600"></i> সাম্প্রতিক মার্কেটপ্লেস পোস্ট
                 </h3>
-                <a href="{{ route('posts.index') }}" target="_blank" style="font-size: 0.8rem; color: var(--admin-primary); font-weight: 700; text-decoration: none;">Explore Live Site &rarr;</a>
+                <a href="{{ route('posts.index') }}" target="_blank" style="font-size: 0.82rem; color: var(--admin-primary); font-weight: 700; text-decoration: none;">
+                    মার্কেটপ্লেস খুলুন &rarr;
+                </a>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-                @foreach($recentPosts as $p)
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #F8FAFC; border-radius: 10px; border: 1px solid var(--border-color);">
-                        <div>
-                            <strong style="display: block; font-size: 0.88rem; color: var(--admin-dark);">{{ $p->title }}</strong>
-                            <span style="font-size: 0.78rem; color: var(--text-muted);">By {{ $p->agency->agency_name }} • {{ $p->created_at->diffForHumans() }}</span>
-                        </div>
-                        <span class="badge" style="background: #E0F2FE; color: #0369A1; font-size: 0.75rem;">
-                            {{ strtoupper(str_replace('_', ' ', $p->post_category)) }}
-                        </span>
-                    </div>
-                @endforeach
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #F1F5F9; color: var(--text-muted); text-align: left;">
+                            <th style="padding: 0.65rem 0.5rem;">Title</th>
+                            <th style="padding: 0.65rem 0.5rem;">Seats / Rate</th>
+                            <th style="padding: 0.65rem 0.5rem;">Posting Agency</th>
+                            <th style="padding: 0.65rem 0.5rem; text-align: right;">View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentPosts as $p)
+                            <tr style="border-bottom: 1px solid #F8FAFC;">
+                                <td style="padding: 0.75rem 0.5rem;">
+                                    <strong style="color: var(--admin-dark); display: block; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $p->title }}
+                                    </strong>
+                                    <span style="font-size: 0.72rem; color: #059669; font-weight: 700;">{{ strtoupper($p->hajj_or_umrah ?? 'UMRAH') }}</span>
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem; font-size: 0.82rem;">
+                                    <strong style="color: #DC2626;">{{ $p->available_seats }} Pax</strong><br>
+                                    <span style="color: var(--text-muted);">৳{{ number_format($p->price_per_seat) }}</span>
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem; font-size: 0.82rem; color: #475569;">
+                                    {{ $p->agency->agency_name ?? 'N/A' }}
+                                </td>
+                                <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                                    <a href="{{ route('posts.show', $p->id) }}" target="_blank" class="btn-primary" style="padding: 0.35rem 0.7rem; font-size: 0.75rem; background: #044E35;">
+                                        দেখুন
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: Verification Doughnut
+            const ctxVerif = document.getElementById('verificationDoughnutChart').getContext('2d');
+            new Chart(ctxVerif, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [{{ $verificationChart['approved'] }}, {{ $verificationChart['pending'] }}, {{ $verificationChart['rejected'] }}],
+                        backgroundColor: ['#059669', '#F59E0B', '#DC2626'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '72%'
+                }
+            });
+
+            // Chart 2: Category Pie
+            const ctxCat = document.getElementById('categoryPieChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Group Seats', 'Ticket Only', 'Hotel Share'],
+                    datasets: [{
+                        data: [{{ $categoryChart['group_seats'] }}, {{ $categoryChart['ticket_only'] }}, {{ $categoryChart['hotel_share'] }}],
+                        backgroundColor: ['#4F46E5', '#0284C7', '#D97706'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '72%'
+                }
+            });
+
+            // Chart 3: City Hub Bar
+            const ctxCity = document.getElementById('cityBarChart').getContext('2d');
+            new Chart(ctxCity, {
+                type: 'bar',
+                data: {
+                    labels: ['Dhaka', 'Ctg', 'Sylhet', 'Others'],
+                    datasets: [{
+                        label: 'Agencies',
+                        data: [{{ $cityChart['Dhaka'] }}, {{ $cityChart['Chittagong'] }}, {{ $cityChart['Sylhet'] }}, {{ $cityChart['Others'] }}],
+                        backgroundColor: '#044E35',
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

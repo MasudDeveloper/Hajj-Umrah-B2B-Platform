@@ -66,11 +66,11 @@
 
             <!-- Grid 1: Category & Requirement Type -->
             <div class="form-grid-2" style="margin-bottom: 1.5rem;">
-                <div>
+                <div id="main_category_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মূল ক্যাটাগরি *' : 'Main Category *' }}
                     </label>
-                    <select name="post_category" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                    <select name="post_category" id="post_category" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                         <option value="group_seats">Category A: Group Seats (গ্রুপ সিট)</option>
                         <option value="ticket_only">Category B: Ticket / Visa Only (টিকিট/ভিসা)</option>
                         <option value="hotel_share">Category C: Hotel Room Sharing (হোটেল রুম শেয়ারিং)</option>
@@ -81,20 +81,20 @@
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'রিকোয়ারমেন্ট টাইপ *' : 'Requirement Type *' }}
                     </label>
-                    <select name="requirement_type" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                    <select name="requirement_type" id="requirement_type" onchange="toggleRequirementType()" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                         <option value="have_extra_seats">Seats Available (আমার কাছে অতিরিক্ত সিট ফাঁকা আছে)</option>
                         <option value="need_seats">Seats Required (আমার গ্রুপ সিট প্রয়োজন / শর্টেজ)</option>
-                        <option value="ticket_sale">Surplus Ticket Sale (টিকিট বিক্রি)</option>
-                        <option value="hotel_share">Hotel Room Sharing (হোটেল শেয়ার)</option>
+                        <option value="ticket_sale" class="umrah-only">Surplus Ticket Sale (টিকিট বিক্রি)</option>
+                        <option value="hotel_share" class="umrah-only">Hotel Room Sharing (হোটেল শেয়ার)</option>
                     </select>
                 </div>
             </div>
             <div class="form-grid-3" style="margin-bottom: 1.5rem;">
-                <div>
+                <div id="total_group_size_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'মোট গ্রুপের সাইজ *' : 'Total Group Block Size *' }}
                     </label>
-                    <input type="number" name="total_group_size" value="35" min="1" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                    <input type="number" name="total_group_size" id="total_group_size" value="35" min="1" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                 </div>
 
                 <div>
@@ -104,11 +104,11 @@
                     <input type="number" name="available_seats" value="5" min="1" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                 </div>
 
-                <div>
+                <div id="departure_city_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'ডিপার্চার হাব (ফ্লাইট শুরু) *' : 'Departure Hub *' }}
                     </label>
-                    <select name="departure_city" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
+                    <select name="departure_city" id="departure_city" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
                         <option value="Dhaka">Dhaka (ঢাকা)</option>
                         <option value="Chittagong">Chittagong (চট্টগ্রাম)</option>
                         <option value="Sylhet">Sylhet (সিলেট)</option>
@@ -152,33 +152,33 @@
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'এয়ারলাইন কোম্পানি *' : 'Airline Company *' }}
                     </label>
-                    <select name="airline" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                    <select name="airline" id="airline" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
                         <option value="Saudia (Saudi Arabian Airlines)">Saudia (Saudi Arabian Airlines)</option>
                         <option value="Biman Bangladesh Airlines">Biman Bangladesh Airlines</option>
-                        <option value="Oman Air">Oman Air</option>
                         <option value="Flynas">Flynas</option>
-                        <option value="Qatar Airways">Qatar Airways</option>
-                        <option value="Emirates">Emirates</option>
-                        <option value="Kuwait Airways">Kuwait Airways</option>
-                        <option value="Gulf Air">Gulf Air</option>
-                        <option value="Air Arabia">Air Arabia</option>
-                        <option value="US-Bangla Airlines">US-Bangla Airlines</option>
-                        <option value="Jazeera Airways">Jazeera Airways</option>
-                        <option value="EgyptAir">EgyptAir</option>
+                        <option value="Oman Air" class="umrah-only">Oman Air</option>
+                        <option value="Qatar Airways" class="umrah-only">Qatar Airways</option>
+                        <option value="Emirates" class="umrah-only">Emirates</option>
+                        <option value="Kuwait Airways" class="umrah-only">Kuwait Airways</option>
+                        <option value="Gulf Air" class="umrah-only">Gulf Air</option>
+                        <option value="Air Arabia" class="umrah-only">Air Arabia</option>
+                        <option value="US-Bangla Airlines" class="umrah-only">US-Bangla Airlines</option>
+                        <option value="Jazeera Airways" class="umrah-only">Jazeera Airways</option>
+                        <option value="EgyptAir" class="umrah-only">EgyptAir</option>
                     </select>
                 </div>
 
-                <div>
+                <div id="flight_transit_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'ফ্লাইট টাইপ *' : 'Flight Type *' }}
                     </label>
-                    <select name="flight_transit" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                    <select name="flight_transit" id="flight_transit" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
                         <option value="direct">Direct Flight (ডিরেক্ট ফ্লাইট)</option>
                         <option value="connecting">Connecting Flight (ট্রানজিট ফ্লাইট)</option>
                     </select>
                 </div>
 
-                <div>
+                <div id="transit_duration_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
                         {{ $lang == 'bn' ? 'ট্রানজিটের সময় / ডিউরেশন' : 'Transit Duration' }}
                     </label>
@@ -204,9 +204,11 @@
                         {{ $lang == 'bn' ? 'রুম ক্যাটাগরি *' : 'Room Type *' }}
                     </label>
                     <select name="room_type" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
-                        <option value="quad">Quad Room (৪ জন শেয়ারিং)</option>
-                        <option value="triple">Triple Room (৩ জন শেয়ারিং)</option>
-                        <option value="double">Double Room (২ জন শেয়ারিং)</option>
+                        <option value="double">Double Room (২ জন)</option>
+                        <option value="triple">Triple Room (৩ জন)</option>
+                        <option value="quad">Quad Room (৪ জন)</option>
+                        <option value="quintuple">5 Person Room (৫ জন)</option>
+                        <option value="sextuple">6 Person Room (৬ জন)</option>
                     </select>
                 </div>
 
@@ -223,10 +225,10 @@
                 <h4 style="font-size: 1rem; color: #92400E; margin-bottom: 0.75rem; border-bottom: 1px solid #FDE68A; padding-bottom: 0.35rem;">
                     <i class="fa-solid fa-kaaba me-1"></i> {{ $lang == 'bn' ? 'হজ সংক্রান্ত বিশেষ ফিল্ডসমূহ' : 'Hajj Specific Requirements' }}
                 </h4>
-                <div class="form-grid-2">
+                <div class="form-grid-3" style="margin-bottom: 1.25rem;">
                     <div>
                         <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            {{ $lang == 'bn' ? 'মিনার খيمة (Tent Category)' : 'Mina Tent Category' }}
+                            {{ $lang == 'bn' ? 'মিনার তাবু (Tent Category)' : 'Mina Tent Category' }}
                         </label>
                         <select name="hajj_tent_category" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
                             <option value="Zone A (VIP Mina Tents)">Zone A (VIP Mina Tents)</option>
@@ -236,12 +238,35 @@
                     </div>
                     <div>
                         <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            {{ $lang == 'bn' ? 'ভিসা ও মোফা প্রসেসিং (Visa Category)' : 'Hajj Visa / Moafa Category' }}
+                            {{ $lang == 'bn' ? 'আরাফাতের টেন্ট' : 'Arafat Tent Details' }}
                         </label>
-                        <select name="visa_type" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
-                            <option value="hajj_moafa">Hajj Pilgrim Moafa (সরকারী/বেসরকারী হজ মোফা)</option>
-                            <option value="hajj_pre_reg">Hajj Pre-Registration Transfer (প্রাক-নিবন্ধন)</option>
+                        <input type="text" name="arafat_tent_details" placeholder="e.g. AC VIP Tent" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                            {{ $lang == 'bn' ? 'মোয়াল্লেম/মাকতাব নং' : 'Moallem/Maktab No.' }}
+                        </label>
+                        <input type="text" name="moallem_number" placeholder="e.g. Maktab 25" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                            {{ $lang == 'bn' ? 'প্যাকেজ টাইপ (Shifting/Non-Shifting)' : 'Package Type' }}
+                        </label>
+                        <select name="shifting_package" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                            <option value="0">স্থায়ী / Non-Shifting (কাছের হোটেল)</option>
+                            <option value="1">ফিতরা / Shifting (দূরের হোটেল ও আজিজিয়া)</option>
                         </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center; padding-top: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" name="aziziyah_accommodation" value="1"> 🏢 আজিজিয়া অ্যাকোমোডেশন
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" name="qurbani_included" value="1" checked> 🥩 কুরবানি অন্তর্ভুক্ত
+                        </label>
                     </div>
                 </div>
             </div>
@@ -424,19 +449,71 @@
             const labelUmrah = document.getElementById('label_umrah');
             const labelHajj = document.getElementById('label_hajj');
 
+            const umrahOnlyOptions = document.querySelectorAll('.umrah-only');
+            const mainCategoryBox = document.getElementById('main_category_box');
+            const departureCityBox = document.getElementById('departure_city_box');
+            const flightTransitBox = document.getElementById('flight_transit_box');
+            const transitDurationBox = document.getElementById('transit_duration_box');
+            
             if (type === 'hajj') {
                 hajjBox.style.display = 'block';
                 labelHajj.style.borderColor = '#D97706';
                 labelHajj.style.background = '#FFFBEB';
                 labelUmrah.style.borderColor = '#E2E8F0';
                 labelUmrah.style.background = '#FFFFFF';
+                
+                umrahOnlyOptions.forEach(opt => opt.style.display = 'none');
+                
+                mainCategoryBox.style.display = 'none';
+                document.getElementById('post_category').value = 'group_seats';
+                
+                departureCityBox.style.display = 'none';
+                document.getElementById('departure_city').value = 'Dhaka';
+                
+                flightTransitBox.style.display = 'none';
+                document.getElementById('flight_transit').value = 'direct';
+                
+                transitDurationBox.style.display = 'none';
+                
+                document.querySelector('input[name="duration_days"]').value = '40';
+                
+                let reqType = document.getElementById('requirement_type');
+                if(reqType.value === 'ticket_sale' || reqType.value === 'hotel_share') {
+                    reqType.value = 'have_extra_seats';
+                }
             } else {
                 hajjBox.style.display = 'none';
                 labelUmrah.style.borderColor = '#6366F1';
                 labelUmrah.style.background = '#EEF2FF';
                 labelHajj.style.borderColor = '#E2E8F0';
                 labelHajj.style.background = '#FFFFFF';
+                
+                umrahOnlyOptions.forEach(opt => opt.style.display = 'block');
+                
+                mainCategoryBox.style.display = 'block';
+                departureCityBox.style.display = 'block';
+                flightTransitBox.style.display = 'block';
+                transitDurationBox.style.display = 'block';
+                
+                document.querySelector('input[name="duration_days"]').value = '14';
+            }
+            toggleRequirementType();
+        }
+
+        function toggleRequirementType() {
+            const reqType = document.getElementById('requirement_type').value;
+            const groupSizeBox = document.getElementById('total_group_size_box');
+            if (reqType === 'need_seats') {
+                groupSizeBox.style.display = 'none';
+                // document.getElementById('total_group_size').required = false;
+            } else {
+                groupSizeBox.style.display = 'block';
+                // document.getElementById('total_group_size').required = true;
             }
         }
+        
+        window.onload = function() {
+            toggleHajjUmrahFields(document.querySelector('input[name="hajj_or_umrah"]:checked').value);
+        };
     </script>
 @endsection

@@ -6,8 +6,13 @@ use App\Models\Agency;
 use App\Models\Post;
 use App\Models\PostInquiry;
 use App\Models\SiteSetting;
+use App\Models\Transaction;
+use App\Models\Subscription;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -23,6 +28,10 @@ class AdminController extends Controller
         $totalRejectedCount = Agency::where('verification_status', 'rejected')->where('is_admin', false)->count();
         $totalPostsCount = Post::count();
         $totalInquiriesCount = PostInquiry::count();
+        $totalCompletedDeals = PostInquiry::where('status', 'completed')->count();
+        $totalPendingTransactions = Transaction::where('status', 'pending')->count();
+        $totalRevenue = Transaction::where('status', 'approved')->sum('amount');
+        $currentPlatformMode = SiteSetting::get('platform_monetization_mode', 'free');
 
         // Analytics Data Breakdowns for Visual Charts
         $verificationChart = [
@@ -59,7 +68,11 @@ class AdminController extends Controller
             'categoryChart',
             'cityChart',
             'recentRegistrations',
-            'recentPosts'
+            'recentPosts',
+            'totalCompletedDeals',
+            'totalPendingTransactions',
+            'totalRevenue',
+            'currentPlatformMode'
         ));
     }
 
@@ -128,6 +141,7 @@ class AdminController extends Controller
             'site_email' => SiteSetting::get('site_email', 'masudd.info@gmail.com'),
             'site_address' => SiteSetting::get('site_address', '53 DIT Extension Road, Naya Paltan, Dhaka'),
             'site_notice' => SiteSetting::get('site_notice', 'বাংলাদেশের ভেরিফাইড হজ ও ওমরাহ এজেন্সি সমূহের ১০০% নিরাপদ B2B নেটওয়ার্ক।'),
+            'platform_monetization_mode' => SiteSetting::get('platform_monetization_mode', 'free'),
         ];
 
         return view('admin.settings', compact('settings'));
@@ -144,10 +158,13 @@ class AdminController extends Controller
             'site_email' => 'nullable|email|max:100',
             'site_address' => 'nullable|string|max:255',
             'site_notice' => 'nullable|string',
+            'platform_monetization_mode' => 'nullable|string|in:free,paid',
         ]);
 
-        foreach (['site_phone', 'site_whatsapp', 'site_email', 'site_address', 'site_notice'] as $key) {
-            SiteSetting::set($key, $request->input($key));
+        foreach (['site_phone', 'site_whatsapp', 'site_email', 'site_address', 'site_notice', 'platform_monetization_mode'] as $key) {
+            if ($request->has($key)) {
+                SiteSetting::set($key, $request->input($key));
+            }
         }
 
         return back()->with('success', 'Platform site settings updated successfully!');
@@ -169,14 +186,42 @@ class AdminController extends Controller
     /**
      * Reject Agency Verification
      */
-    public function rejectAgency($id)
+    public function rejectAgency(Request $request, $id)
     {
         $agency = Agency::findOrFail($id);
         $agency->is_verified = false;
         $agency->verification_status = 'rejected';
+        $reason = $request->input('rejection_reason');
+        if (empty(trim($reason))) {
+            $reason = 'দাখিলকৃত লাইসেন্স বা ট্রেড লাইসেন্সের কাগজপত্র অসম্পূর্ণ, অস্পষ্ট বা সরকারি রেকর্ডের সাথে অমিল রয়েছে।';
+        }
+        $agency->rejection_reason = $reason;
         $agency->save();
 
-        return back()->with('success', 'Agency "' . $agency->agency_name . '" verification status set to REJECTED.');
+        // Send alert notification to the agency
+        Notification::send(
+            $agency->id,
+            'verification_rejected',
+            '❌ এজেন্সির ভেরিফিকেশন আবেদন বাতিল হয়েছে',
+            'কারণ: ' . $reason . ' - অনুগ্রহ করে ভেরিফিকেশন পোর্টালে গিয়ে সঠিক কাগজপত্র পুনরায় আপলোড করুন।',
+            route('verification.portal')
+        );
+
+        return back()->with('success', 'Agency "' . $agency->agency_name . '" verification status set to REJECTED. Reason recorded & agency notified.');
+    }
+
+    /**
+     * Toggle Platform Access Mode: Free vs Paid VIP Mode
+     */
+    public function togglePlatformMode(Request $request)
+    {
+        $mode = $request->input('mode', 'free');
+        SiteSetting::set('platform_monetization_mode', $mode);
+        $msg = ($mode === 'free') 
+            ? 'প্ল্যাটফর্ম সম্পূর্ণ ফ্রি মোডে (100% Free Mode) চালু করা হয়েছে। সকল ভেরিফাইড এজেন্সির জন্য আনলিমিটেড অ্যাক্সেস সক্রিয়।' 
+            : 'পেইড সাবস্ক্রিপশন মোড (Paid B2B Subscription Mode) সক্রিয় করা হয়েছে।';
+
+        return back()->with('success', $msg);
     }
 
     /**
@@ -287,5 +332,93 @@ class AdminController extends Controller
         SiteSetting::set('notice_ticker_active', $active);
 
         return back()->with('success', 'Site Announcement Notice Ticker updated successfully!');
+    }
+    /**
+     * View Transactions
+     */
+    public function transactions()
+    {
+        $transactions = Transaction::with('agency')->orderBy('created_at', 'desc')->get();
+        return view('admin.transactions', compact('transactions'));
+    }
+
+    /**
+     * Approve Transaction
+     */
+    public function approveTransaction($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        
+        if ($transaction->status === 'completed') {
+            return back()->with('error', 'Transaction is already completed.');
+        }
+
+        $transaction->status = 'completed';
+        $transaction->save();
+
+        if ($transaction->type === 'subscription') {
+            $subscription = Subscription::where('transaction_id', $transaction->id)->first();
+            if ($subscription) {
+                $subscription->status = 'active';
+                $subscription->starts_at = now();
+                $subscription->ends_at = $subscription->plan_name === 'yearly' ? now()->addYear() : now()->addMonths(1);
+                $subscription->save();
+                
+                $agency = $transaction->agency;
+                if ($agency) {
+                    $agency->subscription_plan = $subscription->plan_name;
+                    $agency->save();
+                }
+            }
+        }
+
+        // Notify agency
+        Notification::send(
+            $transaction->agency_id,
+            'payment_approved',
+            'পেমেন্ট অনুমোদিত হয়েছে!',
+            'আপনার সাবস্ক্রিপশন ট্রানজাকশন #' . $transaction->transaction_id . ' (৳' . number_format($transaction->amount) . ') সফলভাবে অনুমোদিত হয়েছে।',
+            route('dashboard.index')
+        );
+
+        return back()->with('success', 'Transaction #' . $transaction->transaction_id . ' Approved Successfully!');
+    }
+
+    /**
+     * Reject Transaction
+     */
+    public function rejectTransaction($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->status = 'failed'; // or rejected
+        $transaction->save();
+
+        if ($transaction->type === 'subscription') {
+            $subscription = Subscription::where('transaction_id', $transaction->id)->first();
+            if ($subscription) {
+                $subscription->status = 'cancelled';
+                $subscription->save();
+            }
+        }
+
+        // Notify agency
+        Notification::send(
+            $transaction->agency_id,
+            'payment_rejected',
+            'পেমেন্ট বাতিল হয়েছে',
+            'আপনার ট্রানজাকশন #' . $transaction->transaction_id . ' বাতিল করা হয়েছে। তথ্যাদি যাচাই করে পুনরায় চেষ্টা করুন।',
+            route('payment.checkout')
+        );
+
+        return back()->with('success', 'Transaction #' . $transaction->transaction_id . ' has been Rejected.');
+    }
+
+    /**
+     * Run manual platform maintenance cleanup (Cron job trigger).
+     */
+    public function runCleanup()
+    {
+        Artisan::call('platform:cleanup');
+        return back()->with('success', 'প্ল্যাটফর্মের অটোমেটেড ক্লিনআপ (মেয়াদোত্তীর্ণ পোস্ট ও স্টেল প্রস্তাব বাতিল) সফলভাবে সম্পন্ন হয়েছে!');
     }
 }

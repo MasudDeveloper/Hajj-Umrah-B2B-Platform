@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 @php
-    $lang = session('locale', 'bn');
+$lang = session('locale', 'bn');
 @endphp
 <html lang="{{ $lang }}">
 
@@ -90,7 +90,8 @@
 
         /* Main Navigation */
         .navbar {
-            background-color: #0b1521; /* Match the dark hero color */
+            background-color: #0b1521;
+            /* Match the dark hero color */
             color: white;
             padding: 1rem 2.5rem;
             display: flex;
@@ -193,6 +194,77 @@
 
         .btn-primary:hover {
             background: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background: #F1F5F9;
+            color: #334155;
+            padding: 0.6rem 1.15rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            border: 1px solid #CBD5E1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+            border-color: #94A3B8;
+        }
+
+        /* Universal Form Styling */
+        .form-label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            background-color: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            display: block;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(4, 78, 53, 0.15);
+            background-color: #FFFFFF;
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #F8FAFC;
+            color: #64748B;
+            border-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 95px;
+            line-height: 1.5;
+        }
+
+        select.form-control {
+            appearance: auto;
+            cursor: pointer;
+            padding-right: 2rem;
         }
 
         .container {
@@ -561,7 +633,7 @@
 
         .dashboard-stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
         }
 
@@ -610,7 +682,9 @@
                 padding: 0.75rem 1rem !important;
             }
 
-            .nav-links, .lang-switcher, .desktop-actions {
+            .nav-links,
+            .lang-switcher,
+            .desktop-actions {
                 display: none !important;
             }
 
@@ -642,9 +716,11 @@
                 border-radius: 16px !important;
                 margin-bottom: 2rem !important;
             }
+
             .hero-banner-container h1 {
                 font-size: 1.8rem !important;
             }
+
             .hero-banner-container p {
                 font-size: 0.95rem !important;
             }
@@ -703,7 +779,8 @@
             }
 
             /* Responsive Touch Buttons */
-            .btn-primary, .btn-gold {
+            .btn-primary,
+            .btn-gold {
                 padding: 0.65rem 1rem;
                 font-size: 0.85rem;
             }
@@ -732,22 +809,53 @@
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <div class="brand-text">
-                <h1>UMRAH B2B</h1>
-                <span>Seat Exchange Platform</span>
+                <h1>HAJJ & UMRAH B2B</h1>
+                <span>{{ $lang == 'bn' ? 'সরকার অনুমোদিত বিটুবি নেটওয়ার্ক' : 'Govt Approved B2B Portal' }}</span>
             </div>
         </a>
 
         <ul class="nav-links">
-            <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}">Available Seats</a></li>
-            <li><a href="{{ route('posts.create') }}" class="nav-link">Post a Seat</a></li>
-            <li><a href="#" class="nav-link">Need Seats</a></li>
-            <li><a href="{{ route('pages.how-it-works') }}" class="nav-link {{ request()->routeIs('pages.how-it-works') ? 'active' : '' }}">How It Works</a></li>
-            <li><a href="{{ route('pages.about-us') }}" class="nav-link {{ request()->routeIs('pages.about-us') ? 'active' : '' }}">About Us</a></li>
+            <li><a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">{{ $lang == 'bn' ? 'হোম' : 'Home' }}</a></li>
+            <li><a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}">{{ $lang == 'bn' ? 'মার্কেটপ্লেস' : 'Marketplace' }}</a></li>
+            <li><a href="{{ route('posts.create') }}" class="nav-link">{{ $lang == 'bn' ? 'পোস্ট তৈরি' : 'Post Requirement' }}</a></li>
+            <li><a href="{{ route('pages.how-it-works') }}" class="nav-link {{ request()->routeIs('pages.how-it-works') ? 'active' : '' }}">{{ $lang == 'bn' ? 'কীভাবে কাজ করে' : 'How It Works' }}</a></li>
+            <li><a href="{{ route('pages.about-us') }}" class="nav-link {{ request()->routeIs('pages.about-us') ? 'active' : '' }}">{{ $lang == 'bn' ? 'আমাদের সম্পর্কে' : 'About Us' }}</a></li>
         </ul>
 
-        <div class="desktop-actions" style="display: flex; align-items: center; gap: 1rem;">
+        <div class="desktop-actions" style="display: flex; align-items: center; gap: 0.75rem;">
             @auth
+            <!-- Real-time Notification Bell -->
+            <div class="notification-wrapper" style="position: relative;">
+                <button type="button" id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; font-size: 1.05rem;" title="{{ $lang == 'bn' ? 'নোটিফিকেশন' : 'Notifications' }}">
+                    <i class="fa-regular fa-bell"></i>
+                    <span id="notifBadge" style="display: none; position: absolute; top: -3px; right: -3px; background: #EF4444; color: white; font-size: 0.65rem; font-weight: 800; border-radius: 10px; padding: 1px 5px; min-width: 17px; text-align: center; border: 2px solid var(--primary-dark);">0</span>
+                </button>
+
+                <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 10px); width: 350px; background: white; border-radius: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.25); border: 1px solid var(--border-color); z-index: 2500; overflow: hidden;">
+                    <div style="background: var(--primary-dark); color: white; padding: 0.85rem 1.15rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 0.45rem;">
+                            <i class="fa-solid fa-bell text-amber-300"></i> {{ $lang == 'bn' ? 'নোটিফিকেশন ও অ্যালার্ট' : 'Notifications' }}
+                        </div>
+                        <button type="button" onclick="markAllNotificationsRead()" style="background: none; border: none; color: var(--accent-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">
+                            {{ $lang == 'bn' ? 'সব পড়া হয়েছে' : 'Mark all read' }}
+                        </button>
+                    </div>
+                    <div id="notifList" style="max-height: 380px; overflow-y: auto; padding: 0.25rem 0;">
+                        <div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+                            <i class="fa-solid fa-spinner fa-spin me-1"></i> লোড হচ্ছে...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if(\App\Models\SiteSetting::isPaidMode())
+            <a href="{{ route('payment.checkout') }}" class="btn-gold" style="border-radius: 30px; padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+                <i class="fa-solid fa-crown text-amber-200"></i> {{ $lang == 'bn' ? 'সাবস্ক্রিপশন' : 'VIP Plan' }}
+            </a>
+            @endif
+            <a href="{{ route('agency.profile.edit') }}" class="btn-primary" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; padding: 0.5rem 0.9rem; font-size: 0.85rem; text-decoration: none;" title="{{ $lang == 'bn' ? 'প্রোফাইল ও সেটিংস' : 'Profile & Settings' }}">
+                <i class="fa-solid fa-gear"></i>
+            </a>
             <a href="{{ route('dashboard.index') }}" class="btn-primary" style="background: transparent; border: 1px solid rgba(255,255,255,0.4); border-radius: 30px; padding: 0.5rem 1.25rem;">
                 <i class="fa-solid fa-chart-line"></i> Dashboard
             </a>
@@ -775,19 +883,19 @@
 
     <!-- Admin Site Announcement Marquee Ticker Bar -->
     @php
-        $noticeText = \App\Models\SiteSetting::get('notice_ticker_text');
-        $noticeActive = \App\Models\SiteSetting::get('notice_ticker_active', '1') === '1';
+    $noticeText = \App\Models\SiteSetting::get('notice_ticker_text');
+    $noticeActive = \App\Models\SiteSetting::get('notice_ticker_active', '1') === '1';
     @endphp
 
     @if($noticeActive && !empty($noticeText))
-        <div style="background: linear-gradient(90deg, #023624 0%, #044E35 50%, #023624 100%); color: #F3E5AB; border-bottom: 2px solid var(--accent); padding: 0.45rem 1.5rem; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 990; position: relative;">
-            <div style="background: rgba(212, 175, 55, 0.25); color: #F3E5AB; border: 1px solid rgba(212, 175, 55, 0.6); padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0;">
-                <i class="fa-solid fa-bullhorn text-amber-300"></i> {{ $lang == 'bn' ? 'জরুরী নোটিশ' : 'ANNOUNCEMENT' }}
-            </div>
-            <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop()" onmouseout="this.start()" style="color: #FFFFFF; font-family: 'Hind Siliguri', 'Inter', sans-serif;">
-                {{ $noticeText }}
-            </marquee>
+    <div style="background: linear-gradient(90deg, #023624 0%, #044E35 50%, #023624 100%); color: #F3E5AB; border-bottom: 2px solid var(--accent); padding: 0.45rem 1.5rem; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 990; position: relative;">
+        <div style="background: rgba(212, 175, 55, 0.25); color: #F3E5AB; border: 1px solid rgba(212, 175, 55, 0.6); padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0;">
+            <i class="fa-solid fa-bullhorn text-amber-300"></i> {{ $lang == 'bn' ? 'জরুরী নোটিশ' : 'ANNOUNCEMENT' }}
         </div>
+        <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop()" onmouseout="this.start()" style="color: #FFFFFF; font-family: 'Hind Siliguri', 'Inter', sans-serif;">
+            {{ $noticeText }}
+        </marquee>
+    </div>
     @endif
 
     <!-- Mobile Slide Drawer Sidebar -->
@@ -810,10 +918,10 @@
                 </div>
 
                 @auth
-                    <div style="background: rgba(255,255,255,0.08); padding: 0.85rem; border-radius: 10px; margin-bottom: 1.25rem; border: 1px solid rgba(212,175,55,0.3);">
-                        <div style="font-weight: 700; color: #F3E5AB; font-size: 0.95rem;">{{ Auth::user()->agency_name }}</div>
-                        <div style="font-size: 0.78rem; color: #CBD5E1; margin-top: 0.15rem;"><i class="fa-solid fa-certificate text-amber-400 me-1"></i> License: {{ Auth::user()->license_no }}</div>
-                    </div>
+                <div style="background: rgba(255,255,255,0.08); padding: 0.85rem; border-radius: 10px; margin-bottom: 1.25rem; border: 1px solid rgba(212,175,55,0.3);">
+                    <div style="font-weight: 700; color: #F3E5AB; font-size: 0.95rem;">{{ Auth::user()->agency_name }}</div>
+                    <div style="font-size: 0.78rem; color: #CBD5E1; margin-top: 0.15rem;"><i class="fa-solid fa-certificate text-amber-400 me-1"></i> License: {{ Auth::user()->license_no }}</div>
+                </div>
                 @endauth
 
                 <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem; padding: 0;">
@@ -828,19 +936,35 @@
                         </a>
                     </li>
                     @auth
-                        @if(Auth::user()->isAdmin())
-                            <li>
-                                <a href="{{ route('admin.dashboard') }}" style="color: #FBCFE8; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(244, 114, 182, 0.2);">
-                                    <i class="fa-solid fa-user-shield"></i> {{ $lang == 'bn' ? 'এডমিন প্যানেল' : 'Admin Panel' }}
-                                </a>
-                            </li>
-                        @else
-                            <li>
-                                <a href="{{ route('dashboard.index') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: {{ request()->routeIs('dashboard.*') ? 'rgba(212,175,55,0.2)' : 'transparent' }};">
-                                    <i class="fa-solid fa-chart-line text-emerald-400"></i> {{ $lang == 'bn' ? 'মাই এজেন্সি ড্যাশবোর্ড' : 'My Agency Control' }}
-                                </a>
-                            </li>
-                        @endif
+                    @if(Auth::user()->isAdmin())
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" style="color: #FBCFE8; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(244, 114, 182, 0.2);">
+                            <i class="fa-solid fa-user-shield"></i> {{ $lang == 'bn' ? 'এডমিন প্যানেল' : 'Admin Panel' }}
+                        </a>
+                    </li>
+                    @else
+                    <li>
+                        <a href="{{ route('dashboard.index') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: {{ request()->routeIs('dashboard.*') ? 'rgba(212,175,55,0.2)' : 'transparent' }};">
+                            <i class="fa-solid fa-chart-line text-emerald-400"></i> {{ $lang == 'bn' ? 'মাই এজেন্সি ড্যাশবোর্ড' : 'My Agency Control' }}
+                        </a>
+                    </li>
+                    @if(\App\Models\SiteSetting::isPaidMode())
+                    <li>
+                        <a href="{{ route('payment.checkout') }}" style="color: #F3E5AB; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(212,175,55,0.2);">
+                            <i class="fa-solid fa-crown text-amber-300"></i> {{ $lang == 'bn' ? 'প্রিমিয়াম সাবস্ক্রিপশন' : 'VIP Subscription' }}
+                        </a>
+                    </li>
+                    @endif
+                        <a href="{{ route('agencies.show', Auth::id()) }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: transparent;">
+                            <i class="fa-solid fa-id-badge text-amber-400"></i> {{ $lang == 'bn' ? 'এজেন্সি পাবলিক প্রোফাইল' : 'My Public Profile' }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('agency.profile.edit') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: transparent;">
+                            <i class="fa-solid fa-gears text-teal-400"></i> {{ $lang == 'bn' ? 'প্রোফাইল ও সিকিউরিটি সেটিংস' : 'Profile & Security Settings' }}
+                        </a>
+                    </li>
+                    @endif
                     @endauth
                     <li>
                         <a href="{{ route('posts.create') }}" style="color: #F3E5AB; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3);">
@@ -857,21 +981,21 @@
                 </div>
 
                 @auth
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" style="width: 100%; padding: 0.65rem; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer;">
-                            <i class="fa-solid fa-right-from-bracket me-1"></i> {{ $lang == 'bn' ? 'লগআউট' : 'Logout' }}
-                        </button>
-                    </form>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" style="width: 100%; padding: 0.65rem; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer;">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> {{ $lang == 'bn' ? 'লগআউট' : 'Logout' }}
+                    </button>
+                </form>
                 @else
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <a href="{{ route('login') }}" class="btn-primary" style="justify-content: center; background: rgba(255,255,255,0.15);">
-                            <i class="fa-solid fa-right-to-bracket me-1"></i> {{ $lang == 'bn' ? 'এজেন্সি লগইন' : 'Agency Login' }}
-                        </a>
-                        <a href="{{ route('register') }}" class="btn-gold" style="justify-content: center;">
-                            <i class="fa-solid fa-user-plus me-1"></i> {{ $lang == 'bn' ? 'ফ্রি রেজিস্ট্রেশন' : 'Register Agency' }}
-                        </a>
-                    </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="{{ route('login') }}" class="btn-primary" style="justify-content: center; background: rgba(255,255,255,0.15);">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> {{ $lang == 'bn' ? 'এজেন্সি লগইন' : 'Agency Login' }}
+                    </a>
+                    <a href="{{ route('register') }}" class="btn-gold" style="justify-content: center;">
+                        <i class="fa-solid fa-user-plus me-1"></i> {{ $lang == 'bn' ? 'ফ্রি রেজিস্ট্রেশন' : 'Register Agency' }}
+                    </a>
+                </div>
                 @endauth
             </div>
         </div>
@@ -879,19 +1003,7 @@
 
     <!-- Main Container -->
     <main class="container">
-        @if(session('success'))
-        <div class="alert-success">
-            <i class="fa-solid fa-circle-check fa-lg"></i>
-            <div>{{ session('success') }}</div>
-        </div>
-        @endif
-
-        @if(session('error'))
-        <div class="alert-error">
-            <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
-            <div>{{ session('error') }}</div>
-        </div>
-        @endif
+        {{-- Flash messages are handled by SweetAlert2 --}}
 
         @yield('content')
     </main>
@@ -925,7 +1037,7 @@
                 <h4>{{ $lang == 'bn' ? 'নিরাপত্তা ও নিয়মাবলী' : 'Legal & Verification' }}</h4>
                 <ul>
                     <li><a href="javascript:void(0)" onclick="openTermsModal()"><i class="fa-solid fa-shield-halved text-xs"></i> {{ $lang == 'bn' ? 'B2B ম্যাচমেকার শর্তাবলী' : 'B2B Matchmaker Terms' }}</a></li>
-                    <li><a href="{{ route('register') }}"><i class="fa-solid fa-chevron-right text-xs"></i> {{ $lang == 'bn' ? 'হাব ও গভঃ লাইসেন্স ভেরিফিকেশন' : 'HAAB License Verification' }}</a></li>
+                    <li><a href="{{ route('register') }}"><i class="fa-solid fa-chevron-right text-xs"></i> {{ $lang == 'bn' ? 'সরকার অনুমোদিত লাইসেন্স ভেরিফিকেশন (হাব ঐচ্ছিক)' : 'Govt Approved License Verification' }}</a></li>
                     <li><a href="{{ route('login') }}"><i class="fa-solid fa-lock text-xs"></i> {{ $lang == 'bn' ? 'নম্বর ও কন্টাক্ট প্রাইভেসি' : 'Contact Privacy Standards' }}</a></li>
                 </ul>
             </div>
@@ -954,7 +1066,7 @@
             <div style="font-size: 0.88rem; color: var(--text-dark); line-height: 1.6; background: #F8FAFC; padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color); max-height: 300px; overflow-y: auto;">
                 <p style="margin-bottom: 0.75rem;"><strong>১. ম্যাচমেকার ভূমিকা:</strong> এই প্ল্যাটফর্মটি শুধুমাত্র বাংলাদেশ সরকারের অনুমোদিত হজ ও ওমরাহ এজেন্সিগুলোর মধ্যে কাজের সমন্বয় (Matchmaking) করার জন্য একটি সফটওয়্যার প্ল্যাটফর্ম।</p>
                 <p style="margin-bottom: 0.75rem;"><strong>২. আর্থিক লেনদেন:</strong> কোনো প্রকার আর্থিক পেমেন্ট বা প্যাকেজ চুক্তি এজেন্সিরা নিজেদের মধ্যে সম্পন্ন করবে। প্ল্যাটফর্ম কোনো আর্থিক লেনদেনের দায়ভার বহন করে না।</p>
-                <p style="margin-bottom: 0.75rem;"><strong>৩. কঠোর এজেন্সি ভেরিফিকেশন:</strong> শুধুমাত্র হাব (HAAB) বা ধর্ম মন্ত্রণালয়ের বৈধ লাইসেন্সধারী এজেন্সিরাই সুপার এডমিন কর্তৃক অনুমোদিত হয়ে ডিল দেখতে বা কন্টাক্ট করতে পারবে।</p>
+                <p style="margin-bottom: 0.75rem;"><strong>৩. কঠোর এজেন্সি ভেরিফিকেশন:</strong> শুধুমাত্র বাংলাদেশ সরকারের ধর্ম বিষয়ক মন্ত্রণালয় অনুমোদিত বৈধ হজ্ব ও ওমরাহ লাইসেন্সধারী এজেন্সিরাই (হাব ঐচ্ছিক) সুপার এডমিন কর্তৃক অনুমোদিত হয়ে ডিল দেখতে বা কন্টাক্ট করতে পারবে।</p>
             </div>
         </div>
     </div>
@@ -963,7 +1075,7 @@
     <div id="restrictedAccessModal" class="modal" onclick="if(event.target === this) closeRestrictedModal()">
         <div class="modal-content" style="max-width: 540px; text-align: center; padding: 2.25rem;">
             <button class="close-btn" onclick="closeRestrictedModal()"><i class="fa-solid fa-xmark"></i></button>
-            
+
             <div style="width: 64px; height: 64px; background: #FEF3C7; border: 2px solid #FDE68A; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #D97706; font-size: 1.8rem; margin: 0 auto 1.25rem;">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
@@ -975,8 +1087,8 @@
             <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; font-size: 0.9rem; color: var(--text-dark); line-height: 1.6; margin-bottom: 1.5rem; text-align: left;">
                 <p style="margin-bottom: 0.75rem;">
                     {{ $lang == 'bn' 
-                        ? 'এই B2B ডিলটির পূর্ণাঙ্গ এজেন্সির নাম, মালিকের তথ্য, ফোন নম্বর ও ১-ক্লিক হোয়াটসঅ্যাপ লিঙ্ক শুধুমাত্র বাংলাদেশ সরকারের হাব (HAAB) / ধর্ম মন্ত্রণালয় কর্তৃক অনুমোদিত ভেরিফাইড এজেন্সিরাই দেখতে পারেন।' 
-                        : 'Full agency name, phone contact, office address, and WhatsApp links are strictly restricted to approved HAAB verified agencies in Bangladesh.' 
+                        ? 'এই B2B ডিলটির পূর্ণাঙ্গ এজেন্সির নাম, মালিকের তথ্য, ফোন নম্বর ও ১-ক্লিক হোয়াটসঅ্যাপ লিঙ্ক শুধুমাত্র বাংলাদেশ সরকার কর্তৃক অনুমোদিত হজ / ওমরাহ লাইসেন্সধারী এবং ভেরিফাইড এজেন্সিরাই দেখতে পারেন।' 
+                        : 'Full agency name, phone contact, office address, and WhatsApp links are strictly restricted to approved Hajj / Umrah licensed and verified agencies in Bangladesh.' 
                     }}
                 </p>
                 <p style="margin: 0; color: #B45309; font-size: 0.85rem; font-weight: 600;">
@@ -1010,15 +1122,15 @@
             <span>{{ $lang == 'bn' ? 'পোস্ট' : 'Post' }}</span>
         </a>
         @auth
-            <a href="{{ route('dashboard.index') }}" class="mobile-nav-item {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-user-gear"></i>
-                <span>{{ $lang == 'bn' ? 'ড্যাশবোর্ড' : 'Account' }}</span>
-            </a>
+        <a href="{{ route('dashboard.index') }}" class="mobile-nav-item {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>{{ $lang == 'bn' ? 'ড্যাশবোর্ড' : 'Account' }}</span>
+        </a>
         @else
-            <a href="{{ route('login') }}" class="mobile-nav-item {{ request()->routeIs('login') ? 'active' : '' }}">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                <span>{{ $lang == 'bn' ? 'লগইন' : 'Login' }}</span>
-            </a>
+        <a href="{{ route('login') }}" class="mobile-nav-item {{ request()->routeIs('login') ? 'active' : '' }}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>{{ $lang == 'bn' ? 'লগইন' : 'Login' }}</span>
+        </a>
         @endauth
     </nav>
 
@@ -1054,6 +1166,227 @@
                 closeRestrictedModal();
             }
         });
+    </script>
+
+    <!-- SweetAlert2 Flash Messages -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'swal2-custom-toast'
+            },
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
+        @if(session('success'))
+        Toast.fire({
+            icon: 'success',
+            title: "{!! session('success') !!}"
+        });
+        @endif
+
+        @if(session('error'))
+        Toast.fire({
+            icon: 'error',
+            title: "{!! session('error') !!}"
+        });
+        @endif
+
+        @if(session('payment_submitted'))
+        Swal.fire({
+            title: 'Payment Submitted Successfully!',
+            html: '<p style="color: #475569; font-size: 0.95rem; line-height: 1.6;">Thank you. Your payment has been received and is pending verification. Please wait, it will be completed within a few hours.<br><br>For urgent queries, please call: <strong style="color:#023624;"><i class="fa-solid fa-phone text-emerald-500"></i> +880 1644 416378</strong></p>',
+            icon: 'success',
+            confirmButtonColor: '#10B981',
+            confirmButtonText: '<i class="fa-solid fa-check"></i> Great, Thanks!',
+            background: '#F8FAFC',
+            backdrop: `rgba(2, 54, 36, 0.4)`
+        });
+        @endif
+
+        // Notification System
+        let isNotifOpen = false;
+        function toggleNotifDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('notifDropdown');
+            if (!dd) return;
+            isNotifOpen = !isNotifOpen;
+            dd.style.display = isNotifOpen ? 'block' : 'none';
+            if (isNotifOpen) {
+                fetchNotifications();
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('notifDropdown');
+            const btn = document.getElementById('notifBellBtn');
+            if (dd && isNotifOpen && !dd.contains(e.target) && !btn.contains(e.target)) {
+                dd.style.display = 'none';
+                isNotifOpen = false;
+            }
+        });
+
+        // Synthesized crystal-clear notification chime (Web Audio API)
+        function playNotificationSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                if (ctx.state === 'suspended') {
+                    ctx.resume();
+                }
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5 note
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5 note
+                gain.gain.setValueAtTime(0.28, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch (e) {
+                // AudioContext interaction restriction fallback
+            }
+        }
+
+        let previousNotifCount = 0;
+        let lastKnownVerifStatus = '{{ Auth::check() ? Auth::user()->verification_status : '' }}';
+
+        function fetchNotifications() {
+            @auth
+            fetch("{{ route('notifications.unread') }}")
+                .then(r => r.json())
+                .then(data => {
+                    const badge = document.getElementById('notifBadge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+
+                    // 1. New Message or Notification Sound & Alert
+                    if (data.count > previousNotifCount && previousNotifCount !== 0) {
+                        playNotificationSound();
+                        const latest = data.latest_unread;
+                        Toast.fire({
+                            icon: 'info',
+                            title: latest ? latest.title : '🔔 নতুন B2B নোটিফিকেশন!',
+                            text: latest ? latest.message : 'আপনার ইনবক্সে নতুন আপডেট রয়েছে।'
+                        });
+                    }
+                    previousNotifCount = data.count;
+
+                    // 2. Real-time Live Verification Status Change (No manual reload needed!)
+                    if (data.verification_status && lastKnownVerifStatus && data.verification_status !== lastKnownVerifStatus) {
+                        playNotificationSound();
+                        const isApproved = data.verification_status === 'verified';
+                        Swal.fire({
+                            icon: isApproved ? 'success' : 'error',
+                            title: isApproved ? '🎉 অভিনন্দন! এজেন্সি ভেরিফিকেশন অনুমোদিত' : '⚠️ এজেন্সি ভেরিফিকেশন প্রত্যাখ্যাত হয়েছে',
+                            text: isApproved ? 'সুপার এডমিন আপনার লাইসেন্স অনুমোদন করেছেন। সম্পূর্ণ এক্সেস লোড হচ্ছে...' : (data.rejection_reason || 'এডমিন মন্তব্য প্রদান করেছেন।'),
+                            timer: 3500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                        lastKnownVerifStatus = data.verification_status;
+                    }
+
+                    if (isNotifOpen) {
+                        renderNotifList(data.notifications);
+                    }
+                })
+                .catch(err => console.error(err));
+            @endauth
+        }
+
+        function renderNotifList(list) {
+            const container = document.getElementById('notifList');
+            if (!container) return;
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;"><i class="fa-regular fa-bell-slash me-1"></i> কোনো নোটিফিকেশন নেই</div>';
+                return;
+            }
+
+            let html = '';
+            list.forEach(n => {
+                let icon = 'fa-bell text-amber-500';
+                if (n.type === 'new_inquiry') icon = 'fa-paper-plane text-sky-500';
+                else if (n.type === 'deal_confirmed') icon = 'fa-award text-emerald-500';
+                else if (n.type === 'message') icon = 'fa-comments text-indigo-500';
+                else if (n.type === 'payment_approved') icon = 'fa-circle-check text-emerald-600';
+                else if (n.type === 'payment_rejected') icon = 'fa-circle-xmark text-rose-500';
+
+                html += `
+                <div onclick="openNotification(${n.id}, '${n.link || ''}')" style="padding: 0.85rem 1.15rem; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.15s; background: ${n.is_read ? 'white' : '#F0FDF4'};" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='${n.is_read ? 'white' : '#F0FDF4'}'">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <div style="width: 32px; height: 32px; border-radius: 8px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem;">
+                            <i class="fa-solid ${icon}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.85rem; font-weight: ${n.is_read ? '600' : '800'}; color: var(--primary-dark); line-height: 1.3;">
+                                ${n.title}
+                            </div>
+                            <div style="font-size: 0.78rem; color: #475569; margin-top: 0.2rem; line-height: 1.4;">
+                                ${n.message}
+                            </div>
+                            <div style="font-size: 0.7rem; color: #94A3B8; margin-top: 0.35rem;">
+                                <i class="fa-regular fa-clock me-1"></i> ${n.time_ago}
+                            </div>
+                        </div>
+                        ${!n.is_read ? '<span style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; flex-shrink: 0; margin-top: 4px;"></span>' : ''}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function openNotification(id, link) {
+            fetch(`/notifications/mark-read/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            }).finally(() => {
+                if (link) {
+                    window.location.href = link;
+                } else {
+                    fetchNotifications();
+                }
+            });
+        }
+
+        function markAllNotificationsRead() {
+            fetch("{{ route('notifications.mark_all_read') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => {
+                fetchNotifications();
+            });
+        }
+
+        @auth
+        fetchNotifications();
+        // Snappy real-time polling every 5 seconds
+        setInterval(fetchNotifications, 5000);
+        @endauth
     </script>
 </body>
 

@@ -84,7 +84,31 @@
     @endif
 
     <!-- Information Status Box -->
-    @if($agency->hasSubmittedVerification() && $agency->verification_status === 'pending')
+    @if($agency->verification_status === 'rejected')
+    <div style="background: #FEF2F2; border: 1.5px solid #F87171; border-radius: 14px; padding: 1.5rem; margin-bottom: 2rem; color: #991B1B; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);">
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="width: 44px; height: 44px; background: #EF4444; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #991B1B; margin: 0 0 0.5rem 0;">
+                    আবেদন বাতিল হয়েছে (Application Rejected)
+                </h4>
+                <div style="background: white; border: 1px solid #FECACA; padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <strong style="color: #7F1D1D; font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> অ্যাডমিন প্রদত্ত বাতিলের কারণ:
+                    </strong>
+                    <p style="color: #991B1B; font-size: 0.92rem; margin: 0; font-weight: 600; line-height: 1.5;">
+                        "{{ $agency->rejection_reason ?: 'দাখিলকৃত লাইসেন্স বা ট্রেড লাইসেন্সের কাগজপত্র অসম্পূর্ণ, অস্পষ্ট বা ত্রুটিপূর্ণ।' }}"
+                    </p>
+                </div>
+                <p style="font-size: 0.85rem; color: #B91C1C; margin: 0; line-height: 1.4;">
+                    অনুগ্রহ করে নিচের ফর্মে সঠিক লাইসেন্স নম্বর ও পরিষ্কার ছবি/ডকুমেন্ট আপলোড করে পুনরায় সাবমিট করুন।
+                </p>
+            </div>
+        </div>
+    </div>
+    @elseif($agency->hasSubmittedVerification() && $agency->verification_status === 'pending')
     <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem; color: #92400E; display: flex; gap: 1rem; align-items: flex-start;">
         <i class="fa-solid fa-circle-info fa-xl text-amber-600" style="margin-top: 0.3rem;"></i>
         <div>

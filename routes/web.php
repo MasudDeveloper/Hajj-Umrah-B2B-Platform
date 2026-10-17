@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AgencyProfileController;
 
 // 1. Home / Landing Page
 Route::get('/', [PostController::class, 'home'])->name('home');
@@ -45,6 +50,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/verifications', [AdminController::class, 'verifications'])->name('verifications');
     Route::get('/agencies', [AdminController::class, 'agencies'])->name('agencies');
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions');
     
     // Notice Ticker & Settings Actions
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
@@ -53,6 +59,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/reject/{id}', [AdminController::class, 'rejectAgency'])->name('reject');
     Route::post('/subscription/{id}', [AdminController::class, 'toggleSubscription'])->name('subscription');
     
+    // Transactions Actions
+    Route::post('/transactions/{id}/approve', [AdminController::class, 'approveTransaction'])->name('transactions.approve');
+    Route::post('/transactions/{id}/reject', [AdminController::class, 'rejectTransaction'])->name('transactions.reject');
+    
     // 1-Click Agency Impersonation Routes
     Route::post('/impersonate/{id}', [AdminController::class, 'impersonate'])->name('impersonate');
     Route::get('/stop-impersonation', [AdminController::class, 'stopImpersonation'])->name('stop.impersonation');
@@ -60,6 +70,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // Agency Details JSON for Inspection Modal
     Route::get('/agency/{id}', [AdminController::class, 'agencyDetails'])->name('agency.details');
+    Route::post('/cleanup', [AdminController::class, 'runCleanup'])->name('cleanup');
+    Route::post('/platform-mode', [AdminController::class, 'togglePlatformMode'])->name('platform.mode');
 });
 
 // 4. Multi-Category B2B Posts (Group Seats, Tickets, Hotel Share)
@@ -80,3 +92,26 @@ Route::prefix('posts')->name('posts.')->group(function () {
 
 // 5. Agency Dashboard & Incoming B2B Leads
 Route::get('/dashboard', [PostController::class, 'dashboard'])->name('dashboard.index');
+
+// 6. Payment & Subscriptions (Manual Gateway)
+Route::get('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
+Route::post('/checkout/submit', [PaymentController::class, 'submitPayment'])->name('payment.submit');
+
+// 7. Real-Time Notifications
+Route::get('/notifications/unread', [NotificationController::class, 'getUnread'])->name('notifications.unread');
+Route::post('/notifications/mark-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.mark_read');
+Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark_all_read');
+
+// 8. Live B2B Chat & Negotiation
+Route::get('/chat/{inquiryId}', [ChatController::class, 'getMessages'])->name('chat.messages');
+Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+
+// 9. Review & Rating System (Phase 4)
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+// 10. Agency Public Profile & Management (Phase 4 & 5)
+Route::get('/agencies/{id}', [AgencyProfileController::class, 'show'])->name('agencies.show');
+Route::get('/agency/settings/profile', [AgencyProfileController::class, 'edit'])->name('agency.profile.edit');
+Route::post('/agency/settings/profile', [AgencyProfileController::class, 'update'])->name('agency.profile.update');
+Route::post('/agency/settings/password', [AgencyProfileController::class, 'updatePassword'])->name('agency.profile.password');
+

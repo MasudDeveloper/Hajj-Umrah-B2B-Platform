@@ -72,6 +72,34 @@
                 </div>
             </div>
 
+            <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2rem;">
+                <i class="fa-solid fa-coins text-amber-500 me-1"></i> Platform Monetization & Access Mode (ফ্রি বনাম পেইড মোড)
+            </h3>
+
+            <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                    <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 1rem; border: 2px solid {{ ($settings['platform_monetization_mode'] ?? 'free') === 'free' ? '#10B981' : '#E2E8F0' }}; background: {{ ($settings['platform_monetization_mode'] ?? 'free') === 'free' ? '#ECFDF5' : 'white' }}; border-radius: 10px; cursor: pointer;">
+                        <input type="radio" name="platform_monetization_mode" value="free" {{ ($settings['platform_monetization_mode'] ?? 'free') === 'free' ? 'checked' : '' }} style="margin-top: 0.2rem; accent-color: #059669; width: 17px; height: 17px;">
+                        <div>
+                            <strong style="color: #065F46; font-size: 0.95rem; display: block;">🟢 সম্পূর্ণ ফ্রি মোড (100% Free Mode)</strong>
+                            <span style="font-size: 0.8rem; color: #047857; display: block; margin-top: 0.25rem;">
+                                কোনো সাবস্ক্রিপশন ফি নেই। সকল ভেরিফাইড এজেন্সির জন্য পোস্ট ও লেনদেন উন্মুক্ত।
+                            </span>
+                        </div>
+                    </label>
+
+                    <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 1rem; border: 2px solid {{ ($settings['platform_monetization_mode'] ?? 'free') === 'paid' ? '#F59E0B' : '#E2E8F0' }}; background: {{ ($settings['platform_monetization_mode'] ?? 'free') === 'paid' ? '#FFFBEB' : 'white' }}; border-radius: 10px; cursor: pointer;">
+                        <input type="radio" name="platform_monetization_mode" value="paid" {{ ($settings['platform_monetization_mode'] ?? 'free') === 'paid' ? 'checked' : '' }} style="margin-top: 0.2rem; accent-color: #D97706; width: 17px; height: 17px;">
+                        <div>
+                            <strong style="color: #92400E; font-size: 0.95rem; display: block;">🟡 পেইড সাবস্ক্রিপশন মোড (Paid VIP Mode)</strong>
+                            <span style="font-size: 0.8rem; color: #78350F; display: block; margin-top: 0.25rem;">
+                                বিকাশ/নগদে সাবস্ক্রিপশন ফি নেওয়ার সিস্টেম চালু থাকবে এবং VIP প্ল্যান সক্রিয় হবে।
+                            </span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
             <button type="submit" class="btn-gold" style="font-size: 1.05rem; padding: 0.85rem 1.75rem; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">
                 <i class="fa-solid fa-floppy-disk me-2"></i> Save Site Settings Changes
             </button>

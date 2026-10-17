@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Agency;
 use App\Models\Post;
 use App\Models\PostInquiry;
+use App\Models\Transaction;
+use App\Models\Subscription;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -113,6 +117,30 @@ class PostController extends Controller
             $query->where('catering_type', $request->catering_type);
         }
 
+        if ($request->filled('hajj_or_umrah')) {
+            $query->where('hajj_or_umrah', $request->hajj_or_umrah);
+        }
+
+        if ($request->filled('airline')) {
+            $query->where('airline', $request->airline);
+        }
+
+        if ($request->filled('flight_date_from')) {
+            $query->where('flight_date', '>=', $request->flight_date_from);
+        }
+
+        if ($request->filled('flight_date_to')) {
+            $query->where('flight_date', '<=', $request->flight_date_to);
+        }
+
+        if ($request->filled('max_hotel_distance')) {
+            $dist = (int) $request->max_hotel_distance;
+            $query->where(function($q) use ($dist) {
+                $q->where('makkah_hotel_distance', '<=', $dist)
+                  ->orWhere('madinah_hotel_distance', '<=', $dist);
+            });
+        }
+
         if ($request->filled('min_seats')) {
             $query->where('available_seats', '>=', $request->min_seats);
         }
@@ -127,13 +155,20 @@ class PostController extends Controller
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('airline', 'like', "%{$search}%")
                   ->orWhere('makkah_hotel', 'like', "%{$search}%")
+                  ->orWhere('madinah_hotel', 'like', "%{$search}%")
                   ->orWhere('pnr_code', 'like', "%{$search}%");
             });
         }
 
         $posts = $query->orderBy('flight_date', 'asc')->paginate(9);
 
-        return view('posts.index', compact('posts'));
+        // Fetch distinct available airlines for dynamic filter dropdown
+        $availableAirlines = Post::whereNotNull('airline')
+            ->where('airline', '!=', '')
+            ->distinct()
+            ->pluck('airline');
+
+        return view('posts.index', compact('posts', 'availableAirlines'));
     }
 
     public function show($id)
@@ -190,9 +225,9 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'hajj_or_umrah' => 'required|string|in:hajj,umrah',
-            'post_category' => 'required|string',
+            'post_category' => 'nullable|string',
             'requirement_type' => 'required|string',
-            'total_group_size' => 'required|integer|min:1',
+            'total_group_size' => 'nullable|integer|min:1',
             'available_seats' => 'required|integer|min:1',
             'flight_date' => 'required|date',
             'departure_time' => 'nullable|string|max:255',
@@ -200,9 +235,9 @@ class PostController extends Controller
             'transit_duration' => 'nullable|string|max:255',
             'return_date' => 'nullable|date|after_or_equal:flight_date',
             'duration_days' => 'required|integer|min:1',
-            'airline' => 'required|string|max:255',
-            'flight_transit' => 'required|string',
-            'departure_city' => 'required|string',
+            'airline' => 'nullable|string|max:255',
+            'flight_transit' => 'nullable|string',
+            'departure_city' => 'nullable|string',
             'package_tier' => 'required|string',
             'room_type' => 'required|string',
             'makkah_hotel' => 'nullable|string|max:255',
@@ -223,12 +258,24 @@ class PostController extends Controller
             'name_change_policy' => 'nullable|string',
             'payment_terms' => 'nullable|string',
             'hajj_tent_category' => 'nullable|string',
+            'moallem_number' => 'nullable|string',
+            'arafat_tent_details' => 'nullable|string',
             'visa_type' => 'nullable|string',
             'makkah_hotel_type' => 'nullable|string',
             'madinah_hotel_type' => 'nullable|string',
             'itinerary_pdf' => 'nullable|string|max:500',
             'details' => 'nullable|string',
         ]);
+
+        if ($validated['hajj_or_umrah'] === 'hajj') {
+            $validated['post_category'] = 'group_seats';
+            $validated['departure_city'] = 'Dhaka';
+            $validated['flight_transit'] = 'direct';
+            $validated['visa_type'] = 'hajj_visa';
+        }
+        if ($validated['requirement_type'] === 'need_seats') {
+            $validated['total_group_size'] = 0;
+        }
 
         $validated['agency_id'] = $agency->id;
         $validated['meals_included'] = $request->has('meals_included');
@@ -239,6 +286,9 @@ class PostController extends Controller
         $validated['guide_included'] = $request->has('guide_included');
         $validated['zamzam_included'] = $request->has('zamzam_included');
         $validated['haramain_train'] = $request->has('haramain_train');
+        $validated['aziziyah_accommodation'] = $request->has('aziziyah_accommodation');
+        $validated['shifting_package'] = $request->input('shifting_package') == '1';
+        $validated['qurbani_included'] = $request->has('qurbani_included');
         $validated['currency'] = 'BDT';
         $validated['status'] = 'open';
 
@@ -276,7 +326,19 @@ class PostController extends Controller
         $validated['inquiring_agency_id'] = Auth::id();
         $validated['status'] = 'pending';
 
-        PostInquiry::create($validated);
+        $inquiry = PostInquiry::create($validated);
+
+        // Notify seller agency
+        $post = Post::find($request->post_id);
+        if ($post) {
+            Notification::send(
+                $post->agency_id,
+                'new_inquiry',
+                'নতুন B2B ডিল প্রস্তাব!',
+                Auth::user()->agency_name . ' আপনার "' . Str::limit($post->title, 35) . '" পোস্টে ' . $request->requested_seats . 'টি সিটের জন্য প্রস্তাব পাঠিয়েছেন।',
+                route('dashboard.index')
+            );
+        }
 
         return back()->with('success', 'B2B Deal proposal submitted! The seller agency has been notified.');
     }
@@ -306,6 +368,15 @@ class PostController extends Controller
             'offered_price_per_seat' => $request->input('offered_price_per_seat') ?: $inquiry->offered_price_per_seat,
             'status' => $request->input('status'),
         ]);
+
+        // Notify buyer agency
+        Notification::send(
+            $inquiry->inquiring_agency_id,
+            'quotation_responded',
+            'কোটেশন উত্তর: ' . strtoupper($request->input('status')),
+            $inquiry->post->agency->agency_name . ' আপনার ডিল প্রস্তাবে কোটেশন উত্তর দিয়েছেন।',
+            route('dashboard.index')
+        );
 
         return back()->with('success', 'Quotation response sent to buyer agency!');
     }
@@ -361,8 +432,35 @@ class PostController extends Controller
         $inquiry->save();
 
         if ($inquiry->status === 'completed') {
+            // Send deal confirmation notifications to both agencies
+            Notification::send(
+                $inquiry->post->agency_id,
+                'deal_confirmed',
+                '🎉 দ্বিপাক্ষিক B2B ডিল সম্পন্ন!',
+                $inquiry->inquiringAgency->agency_name . '-এর সাথে চুক্তিপত্র #' . $inquiry->contract_number . ' চূড়ান্ত হয়েছে!',
+                route('posts.inquiry.contract', $inquiry->id)
+            );
+
+            Notification::send(
+                $inquiry->inquiring_agency_id,
+                'deal_confirmed',
+                '🎉 দ্বিপাক্ষিক B2B ডিল সম্পন্ন!',
+                $inquiry->post->agency->agency_name . '-এর সাথে চুক্তিপত্র #' . $inquiry->contract_number . ' চূড়ান্ত হয়েছে!',
+                route('posts.inquiry.contract', $inquiry->id)
+            );
+
             return back()->with('success', '🎉 DEAL COMPLETED! Both agencies have confirmed advance payment. Official B2B Contract Agreement #' . $inquiry->contract_number . ' is ready!');
         }
+
+        // Notify other agency of Deal Done press
+        $otherPartyId = $isSeller ? $inquiry->inquiring_agency_id : $inquiry->post->agency_id;
+        Notification::send(
+            $otherPartyId,
+            'deal_step',
+            'পার্টনার এজেন্সি ডিল ডান কনফার্ম করেছে!',
+            Auth::user()->agency_name . ' অগ্রিম লেনদেন কনফার্ম করেছে। চুক্তিপত্র প্রস্তুত করতে আপনার কনফার্মেশন দিন।',
+            route('dashboard.index')
+        );
 
         return back()->with('success', 'Your "Deal Done" confirmation has been recorded. Waiting for partner agency confirmation.');
     }
@@ -427,7 +525,16 @@ class PostController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('dashboard.index', compact('agency', 'myPosts', 'myInquiries', 'sentInquiries'));
+        $myTransactions = Transaction::where('agency_id', $agency->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $activeSubscription = Subscription::where('agency_id', $agency->id)
+            ->where('status', 'active')
+            ->orderBy('ends_at', 'desc')
+            ->first();
+
+        return view('dashboard.index', compact('agency', 'myPosts', 'myInquiries', 'sentInquiries', 'myTransactions', 'activeSubscription'));
     }
 
     public function updateStatus(Request $request, $id)

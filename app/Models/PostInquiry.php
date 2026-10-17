@@ -50,6 +50,16 @@ class PostInquiry extends Model
         return $this->status === 'completed' || ($this->seller_deal_done && $this->buyer_deal_done);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'post_inquiry_id');
+    }
+
+    public function hasReviewedBy($agencyId): bool
+    {
+        return $this->reviews()->where('reviewer_agency_id', $agencyId)->exists();
+    }
+
     public static function generateContractNumber(): string
     {
         return 'B2B-CONTRACT-' . date('Y') . '-' . strtoupper(substr(uniqid(), -6));

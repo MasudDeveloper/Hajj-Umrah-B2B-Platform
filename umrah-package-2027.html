@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পবিত্র ওমরাহ প্যাকেজ ২০২৭ | R.B TOURS & TRAVELS</title>
+    
+    <!-- Google Fonts for Bengali -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-dark: #023624;
+            --primary: #044E35;
+            --primary-light: #0B6E4F;
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --bg-light: #F8FAF9;
+            --text-dark: #1E293B;
+            --text-muted: #475569;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header / Hero Section */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/arabesque.png');
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-subtitle {
+            color: var(--gold-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .agency-name {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--primary-dark);
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Main Content */
+        main {
+            padding: 50px 0;
+        }
+
+        .package-meta {
+            text-align: center;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            border-top: 4px solid var(--gold);
+        }
+
+        .package-meta p {
+            margin-bottom: 5px;
+        }
+
+        /* Timeline / Itinerary */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            width: 4px;
+            background: var(--gold-light);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 60px;
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            width: 34px;
+            height: 34px;
+            background: var(--primary);
+            color: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            border: 3px solid var(--gold-light);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(4, 78, 53, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(4, 78, 53, 0.08);
+        }
+
+        .timeline-title {
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed var(--gold-light);
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .timeline-body ul {
+            list-style: none;
+        }
+
+        .timeline-body ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+
+        .timeline-body ul li i {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: var(--primary);
+            font-size: 8px;
+        }
+
+        .timeline-body ul li ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        .timeline-body ul li ul li i {
+            color: var(--gold);
+        }
+
+        /* Pricing & Details Section */
+        .pricing-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            border-top: 5px solid var(--primary);
+        }
+
+        .price-tag {
+            text-align: center;
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .price-tag h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--gold-light);
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .detail-box h4 {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 10px;
+        }
+
+        .detail-box h4.inc i { color: #10B981; }
+        .detail-box h4.exc i { color: #EF4444; }
+
+        .detail-box ul {
+            list-style: none;
+        }
+
+        .detail-box ul li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .detail-box ul li i {
+            position: absolute;
+            left: 0;
+            top: 4px;
+        }
+
+        .detail-box.inc ul li i { color: #10B981; }
+        .detail-box.exc ul li i { color: #EF4444; }
+
+        /* Footer / Contact */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .footer-text {
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .contact-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .contact-card i {
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .header-title { font-size: 2.2rem; }
+            .details-grid { grid-template-columns: 1fr; }
+            .timeline::before { left: 15px; }
+            .timeline-item { padding-left: 45px; }
+            .timeline-icon { width: 34px; height: 34px; font-size: 1rem; left: 0; }
+            .price-amount { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <p class="header-subtitle"><i class="fa-solid fa-kaaba"></i> মদিনা • মক্কা • রমজানের পবিত্র আবহে ওমরাহ</p>
+            <h1 class="header-title">পবিত্র ওমরাহ প্যাকেজ ২০২৭</h1>
+            <div class="agency-name">R.B TOURS & TRAVELS</div>
+            <p style="margin-top: 10px; color: var(--gold-light); font-weight: 500;">বিশ্বস্ততা • সততা • দক্ষতা ও উন্নত সেবা</p>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="package-meta">
+            <p style="font-size: 1.4rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px;">✨ ওমরাহ ২০২৭ ভ্রমণ সূচী ✨</p>
+            <p style="font-size: 1.15rem; color: var(--text-dark); font-weight: 600;">📅 তারিখ: ২৭ জানুয়ারি ২০২৭ – ১০ ফেব্রুয়ারি ২০২৭</p>
+            <p style="font-size: 1.15rem; color: var(--text-dark); font-weight: 600; margin-top: 5px;">🕌 মদিনা: ৯ দিন &nbsp;|&nbsp; 🕋 মক্কা: ৬ দিন</p>
+        </div>
+
+        <div class="timeline">
+            <!-- Day 1 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">২৭ জানুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> ঢাকা থেকে মদিনার উদ্দেশ্যে ট্রানজিট ফ্লাইটে যাত্রা।</li>
+                            <li><i class="fa-solid fa-circle"></i> সম্ভাব্য এয়ারলাইন: Air Arabia, SalamAir অথবা Riyadh Air।</li>
+                            <li><i class="fa-solid fa-circle"></i> মদিনায় পৌঁছানোর পর কোবা রোডে অবস্থিত হোটেলে আবাসন।</li>
+                            <li><i class="fa-solid fa-circle"></i> হোটেল থেকে মসজিদে নববীতে হেঁটে যেতে আনুমানিক ৭-১০ মিনিট সময় লাগবে।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2-4 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-bed"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">২৮ - ৩০ জানুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> এই দিনগুলোতে সম্পূর্ণ রেস্ট।</li>
+                            <li><i class="fa-solid fa-circle"></i> ওয়াক্তমতো মসজিদে নববীতে পাঁচ ওয়াক্ত নামাজ আদায়।</li>
+                            <li><i class="fa-solid fa-circle"></i> রওজা মোবারক জিয়ারত এবং ব্যক্তিগত ইবাদত।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">৩১ জানুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> মদিনার ঐতিহাসিক স্থানসমূহ জিয়ারা করবো:
+                                <ul>
+                                    <li><i class="fa-regular fa-circle"></i> মসজিদে কুবা</li>
+                                    <li><i class="fa-regular fa-circle"></i> ওহুদ পাহাড় ও শহীদদের কবরস্থান</li>
+                                    <li><i class="fa-regular fa-circle"></i> মসজিদে কিবলাতাইন (দুই কিবলার মসজিদ)</li>
+                                    <li><i class="fa-regular fa-circle"></i> খন্দক প্রান্তর ও সাবাআ মাসাজিদ (সাত মসজিদ)</li>
+                                    <li><i class="fa-regular fa-circle"></i> জান্নাতুল বাকি</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 6-9 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-pray"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">১ - ৪ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> এই দিনগুলোতে মসজিদে নববীতে নিয়মিত ইবাদত।</li>
+                            <li><i class="fa-solid fa-circle"></i> মক্কার উদ্দেশ্যে যাত্রার প্রস্তুতি।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 10 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-bus"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">৫ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> ওমরাহ আদায়ের উদ্দেশ্যে মদিনা থেকে মক্কার পথে যাত্রা।</li>
+                            <li><i class="fa-solid fa-circle"></i> মক্কায় পৌঁছে ইব্রাহিম খলিল রোডের হোটেলে অবস্থান।</li>
+                            <li><i class="fa-solid fa-circle"></i> পবিত্র ওমরাহ আদায়, তাওয়াফ, সাঈ এবং অন্যান্য ইবাদত পালন।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 11-12 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-bed"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">৬ - ৭ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> সম্পূর্ণ বিশ্রাম।</li>
+                            <li><i class="fa-solid fa-circle"></i> মসজিদুল হারামে নিয়মিত পাঁচ ওয়াক্ত নামাজ আদায় ও নফল তাওয়াফ।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 13 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">৮ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> মক্কার ঐতিহাসিক স্থানসমূহ জিয়ারা করবো:
+                                <ul>
+                                    <li><i class="fa-regular fa-circle"></i> জাবাল আন্-নূর (গারে হেরা)</li>
+                                    <li><i class="fa-regular fa-circle"></i> জাবাল আস-সাওর (গারে সাওর)</li>
+                                    <li><i class="fa-regular fa-circle"></i> আরাফাতের ময়দান ও জাবালে রহমত</li>
+                                    <li><i class="fa-regular fa-circle"></i> মিনা ও মুজদালিফা</li>
+                                    <li><i class="fa-regular fa-circle"></i> জামারাত</li>
+                                    <li><i class="fa-regular fa-circle"></i> জান্নাতুল মুয়াল্লা</li>
+                                    <li><i class="fa-regular fa-circle"></i> মসজিদে জ্বিন</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 14 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-pray"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">৯ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> বিদায়ী তাওয়াফ এবং শেষ সময়ের ইবাদত।</li>
+                            <li><i class="fa-solid fa-circle"></i> দেশে ফেরার জন্য কেনাকাটা ও প্রস্তুতি।</li>
+                            <li><i class="fa-solid fa-circle"></i> মক্কায় অবস্থানের শেষের দিকে ইনশাআল্লাহ প্রায় ৩ টি রোজা পাওয়ার সম্ভাবনা থাকবে (চাঁদ দেখার ওপর নির্ভরশীল)।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 15 -->
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">১০ ফেব্রুয়ারি</h3>
+                    <div class="timeline-body">
+                        <ul>
+                            <li><i class="fa-solid fa-circle"></i> মক্কা থেকে জেদ্দা বিমানবন্দর যাওয়ার প্রয়োজনীয় ট্রান্সফার/পরিবহন ব্যবস্থা প্যাকেজেই অন্তর্ভুক্ত থাকবে।</li>
+                            <li><i class="fa-solid fa-circle"></i> জেদ্দা থেকে ঢাকার উদ্দেশ্যে ট্রানজিট ফ্লাইটে যাত্রা এবং দেশে প্রত্যাবর্তন।</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing & Terms -->
+        <div class="pricing-section">
+            <h2 class="section-title" style="margin-bottom: 30px;">প্যাকেজ মূল্য ও শর্তাবলী</h2>
+            
+            <div class="price-tag">
+                <h3>প্যাকেজ মূল্য (জনপ্রতি)</h3>
+                <div class="price-amount">১,৪০,০০০/- টাকা</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-box inc">
+                    <h4 class="inc"><i class="fa-solid fa-circle-check"></i> প্যাকেজে যা অন্তর্ভুক্ত</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i> ঢাকা-মদিনা-জেদ্দা-ঢাকা বিমান টিকিট</li>
+                        <li><i class="fa-solid fa-check"></i> মদিনা ও মক্কায় হোটেলে আবাসন</li>
+                        <li><i class="fa-solid fa-check"></i> ওমরাহ ভিসা প্রসেসিং</li>
+                        <li><i class="fa-solid fa-check"></i> প্রয়োজনীয় ট্রান্সফার/পরিবহন</li>
+                        <li><i class="fa-solid fa-check"></i> মক্কা ও মদিনার সকল সাধারণ জিয়ারা</li>
+                        <li><i class="fa-solid fa-check"></i> ওমরাহ পালনে প্রয়োজনীয় গাইডলাইন</li>
+                    </ul>
+                </div>
+                
+                <div class="detail-box exc">
+                    <h4 class="exc"><i class="fa-solid fa-circle-xmark"></i> যা অন্তর্ভুক্ত নয় (ঐচ্ছিক)</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-plus"></i> <strong>অতিরিক্ত জিয়ারা:</strong> তায়েফ শহর, জেদ্দা শহর এবং বদরের যুদ্ধের স্থানে ভ্রমণ করতে চাইলে প্যাকেজের বাইরে জনপ্রতি অতিরিক্ত <strong>৫,০০০ টাকা</strong> প্রদান করতে হবে।</li>
+                        <li><i class="fa-solid fa-plane"></i> <strong>ফ্লাইট আপগ্রেড:</strong> ডাইরেক্ট বা সরাসরি ফ্লাইটে যেতে চাইলে প্যাকেজ খরচ অতিরিক্ত <strong>১০,০০০ টাকা</strong> বেড়ে যাবে।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-logo">R.B TOURS & TRAVELS</div>
+        <p class="footer-text">আপনার পবিত্র সফরের বিশ্বস্ত সঙ্গী</p>
+        
+        <div class="contact-cards">
+            <div class="contact-card">
+                <i class="fa-solid fa-phone"></i>
+                <span>01616607182</span>
+            </div>
+            <div class="contact-card">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>01991 97 97 36</span>
+            </div>
+        </div>
+        
+        <p style="margin-top: 30px; font-size: 0.9rem; color: #94A3B8;">&copy; 2027 R.B Tours & Travels. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

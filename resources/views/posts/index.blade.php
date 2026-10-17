@@ -44,56 +44,127 @@
         </div>
 
         <!-- Multi-Field Filter Bar -->
-        <form action="{{ route('posts.index') }}" method="GET" class="filter-form-grid" style="background: #F8FAFC; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color);">
+        <form action="{{ route('posts.index') }}" method="GET" style="background: #F8FAFC; padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color);">
             <input type="hidden" name="post_category" value="{{ request('post_category') }}">
 
-            <div>
-                <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Search Title/Hotel</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="e.g. Saudia / Clock Tower..." style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+            <div class="filter-form-grid">
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Search Title/Hotel/PNR</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="e.g. Saudia / Clock Tower..." style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Service Type</label>
+                    <select name="hajj_or_umrah" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                        <option value="">All (হজ্জ ও ওমরাহ)</option>
+                        <option value="umrah" {{ request('hajj_or_umrah') == 'umrah' ? 'selected' : '' }}>🕌 ওমরাহ (Umrah)</option>
+                        <option value="hajj" {{ request('hajj_or_umrah') == 'hajj' ? 'selected' : '' }}>🕋 হজ্জ (Hajj)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Airline (এয়ারলাইন্স)</label>
+                    <select name="airline" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                        <option value="">All Airlines</option>
+                        <option value="Saudia" {{ request('airline') == 'Saudia' ? 'selected' : '' }}>Saudia Airlines</option>
+                        <option value="Biman Bangladesh" {{ request('airline') == 'Biman Bangladesh' ? 'selected' : '' }}>Biman Bangladesh</option>
+                        <option value="Fly Flynas" {{ request('airline') == 'Fly Flynas' ? 'selected' : '' }}>Flynas</option>
+                        <option value="Emirates" {{ request('airline') == 'Emirates' ? 'selected' : '' }}>Emirates</option>
+                        <option value="Qatar Airways" {{ request('airline') == 'Qatar Airways' ? 'selected' : '' }}>Qatar Airways</option>
+                        <option value="Air Arabia" {{ request('airline') == 'Air Arabia' ? 'selected' : '' }}>Air Arabia</option>
+                        <option value="Gulf Air" {{ request('airline') == 'Gulf Air' ? 'selected' : '' }}>Gulf Air</option>
+                        <option value="Kuwait Airways" {{ request('airline') == 'Kuwait Airways' ? 'selected' : '' }}>Kuwait Airways</option>
+                        <option value="Jazeera Airways" {{ request('airline') == 'Jazeera Airways' ? 'selected' : '' }}>Jazeera Airways</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Departure Hub</label>
+                    <select name="departure_city" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                        <option value="">All Hubs</option>
+                        <option value="Dhaka" {{ request('departure_city') == 'Dhaka' ? 'selected' : '' }}>Dhaka</option>
+                        <option value="Chittagong" {{ request('departure_city') == 'Chittagong' ? 'selected' : '' }}>Chittagong</option>
+                        <option value="Sylhet" {{ request('departure_city') == 'Sylhet' ? 'selected' : '' }}>Sylhet</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Requirement Type</label>
+                    <select name="requirement_type" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
+                        <option value="">All Types</option>
+                        <option value="have_extra_seats" {{ request('requirement_type') == 'have_extra_seats' ? 'selected' : '' }}>Seats Available (Extra)</option>
+                        <option value="need_seats" {{ request('requirement_type') == 'need_seats' ? 'selected' : '' }}>Seats Required (Shortage)</option>
+                        <option value="ticket_sale" {{ request('requirement_type') == 'ticket_sale' ? 'selected' : '' }}>Ticket Sale</option>
+                        <option value="hotel_share" {{ request('requirement_type') == 'hotel_share' ? 'selected' : '' }}>Hotel Sharing</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1; justify-content: center; padding: 0.65rem;">
+                        <i class="fa-solid fa-filter"></i> Search
+                    </button>
+                    <button type="button" onclick="toggleAdvancedFilter()" id="advancedFilterToggleBtn" style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.65rem 0.8rem; color: var(--text-dark); cursor: pointer; font-size: 0.88rem;" title="অ্যাডভান্সড ফিল্টার ওপেন করুন">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+                </div>
             </div>
 
-            <div>
-                <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Requirement Type</label>
-                <select name="requirement_type" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
-                    <option value="">All Types</option>
-                    <option value="have_extra_seats" {{ request('requirement_type') == 'have_extra_seats' ? 'selected' : '' }}>Seats Available (Extra)</option>
-                    <option value="need_seats" {{ request('requirement_type') == 'need_seats' ? 'selected' : '' }}>Seats Required (Shortage)</option>
-                    <option value="ticket_sale" {{ request('requirement_type') == 'ticket_sale' ? 'selected' : '' }}>Ticket Sale</option>
-                    <option value="hotel_share" {{ request('requirement_type') == 'hotel_share' ? 'selected' : '' }}>Hotel Sharing</option>
-                </select>
-            </div>
+            <!-- Extended Advanced Filter Drawer -->
+            <div id="advancedFilterSection" style="{{ request('flight_date_from') || request('flight_date_to') || request('max_hotel_distance') || request('package_tier') || request('max_price') ? 'display: grid;' : 'display: none;' }} grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-color);">
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Flight Date From (তারিখ থেকে)</label>
+                    <input type="date" name="flight_date_from" value="{{ request('flight_date_from') }}" style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
 
-            <div>
-                <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Departure Hub</label>
-                <select name="departure_city" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
-                    <option value="">All Hubs</option>
-                    <option value="Dhaka" {{ request('departure_city') == 'Dhaka' ? 'selected' : '' }}>Dhaka</option>
-                    <option value="Chittagong" {{ request('departure_city') == 'Chittagong' ? 'selected' : '' }}>Chittagong</option>
-                    <option value="Sylhet" {{ request('departure_city') == 'Sylhet' ? 'selected' : '' }}>Sylhet</option>
-                </select>
-            </div>
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Flight Date To (তারিখ পর্যন্ত)</label>
+                    <input type="date" name="flight_date_to" value="{{ request('flight_date_to') }}" style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
 
-            <div>
-                <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Package Tier</label>
-                <select name="package_tier" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
-                    <option value="">All Tiers</option>
-                    <option value="economy" {{ request('package_tier') == 'economy' ? 'selected' : '' }}>Economy</option>
-                    <option value="standard" {{ request('package_tier') == 'standard' ? 'selected' : '' }}>3-Star Standard</option>
-                    <option value="vip" {{ request('package_tier') == 'vip' ? 'selected' : '' }}>5-Star VIP</option>
-                </select>
-            </div>
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Haram Distance (হোটেলের সর্বোচ্চ দূরত্ব)</label>
+                    <select name="max_hotel_distance" style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                        <option value="">যে কোনো দূরত্ব</option>
+                        <option value="150" {{ request('max_hotel_distance') == '150' ? 'selected' : '' }}>১৫০ মিটারের মধ্যে (খুব কাছে)</option>
+                        <option value="350" {{ request('max_hotel_distance') == '350' ? 'selected' : '' }}>৩৫০ মিটারের মধ্যে</option>
+                        <option value="600" {{ request('max_hotel_distance') == '600' ? 'selected' : '' }}>৬০০ মিটারের মধ্যে</option>
+                        <option value="1000" {{ request('max_hotel_distance') == '1000' ? 'selected' : '' }}>১ কিলোমিটারের মধ্যে</option>
+                    </select>
+                </div>
 
-            <div>
-                <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Max Price (BDT)</label>
-                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="e.g. 200000" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
-            </div>
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Package Tier</label>
+                    <select name="package_tier" style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                        <option value="">All Tiers</option>
+                        <option value="economy" {{ request('package_tier') == 'economy' ? 'selected' : '' }}>Economy</option>
+                        <option value="standard" {{ request('package_tier') == 'standard' ? 'selected' : '' }}>3-Star Standard</option>
+                        <option value="vip" {{ request('package_tier') == 'vip' ? 'selected' : '' }}>5-Star VIP</option>
+                    </select>
+                </div>
 
-            <div style="display: flex; align-items: flex-end;">
-                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.65rem;">
-                    <i class="fa-solid fa-filter"></i> Filter
-                </button>
+                <div>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Max Price (সর্বোচ্চ বাজেট BDT)</label>
+                    <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="e.g. 200000" style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div style="display: flex; align-items: flex-end;">
+                    <a href="{{ route('posts.index') }}" style="width: 100%; text-align: center; background: #E2E8F0; color: #475569; padding: 0.55rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none;">
+                        <i class="fa-solid fa-rotate-left"></i> রিসেট ফিল্টার
+                    </a>
+                </div>
             </div>
         </form>
+
+        <script>
+            function toggleAdvancedFilter() {
+                const sec = document.getElementById('advancedFilterSection');
+                if (sec.style.display === 'none' || sec.style.display === '') {
+                    sec.style.display = 'grid';
+                } else {
+                    sec.style.display = 'none';
+                }
+            }
+        </script>
     </div>
 
     <!-- Posts Detailed Grid Section -->
