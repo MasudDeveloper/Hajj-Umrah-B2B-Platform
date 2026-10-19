@@ -17,6 +17,32 @@
         </a>
     </div>
 
+    @if($post->status === 'suspended')
+        <div style="background: #FEF2F2; border: 1.5px solid #F87171; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem; color: #991B1B;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #FEE2E2; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; color: #DC2626;">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 1rem; font-weight: 800;">🚫 এই পোস্টটি সাময়িকভাবে স্থগিত (Suspended) রয়েছে</strong>
+                <span style="font-size: 0.84rem; color: #B91C1C; line-height: 1.4; display: block; margin-top: 0.2rem;">
+                    ডুপ্লিকেট সিট বা নিয়মবহির্ভূত রিসেলিং সংক্রান্ত অভিযোগের সত্যতা পাওয়ায় সুপার এডমিন কর্তৃক এই পোস্টের কার্যক্রম স্থগিত রাখা হয়েছে।
+                </span>
+            </div>
+        </div>
+    @elseif($post->is_reported)
+        <div style="background: #FFF1F2; border: 1.5px solid #FDA4AF; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem; color: #9F1239;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFE4E6; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; color: #E11D48;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 0.98rem; font-weight: 800;">⚠️ সতর্কবার্তা: এই পোস্টটির বিরুদ্ধে অননুমোদিত সিট / ডুপ্লিকেট ইনভেন্টরির অভিযোগ জমা পড়েছে</strong>
+                <span style="font-size: 0.84rem; color: #BE123C; line-height: 1.4; display: block; margin-top: 0.2rem;">
+                    এডমিন প্যানেলে মূল এয়ারলাইন্স PNR এবং টিকিট ভাউচার যাচাই প্রক্রিয়াধীন। ডিল চূড়ান্ত করার পূর্বে যথাযথ প্রমাণাদি নিশ্চিত করুন।
+                </span>
+            </div>
+        </div>
+    @endif
+
     <div class="show-details-grid">
         <!-- Left Main Post Details -->
         <div>
@@ -447,7 +473,111 @@
                         @endauth
                     </div>
                 @endif
+
+                @auth
+                    @if(Auth::id() !== $post->agency_id)
+                        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
+                            <button type="button" onclick="openReportModal()" style="background: none; border: none; color: #E11D48; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.85rem; border-radius: 8px; transition: 0.2s;" onmouseover="this.style.background='#FFF1F2'" onmouseout="this.style.background='none'">
+                                <i class="fa-solid fa-flag text-rose-600"></i> এটি কি আপনার সিট? ডুপ্লিকেট বা ভুয়া পোস্ট রিপোর্ট করুন
+                            </button>
+                        </div>
+                    @endif
+                @endauth
             </div>
         </div>
     </div>
+
+    <!-- Report Post / Dispute Modal -->
+    @auth
+    @if(Auth::id() !== $post->agency_id)
+    <div id="reportPostModal" class="modal" onclick="if(event.target === this) closeReportModal()">
+        <div class="modal-content" style="max-width: 580px; padding: 2rem;">
+            <button class="close-btn" onclick="closeReportModal()">&times;</button>
+            
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #FFE4E6; color: #E11D48; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 class="font-heading" style="font-size: 1.25rem; color: #881337; margin: 0;">পোস্টটির বিরুদ্ধে অভিযোগ দাখিল করুন</h3>
+                    <span style="font-size: 0.8rem; color: #64748B;">সুপার অ্যাডমিন উভয় পক্ষের তথ্য যাচাই করে অবিলম্বে ব্যবস্থা নিবেন</span>
+                </div>
+            </div>
+
+            <form action="{{ route('posts.report') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="post_id" value="{{ $post->id }}">
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem;">
+                        অভিযোগের মূল কারণ নির্বাচন করুন *
+                    </label>
+                    <select name="reason" required style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 0.88rem; outline: none;">
+                        <option value="unauthorized_resale">অননুমোদিত রিসেল / এটি আমার সংরক্ষিত সিটের ডুপ্লিকেট পোস্ট</option>
+                        <option value="ghost_seats">ভুয়া সিট / প্রকৃতপক্ষে এয়ারলাইন্সে সিট মজুদ নেই (Ghost Inventory)</option>
+                        <option value="misleading_info">ভুল বা অসত্য তথ্য / PNR ও ফ্লাইটের তথ্যে গরমিল</option>
+                        <option value="price_gouging">প্রতারণামূলক বা অতিরিক্ত দাম প্রদর্শন</option>
+                        <option value="other">অন্যান্য নিয়মবহির্ভূত বিষয়</option>
+                    </select>
+                </div>
+
+                @php
+                    $myPosts = \App\Models\Post::where('agency_id', Auth::id())->where('status', '!=', 'closed')->latest()->get();
+                @endphp
+
+                @if($myPosts->count() > 0)
+                <div style="margin-bottom: 1rem; background: #F8FAFC; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #0284C7; margin-bottom: 0.25rem;">
+                        <i class="fa-solid fa-link me-1"></i> আপনার আসল পোস্টটি লিংক করুন (ঐচ্ছিক কিন্তু দ্রুত পর্যালোচনায় সহায়ক)
+                    </label>
+                    <select name="original_post_id" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem;">
+                        <option value="">-- কোনো পোস্ট সিলেক্ট না করে রিপোর্ট করুন --</option>
+                        @foreach($myPosts as $mp)
+                            <option value="{{ $mp->id }}">
+                                #{{ $mp->id }} - {{ $mp->title }} ({{ $mp->airline }} &bull; {{ $mp->available_seats }} সিট)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem;">
+                        এয়ারলাইন্স টিকিট স্লিপ / PNR বুকিং প্রমাণপত্র (প্রমাণস্বরূপ ফাইল)
+                    </label>
+                    <input type="file" name="proof_file" accept=".pdf,image/*" style="width: 100%; padding: 0.65rem; border: 1px dashed #CBD5E1; border-radius: 8px; font-size: 0.82rem; background: #F8FAFC;">
+                    <span style="font-size: 0.72rem; color: #64748B; margin-top: 0.25rem; display: block;">
+                        * পিএনআর কপি, গ্রুপ টিকিট ডিপোজিট রসিদ বা ভাউচার আপলোড করুন (PDF বা ছবি, সর্বোচ্চ ১০ মেগাবাইট)
+                    </span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem;">
+                        অভিযোগের বিস্তারিত ব্যাখ্যা *
+                    </label>
+                    <textarea name="details" rows="3" required placeholder="কী কারণে পোস্টটি ডুপ্লিকেট বা ভুয়া? সিটগুলো আপনার কিভাবে এবং অভিযুক্ত এজেন্সি আপনার অনুমতি নিয়েছে কি না বিস্তারিত লিখুন..." style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; font-family: inherit; line-height: 1.4; outline: none;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <button type="button" onclick="closeReportModal()" style="padding: 0.65rem 1.25rem; border-radius: 8px; border: 1px solid var(--border-color); background: white; color: #475569; font-weight: 600; cursor: pointer;">
+                        বাতিল
+                    </button>
+                    <button type="submit" class="btn-danger" style="background: #E11D48; border: none; padding: 0.65rem 1.35rem; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
+                        <i class="fa-solid fa-paper-plane me-1"></i> অভিযোগ জমা দিন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openReportModal() {
+            document.getElementById('reportPostModal').classList.add('open');
+        }
+        function closeReportModal() {
+            document.getElementById('reportPostModal').classList.remove('open');
+        }
+    </script>
+    @endif
+    @endauth
 @endsection

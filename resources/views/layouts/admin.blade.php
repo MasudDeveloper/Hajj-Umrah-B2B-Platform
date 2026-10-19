@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Super Admin Governance Panel - B2B Hajj Umrah')</title>
+    <title>@yield('title', 'Super Admin Governance Panel - B2B Hajj Umrah Platform')</title>
     
     <!-- Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -248,6 +248,7 @@
     @php
         $pendingVerificationsCount = \App\Models\Agency::where('verification_status', 'pending')->where('is_admin', false)->count();
         $pendingTransactionsCount = \App\Models\Transaction::where('status', 'pending')->count();
+        $pendingReportsCount = \App\Models\PostReport::where('status', 'pending')->count();
         $isFreeMode = \App\Models\SiteSetting::isFreeMode();
     @endphp
 
@@ -259,7 +260,7 @@
             </div>
             <div>
                 <h3 style="font-size: 1.15rem; font-weight: 800; line-height: 1.1;">Admin Center</h3>
-                <span style="font-size: 0.68rem; color: var(--admin-accent); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;">HAAB & Ministry B2B SaaS</span>
+                <span style="font-size: 0.68rem; color: var(--admin-accent); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;">B2B Hajj Umrah Platform</span>
             </div>
         </a>
 
@@ -281,6 +282,14 @@
             <li>
                 <a href="{{ route('admin.agencies') }}" class="{{ request()->routeIs('admin.agencies') ? 'active' : '' }}">
                     <span class="link-content"><i class="fa-solid fa-building-circle-check text-emerald-400"></i> Agency Directory</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.reports') }}" class="{{ request()->routeIs('admin.reports') ? 'active' : '' }}">
+                    <span class="link-content"><i class="fa-solid fa-triangle-exclamation text-rose-400"></i> Disputes & Reports</span>
+                    @if($pendingReportsCount > 0)
+                        <span style="background: #E11D48; color: white; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px;">{{ $pendingReportsCount }}</span>
+                    @endif
                 </a>
             </li>
 

@@ -7,7 +7,7 @@ $lang = session('locale', 'bn');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'B2B Hajj Umrah - ' . ($lang == 'bn' ? 'হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'Agency SaaS Network'))</title>
+    <title>@yield('title', 'B2B Hajj Umrah Platform - ' . ($lang == 'bn' ? 'হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'Agency SaaS Network'))</title>
 
     <!-- Fonts: Outfit, Inter & Noto Serif Bengali / Hind Siliguri -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,9 @@ $lang = session('locale', 'bn');
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js for High-End Visual Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -120,7 +123,7 @@ $lang = session('locale', 'bn');
         }
 
         .brand-text h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 800;
             line-height: 1.1;
             letter-spacing: 0.5px;
@@ -809,7 +812,7 @@ $lang = session('locale', 'bn');
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <div class="brand-text">
-                <h1>HAJJ & UMRAH B2B</h1>
+                <h1>B2B HAJJ UMRAH PLATFORM</h1>
                 <span>{{ $lang == 'bn' ? 'সরকার অনুমোদিত বিটুবি নেটওয়ার্ক' : 'Govt Approved B2B Portal' }}</span>
             </div>
         </a>
@@ -908,7 +911,7 @@ $lang = session('locale', 'bn');
                             <i class="fa-solid fa-kaaba"></i>
                         </div>
                         <div class="brand-text">
-                            <h1 style="color: white; font-size: 1.15rem;">B2B Hajj Umrah</h1>
+                            <h1 style="color: white; font-size: 1.15rem;">B2B Hajj Umrah Platform</h1>
                             <span>{{ $lang == 'bn' ? 'বিডি এজেন্সি শেয়ারিং' : 'Agency SaaS Network' }}</span>
                         </div>
                     </div>
@@ -1017,7 +1020,7 @@ $lang = session('locale', 'bn');
                         <i class="fa-solid fa-kaaba"></i>
                     </div>
                     <div class="brand-text">
-                        <h1 style="color: white;">B2B Hajj Umrah SaaS</h1>
+                        <h1 style="color: white;">B2B Hajj Umrah Platform</h1>
                         <span>{{ $lang == 'bn' ? 'বাংলাদেশ ট্রাভেল নেটওয়ার্ক' : 'Bangladesh Travel Network' }}</span>
                     </div>
                 </div>
@@ -1052,7 +1055,7 @@ $lang = session('locale', 'bn');
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} B2B Hajj Umrah. &nbsp;|&nbsp; Design & Developed by <a href="https://mrdeveloper.xyz" target="_blank" style="color: #F3E5AB; font-weight: 700; text-decoration: none;">MR Developer</a> . {{ $lang == 'bn' ? '১০০% ফ্রি এক্সেস প্ল্যাটফর্ম।' : '100% Free Access Platform.' }} All Rights Reserved.</p>
+            <p>&copy; {{ date('Y') }} B2B Hajj Umrah Platform. &nbsp;|&nbsp; Design & Developed by <a href="https://mrdeveloper.xyz" target="_blank" style="color: #F3E5AB; font-weight: 700; text-decoration: none;">MR Developer</a> . {{ $lang == 'bn' ? '১০০% ফ্রি এক্সেস প্ল্যাটফর্ম।' : '100% Free Access Platform.' }} All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1384,10 +1387,145 @@ $lang = session('locale', 'bn');
 
         @auth
         fetchNotifications();
-        // Snappy real-time polling every 5 seconds
-        setInterval(fetchNotifications, 5000);
+        // Snappy real-time polling every 4 seconds for instant chat & notification detection
+        setInterval(fetchNotifications, 4000);
         @endauth
     </script>
+
+    @auth
+    <!-- Floating Messenger Floating Action Button (FAB) -->
+    <div id="floatingMessengerContainer" style="display: none; position: fixed; bottom: 25px; right: 25px; z-index: 99999; animation: bounceFloat 2s infinite ease-in-out;">
+        <!-- New Message Toast Bubble Preview -->
+        <div id="floatingMessengerBubble" onclick="openFloatingMessengerChat()" style="display: none; background: #0F172A; color: white; border-radius: 14px; padding: 0.85rem 1.15rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 10px; cursor: pointer; max-width: 280px; border: 1px solid rgba(255,255,255,0.15); transition: transform 0.2s;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span id="floatingSenderName" style="font-size: 0.82rem; font-weight: 800; color: #FBBF24;">নতুন B2B মেসেজ!</span>
+                <span style="font-size: 0.7rem; color: #94A3B8;">এখনই পড়ুন</span>
+            </div>
+            <p id="floatingMessageText" style="margin: 0; font-size: 0.82rem; color: #E2E8F0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4;">
+                আপনাকে একটি নতুন বার্তা পাঠিয়েছে।
+            </p>
+        </div>
+
+        <!-- Floating Messenger Button -->
+        <button id="floatingMessengerBtn" onclick="openFloatingMessengerChat()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #044E35, #0B6E4F); color: white; border: 2.5px solid #D4AF37; box-shadow: 0 8px 25px rgba(4,78,53,0.45); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; font-size: 1.5rem; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" title="B2B মেসেজ পড়ুন">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span id="floatingMessengerBadge" style="position: absolute; top: -3px; right: -3px; background: #DC2626; color: white; font-size: 0.75rem; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">1</span>
+        </button>
+    </div>
+
+    <style>
+        @keyframes bounceFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+    </style>
+
+    <script>
+        let currentFloatingInquiryId = null;
+        let previousUnreadMessageCount = 0;
+
+        function updateFloatingMessenger(data) {
+            const container = document.getElementById('floatingMessengerContainer');
+            const badge = document.getElementById('floatingMessengerBadge');
+            const bubble = document.getElementById('floatingMessengerBubble');
+            const senderEl = document.getElementById('floatingSenderName');
+            const textEl = document.getElementById('floatingMessageText');
+
+            if (!container) return;
+
+            const unreadCount = data.unread_messages_count || 0;
+
+            if (unreadCount > 0) {
+                container.style.display = 'block';
+                if (badge) badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+
+                if (data.latest_message) {
+                    currentFloatingInquiryId = data.latest_message.inquiry_id;
+                    if (senderEl) senderEl.innerText = data.latest_message.sender_name;
+                    if (textEl) textEl.innerText = data.latest_message.message;
+                    if (bubble) bubble.style.display = 'block';
+                }
+
+                // Play sound if new message arrived
+                if (unreadCount > previousUnreadMessageCount) {
+                    playNotificationSound();
+                }
+            } else {
+                container.style.display = 'none';
+                if (bubble) bubble.style.display = 'none';
+            }
+
+            previousUnreadMessageCount = unreadCount;
+        }
+
+        function openFloatingMessengerChat() {
+            if (typeof openChatModal === 'function' && currentFloatingInquiryId) {
+                const senderName = document.getElementById('floatingSenderName') ? document.getElementById('floatingSenderName').innerText : 'Partner Agency';
+                openChatModal(currentFloatingInquiryId, senderName);
+                const bubble = document.getElementById('floatingMessengerBubble');
+                if (bubble) bubble.style.display = 'none';
+            } else if (currentFloatingInquiryId) {
+                window.location.href = "{{ route('dashboard.index') }}?open_chat=" + currentFloatingInquiryId;
+            } else {
+                window.location.href = "{{ route('dashboard.index') }}#received-proposals-section";
+            }
+        }
+
+        // Hook into fetchNotifications response
+        const originalFetchNotifications = fetchNotifications;
+        fetchNotifications = function() {
+            @auth
+            fetch("{{ route('notifications.unread') }}")
+                .then(r => r.json())
+                .then(data => {
+                    const badge = document.getElementById('notifBadge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+
+                    if (data.count > previousNotifCount && previousNotifCount !== 0) {
+                        playNotificationSound();
+                        const latest = data.latest_unread;
+                        Toast.fire({
+                            icon: 'info',
+                            title: latest ? latest.title : '🔔 নতুন B2B নোটিফিকেশন!',
+                            text: latest ? latest.message : 'আপনার ইনবক্সে নতুন আপডেট রয়েছে।'
+                        });
+                    }
+                    previousNotifCount = data.count;
+
+                    // Update floating messenger button
+                    updateFloatingMessenger(data);
+
+                    if (data.verification_status && lastKnownVerifStatus && data.verification_status !== lastKnownVerifStatus) {
+                        playNotificationSound();
+                        const isApproved = data.verification_status === 'verified';
+                        Swal.fire({
+                            icon: isApproved ? 'success' : 'error',
+                            title: isApproved ? '🎉 অভিনন্দন! এজেন্সি ভেরিফিকেশন অনুমোদিত' : '⚠️ এজেন্সি ভেরিফিকেশন প্রত্যাখ্যাত হয়েছে',
+                            text: isApproved ? 'সুপার এডমিন আপনার লাইসেন্স অনুমোদন করেছেন। সম্পূর্ণ এক্সেস লোড হচ্ছে...' : (data.rejection_reason || 'এডমিন মন্তব্য প্রদান করেছেন।'),
+                            timer: 3500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                        lastKnownVerifStatus = data.verification_status;
+                    }
+
+                    if (isNotifOpen) {
+                        renderNotifList(data.notifications);
+                    }
+                })
+                .catch(err => console.error(err));
+            @endauth
+        };
+    </script>
+    @endauth
 </body>
 
 </html>

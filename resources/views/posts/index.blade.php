@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'B2B Multi-Category Marketplace - B2B Hajj Umrah')
+@section('title', 'B2B Multi-Category Marketplace - B2B Hajj Umrah Platform')
 
 @section('content')
     <div class="responsive-card-padding" style="background: white; padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
         <div class="responsive-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
             <div>
-                <h1 class="font-heading" style="font-size: 2rem; color: var(--primary-dark); margin-bottom: 0.25rem;">B2B Hajj Umrah Collaboration Portal</h1>
+                <h1 class="font-heading" style="font-size: 2rem; color: var(--primary-dark); margin-bottom: 0.25rem;">B2B Hajj Umrah Platform Marketplace</h1>
                 <p style="color: var(--text-muted); font-size: 0.95rem;">Browse group seat vacancies, ticket sales, and hotel sharing deals from verified agencies.</p>
             </div>
 
@@ -79,12 +79,16 @@
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Departure Hub</label>
+                    <label style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Departure City/Division (বিভাগ/শহর)</label>
                     <select name="departure_city" style="width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.88rem;">
-                        <option value="">All Hubs</option>
-                        <option value="Dhaka" {{ request('departure_city') == 'Dhaka' ? 'selected' : '' }}>Dhaka</option>
-                        <option value="Chittagong" {{ request('departure_city') == 'Chittagong' ? 'selected' : '' }}>Chittagong</option>
-                        <option value="Sylhet" {{ request('departure_city') == 'Sylhet' ? 'selected' : '' }}>Sylhet</option>
+                        <option value="">সকল ডিপার্চার শহর</option>
+                        <option value="Dhaka" {{ request('departure_city') == 'Dhaka' ? 'selected' : '' }}>ঢাকা (Dhaka)</option>
+                        <option value="Chittagong" {{ request('departure_city') == 'Chittagong' ? 'selected' : '' }}>চট্টগ্রাম (Chittagong)</option>
+                        <option value="Sylhet" {{ request('departure_city') == 'Sylhet' ? 'selected' : '' }}>সিলেট (Sylhet)</option>
+                        <option value="Cox's Bazar" {{ request('departure_city') == "Cox's Bazar" ? 'selected' : '' }}>কক্সবাজার (Cox's Bazar)</option>
+                        <option value="Rajshahi" {{ request('departure_city') == 'Rajshahi' ? 'selected' : '' }}>রাজশাহী (Rajshahi)</option>
+                        <option value="Saidpur" {{ request('departure_city') == 'Saidpur' ? 'selected' : '' }}>সৈয়দপুর / রংপুর</option>
+                        <option value="Jessore" {{ request('departure_city') == 'Jessore' ? 'selected' : '' }}>যশোর / খুলনা</option>
                     </select>
                 </div>
 

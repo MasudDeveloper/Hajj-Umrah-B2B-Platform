@@ -68,6 +68,7 @@ class Post extends Model
         'status',
         'is_special_offer',
         'special_offer_status',
+        'is_reported',
     ];
 
     protected $casts = [
@@ -86,6 +87,7 @@ class Post extends Model
         'shifting_package' => 'boolean',
         'qurbani_included' => 'boolean',
         'is_special_offer' => 'boolean',
+        'is_reported' => 'boolean',
         'price_per_seat' => 'decimal:2',
         'advance_deposit' => 'decimal:2',
         'agent_commission' => 'decimal:2',
@@ -99,6 +101,11 @@ class Post extends Model
     public function inquiries()
     {
         return $this->hasMany(PostInquiry::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(PostReport::class, 'post_id');
     }
 
     public function pendingSeats()

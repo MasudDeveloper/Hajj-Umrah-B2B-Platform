@@ -9,7 +9,7 @@
         <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ECFDF5; color: #047857; font-size: 0.8rem; font-weight: 700; padding: 0.3rem 0.85rem; border-radius: 20px; margin-bottom: 0.75rem; border: 1px solid #A7F3D0;">
             <i class="fa-solid fa-user-plus"></i> Step 1 of 2: Basic Account Creation
         </div>
-        <h1 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.35rem;">B2B Hajj Umrah Registration</h1>
+        <h1 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.35rem;">B2B Hajj Umrah Platform Registration</h1>
         <p style="color: var(--text-muted); font-size: 0.9rem;">Register your agency account and verify mobile number via OTP.</p>
     </div>
 

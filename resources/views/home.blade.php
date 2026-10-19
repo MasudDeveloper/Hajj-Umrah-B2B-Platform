@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', session('locale', 'bn') == 'bn' ? 'B2B Hajj Umrah - হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'B2B Hajj Umrah SaaS Platform - Bangladesh')
+@section('title', session('locale', 'bn') == 'bn' ? 'B2B Hajj Umrah Platform - হজ ও ওমরাহ B2B শেয়ারিং প্ল্যাটফর্ম' : 'B2B Hajj Umrah Platform - Bangladesh')
 
 @section('content')
     @php

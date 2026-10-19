@@ -43,6 +43,7 @@ class Agency extends Authenticatable
         'bio',
         'website',
         'atab_no',
+        'strike_count',
     ];
 
     protected $hidden = [
@@ -54,12 +55,23 @@ class Agency extends Authenticatable
         'is_admin' => 'boolean',
         'is_verified' => 'boolean',
         'is_phone_verified' => 'boolean',
+        'strike_count' => 'integer',
         'verification_submitted_at' => 'datetime',
     ];
 
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function reportsSubmitted()
+    {
+        return $this->hasMany(PostReport::class, 'reporter_agency_id');
+    }
+
+    public function reportsReceived()
+    {
+        return $this->hasMany(PostReport::class, 'offending_agency_id');
     }
 
     public function inquiriesSent()

@@ -61,7 +61,7 @@
         <i class="fa-solid fa-kaaba text-amber-300"></i> সহজ ও স্বচ্ছ বিটুবি কার্যপ্রণালী
     </div>
     <h1 style="font-size: 2.6rem; font-weight: 800; margin-bottom: 1.25rem; font-family: var(--font-heading); color: white; line-height: 1.25;">
-        কীভাবে কাজ করে HAJJ & UMRAH B2B প্ল্যাটফর্ম?
+        কীভাবে কাজ করে B2B Hajj Umrah Platform?
     </h1>
     <p style="font-size: 1.15rem; color: #E2E8F0; max-width: 820px; margin: 0 auto; line-height: 1.7;">
         বাংলাদেশ সরকারের অনুমোদিত হজ্ব ও ওমরাহ লাইসেন্সপ্রাপ্ত ট্রাভেল এজেন্সিগুলোর জন্য গ্রুপ সিট, বিমান টিকিট ও হোটেল শেয়ারিংয়ের সম্পূর্ণ অটোমেটেড ৪-ধাপের প্রক্রিয়া।

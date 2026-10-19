@@ -84,6 +84,27 @@
         </div>
     </div>
 
+    @if($pendingReportsCount > 0)
+        <div style="background: #FFF1F2; border: 1.5px solid #FDA4AF; border-radius: 14px; padding: 1.15rem 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFE4E6; color: #E11D48; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0; font-size: 1.05rem; color: #9F1239; font-weight: 800;">
+                        {{ $pendingReportsCount }} টি ডুপ্লিকেট বা ফেক সিটের অভিযোগ পর্যালোচনার অপেক্ষায় রয়েছে!
+                    </h4>
+                    <p style="margin: 0.15rem 0 0 0; font-size: 0.85rem; color: #BE123C;">
+                        এজেন্সিগুলোর রিপোর্টের সত্যতা যাচাই করে অননুমোদিত পোস্ট বাতিল ও অভিযুক্ত এজেন্সিকে স্ট্রাইক দিন।
+                    </p>
+                </div>
+            </div>
+            <a href="{{ route('admin.reports') }}" class="btn-primary" style="background: #E11D48; border-radius: 8px; font-size: 0.88rem; font-weight: 700; text-decoration: none; padding: 0.6rem 1.25rem;">
+                রিপোর্ট পর্যালোচনা করুন &rarr;
+            </a>
+        </div>
+    @endif
+
     <!-- 6 Executive KPI Cards Grid -->
     <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-bottom: 2.25rem;" class="admin-kpi-grid">
         <!-- 1 -->
@@ -194,19 +215,21 @@
             </div>
         </div>
 
-        <!-- Chart 3: City Hub Bar Distribution -->
+        <!-- Chart 3: Division & District Agency Distribution -->
         <div style="background: white; border-radius: 18px; padding: 1.75rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
             <h3 class="font-heading" style="font-size: 1.15rem; color: var(--admin-dark); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fa-solid fa-location-dot text-red-500 me-2"></i> ডিপার্চার হাব ডিস্ট্রিবিউশন</span>
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Hubs</span>
+                <span><i class="fa-solid fa-map-location-dot text-emerald-600 me-2"></i> বিভাগ ও জেলা ভিত্তিক এজেন্সি</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Divisions / Districts</span>
             </h3>
             <div style="position: relative; height: 210px; display: flex; align-items: center; justify-content: center;">
                 <canvas id="cityBarChart"></canvas>
             </div>
-            <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.8rem; border-top: 1px solid #F1F5F9; padding-top: 0.75rem;">
-                <span style="color: #047857; font-weight: 700;">● Dhaka: {{ $cityChart['Dhaka'] }}</span>
-                <span style="color: #0284C7; font-weight: 700;">● Ctg: {{ $cityChart['Chittagong'] }}</span>
-                <span style="color: #7C3AED; font-weight: 700;">● Sylhet: {{ $cityChart['Sylhet'] }}</span>
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; font-size: 0.78rem; border-top: 1px solid #F1F5F9; padding-top: 0.75rem;">
+                <span style="color: #044E35; font-weight: 700;">ঢাকা: {{ $cityChart['Dhaka'] ?? 0 }}</span>
+                <span style="color: #0284C7; font-weight: 700;">চট্টগ্রাম: {{ $cityChart['Chittagong'] ?? 0 }}</span>
+                <span style="color: #7C3AED; font-weight: 700;">সিলেট: {{ $cityChart['Sylhet'] ?? 0 }}</span>
+                <span style="color: #D97706; font-weight: 700;">রাজশাহী: {{ $cityChart['Rajshahi'] ?? 0 }}</span>
+                <span style="color: #059669; font-weight: 700;">অন্যান্য: {{ ($cityChart['Khulna'] ?? 0) + ($cityChart['Barisal'] ?? 0) + ($cityChart['Rangpur'] ?? 0) + ($cityChart['Mymensingh'] ?? 0) }}</span>
             </div>
         </div>
     </div>
@@ -358,16 +381,28 @@
                 }
             });
 
-            // Chart 3: City Hub Bar
+            // Chart 3: Division & District Agency Bar
             const ctxCity = document.getElementById('cityBarChart').getContext('2d');
             new Chart(ctxCity, {
                 type: 'bar',
                 data: {
-                    labels: ['Dhaka', 'Ctg', 'Sylhet', 'Others'],
+                    labels: ['ঢাকা', 'চট্টগ্রাম', 'সিলেট', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'রংপুর', 'ময়মনসিংহ'],
                     datasets: [{
-                        label: 'Agencies',
-                        data: [{{ $cityChart['Dhaka'] }}, {{ $cityChart['Chittagong'] }}, {{ $cityChart['Sylhet'] }}, {{ $cityChart['Others'] }}],
-                        backgroundColor: '#044E35',
+                        label: 'এজেন্সি সংখ্যা',
+                        data: [
+                            {{ $cityChart['Dhaka'] ?? 0 }},
+                            {{ $cityChart['Chittagong'] ?? 0 }},
+                            {{ $cityChart['Sylhet'] ?? 0 }},
+                            {{ $cityChart['Rajshahi'] ?? 0 }},
+                            {{ $cityChart['Khulna'] ?? 0 }},
+                            {{ $cityChart['Barisal'] ?? 0 }},
+                            {{ $cityChart['Rangpur'] ?? 0 }},
+                            {{ $cityChart['Mymensingh'] ?? 0 }}
+                        ],
+                        backgroundColor: [
+                            '#044E35', '#0284C7', '#7C3AED', '#D97706',
+                            '#059669', '#E11D48', '#2563EB', '#475569'
+                        ],
                         borderRadius: 6,
                     }]
                 },
@@ -378,7 +413,7 @@
                         legend: { display: false }
                     },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#F1F5F9' } },
                         x: { grid: { display: false } }
                     }
                 }

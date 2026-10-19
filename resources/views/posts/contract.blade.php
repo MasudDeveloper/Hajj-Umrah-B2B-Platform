@@ -16,7 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>দ্বিপাক্ষিক বি২বি চুক্তিপত্র #{{ $contractRef }} | B2B Hajj Umrah Network</title>
+    <title>দ্বিপাক্ষিক বি২বি চুক্তিপত্র #{{ $contractRef }} | B2B Hajj Umrah Platform</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -890,7 +890,7 @@
     <!-- Main Legal Contract Document -->
     <div class="contract-wrapper">
         <div class="contract-inner-border"></div>
-        <div class="watermark">B2B HAJJ UMRAH</div>
+        <div class="watermark">B2B HAJJ UMRAH PLATFORM</div>
 
         <div class="contract-content">
             
@@ -912,7 +912,7 @@
                         <i class="fa-solid fa-kaaba"></i>
                     </div>
                     <div class="brand-text">
-                        <h1>B2B HAJJ UMRAH NETWORK</h1>
+                        <h1>B2B HAJJ UMRAH PLATFORM</h1>
                         <p>BANGLADESH LICENSED AGENCY DEALS & CONTRACTING PLATFORM</p>
                     </div>
                 </div>
@@ -1348,7 +1348,7 @@
 
             <!-- Bottom Legal Footnote -->
             <div class="contract-footer">
-                <div>© {{ date('Y') }} B2B Hajj Umrah Network Bangladesh. All Rights Reserved. HAAB & Govt Ministry Recognized Agency Platform.</div>
+                <div>© {{ date('Y') }} B2B Hajj Umrah Platform Bangladesh. All Rights Reserved. HAAB & Govt Ministry Recognized Agency Platform.</div>
                 <div style="font-size: 0.7rem; margin-top: 0.2rem;">Generated electronically via authenticated B2B session on {{ date('d M, Y - h:i A') }}. Page 1 of 1.</div>
             </div>
 

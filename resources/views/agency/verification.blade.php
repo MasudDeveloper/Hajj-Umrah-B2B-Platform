@@ -161,14 +161,50 @@
         <!-- Grid 3: City & Office Address -->
         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.25rem; margin-bottom: 1.75rem;">
             <div>
-                <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; color: var(--text-dark);">City Hub *</label>
-                <select name="city" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.92rem; background: white;">
-                    <option value="Dhaka" {{ old('city', $agency->city) == 'Dhaka' ? 'selected' : '' }}>Dhaka</option>
-                    <option value="Chittagong" {{ old('city', $agency->city) == 'Chittagong' ? 'selected' : '' }}>Chittagong</option>
-                    <option value="Sylhet" {{ old('city', $agency->city) == 'Sylhet' ? 'selected' : '' }}>Sylhet</option>
-                    <option value="Rajshahi" {{ old('city', $agency->city) == 'Rajshahi' ? 'selected' : '' }}>Rajshahi</option>
-                    <option value="Khulna" {{ old('city', $agency->city) == 'Khulna' ? 'selected' : '' }}>Khulna</option>
-                    <option value="Barisal" {{ old('city', $agency->city) == 'Barisal' ? 'selected' : '' }}>Barisal</option>
+                <label style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; color: var(--text-dark);">Agency District / City (জেলা ও বিভাগ) *</label>
+                <select name="city" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.92rem; background: white; font-weight: 600;">
+                    <optgroup label="ঢাকা বিভাগ (Dhaka Division)">
+                        <option value="Dhaka" {{ old('city', $agency->city) == 'Dhaka' ? 'selected' : '' }}>Dhaka (ঢাকা)</option>
+                        <option value="Gazipur" {{ old('city', $agency->city) == 'Gazipur' ? 'selected' : '' }}>Gazipur (গাজীপুর)</option>
+                        <option value="Narayanganj" {{ old('city', $agency->city) == 'Narayanganj' ? 'selected' : '' }}>Narayanganj (নারায়ণগঞ্জ)</option>
+                        <option value="Tangail" {{ old('city', $agency->city) == 'Tangail' ? 'selected' : '' }}>Tangail (টাঙ্গাইল)</option>
+                        <option value="Faridpur" {{ old('city', $agency->city) == 'Faridpur' ? 'selected' : '' }}>Faridpur (ফরিদপুর)</option>
+                    </optgroup>
+                    <optgroup label="চট্টগ্রাম বিভাগ (Chittagong Division)">
+                        <option value="Chittagong" {{ old('city', $agency->city) == 'Chittagong' ? 'selected' : '' }}>Chittagong (চট্টগ্রাম)</option>
+                        <option value="Cox's Bazar" {{ old('city', $agency->city) == "Cox's Bazar" ? 'selected' : '' }}>Cox's Bazar (কক্সবাজার)</option>
+                        <option value="Comilla" {{ old('city', $agency->city) == 'Comilla' ? 'selected' : '' }}>Comilla (কুমিল্লা)</option>
+                        <option value="Feni" {{ old('city', $agency->city) == 'Feni' ? 'selected' : '' }}>Feni (ফেনী)</option>
+                        <option value="Noakhali" {{ old('city', $agency->city) == 'Noakhali' ? 'selected' : '' }}>Noakhali (নোয়াখালী)</option>
+                        <option value="Brahmanbaria" {{ old('city', $agency->city) == 'Brahmanbaria' ? 'selected' : '' }}>Brahmanbaria (ব্রাহ্মণবাড়িয়া)</option>
+                    </optgroup>
+                    <optgroup label="সিলেট বিভাগ (Sylhet Division)">
+                        <option value="Sylhet" {{ old('city', $agency->city) == 'Sylhet' ? 'selected' : '' }}>Sylhet (সিলেট)</option>
+                        <option value="Moulvibazar" {{ old('city', $agency->city) == 'Moulvibazar' ? 'selected' : '' }}>Moulvibazar (মৌলভীবাজার)</option>
+                        <option value="Habiganj" {{ old('city', $agency->city) == 'Habiganj' ? 'selected' : '' }}>Habiganj (হবিগঞ্জ)</option>
+                        <option value="Sunamganj" {{ old('city', $agency->city) == 'Sunamganj' ? 'selected' : '' }}>Sunamganj (সুনামগঞ্জ)</option>
+                    </optgroup>
+                    <optgroup label="রাজশাহী বিভাগ (Rajshahi Division)">
+                        <option value="Rajshahi" {{ old('city', $agency->city) == 'Rajshahi' ? 'selected' : '' }}>Rajshahi (রাজশাহী)</option>
+                        <option value="Bogra" {{ old('city', $agency->city) == 'Bogra' ? 'selected' : '' }}>Bogra (বগুড়া)</option>
+                        <option value="Pabna" {{ old('city', $agency->city) == 'Pabna' ? 'selected' : '' }}>Pabna (পাবনা)</option>
+                    </optgroup>
+                    <optgroup label="খুলনা বিভাগ (Khulna Division)">
+                        <option value="Khulna" {{ old('city', $agency->city) == 'Khulna' ? 'selected' : '' }}>Khulna (খুলনা)</option>
+                        <option value="Jessore" {{ old('city', $agency->city) == 'Jessore' ? 'selected' : '' }}>Jessore (যশোর)</option>
+                        <option value="Kushtia" {{ old('city', $agency->city) == 'Kushtia' ? 'selected' : '' }}>Kushtia (কুষ্টিয়া)</option>
+                    </optgroup>
+                    <optgroup label="বরিশাল বিভাগ (Barisal Division)">
+                        <option value="Barisal" {{ old('city', $agency->city) == 'Barisal' ? 'selected' : '' }}>Barisal (বরিশাল)</option>
+                        <option value="Patuakhali" {{ old('city', $agency->city) == 'Patuakhali' ? 'selected' : '' }}>Patuakhali (পটুয়াখালী)</option>
+                    </optgroup>
+                    <optgroup label="রংপুর বিভাগ (Rangpur Division)">
+                        <option value="Rangpur" {{ old('city', $agency->city) == 'Rangpur' ? 'selected' : '' }}>Rangpur (রংপুর)</option>
+                        <option value="Dinajpur" {{ old('city', $agency->city) == 'Dinajpur' ? 'selected' : '' }}>Dinajpur (দিনাজপুর)</option>
+                    </optgroup>
+                    <optgroup label="ময়মনসিংহ বিভাগ (Mymensingh Division)">
+                        <option value="Mymensingh" {{ old('city', $agency->city) == 'Mymensingh' ? 'selected' : '' }}>Mymensingh (ময়মনসিংহ)</option>
+                    </optgroup>
                 </select>
             </div>
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'B2B Hajj Umrah'),
+    'name' => env('APP_NAME', 'B2B Hajj Umrah Platform'),
 
     /*
     |--------------------------------------------------------------------------

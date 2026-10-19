@@ -106,13 +106,26 @@
 
                 <div id="departure_city_box">
                     <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                        {{ $lang == 'bn' ? 'ডিপার্চার হাব (ফ্লাইট শুরু) *' : 'Departure Hub *' }}
+                        {{ $lang == 'bn' ? 'ফ্লাইটের ডিপার্চার শহর / বিভাগ *' : 'Departure City / Division *' }}
                     </label>
-                    <select name="departure_city" id="departure_city" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem;">
-                        <option value="Dhaka">Dhaka (ঢাকা)</option>
-                        <option value="Chittagong">Chittagong (চট্টগ্রাম)</option>
-                        <option value="Sylhet">Sylhet (সিলেট)</option>
+                    <select name="departure_city" id="departure_city" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; font-weight: 600;">
+                        <option value="Dhaka">Dhaka (ঢাকা - হযরত শাহজালাল আন্তর্জাতিক বিমানবন্দর)</option>
+                        <option value="Chittagong">Chittagong (চট্টগ্রাম - শাহ আমানত আন্তর্জাতিক বিমানবন্দর)</option>
+                        <option value="Sylhet">Sylhet (সিলেট - ওসমানী আন্তর্জাতিক বিমানবন্দর)</option>
+                        <option value="Cox's Bazar">Cox's Bazar (কক্সবাজার)</option>
+                        <option value="Rajshahi">Rajshahi (রাজশাহী)</option>
+                        <option value="Saidpur">Saidpur / Rangpur (সৈয়দপুর / রংপুর)</option>
+                        <option value="Jessore">Jessore / Khulna (যশোর / খুলনা)</option>
+                        <option value="Barisal">Barisal (বরিশাল)</option>
                     </select>
+                </div>
+            </div>
+
+            <!-- Anti-Ghost / Genuine Seat Ownership Policy Reminder -->
+            <div style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.65rem;">
+                <i class="fa-solid fa-shield-halved text-blue-600" style="margin-top: 0.2rem; font-size: 1.1rem;"></i>
+                <div style="font-size: 0.82rem; color: #1E40AF; line-height: 1.45;">
+                    <strong>ন্যায্য B2B ইনভেন্টরি নিয়মাবলী:</strong> শুধুমাত্র আপনার এজেন্সির নিজস্ব সংরক্ষিত এয়ারলাইন্স গ্রুপ সিট বা অনুমোদিত সাব-অ্যালোকেশনের সিট পোস্ট করুন। অনুমতি ছাড়া অন্যের পোস্ট দেখে অনুমাননির্ভর/ডুপ্লিকেট সিট অফার করলে বা ভুয়া পোস্ট দিলে রিপোর্ট সাপেক্ষে এজেন্সি অ্যাকাউন্ট ও লাইসেন্স ব্যান করা হবে।
                 </div>
             </div>
 

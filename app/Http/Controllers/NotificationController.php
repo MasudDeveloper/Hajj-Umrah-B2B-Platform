@@ -24,10 +24,29 @@ class NotificationController extends Controller
             ->where('is_read', false)
             ->count();
 
+        // Check specifically for unread chat messages
+        $unreadMessagesCount = \App\Models\Message::where('receiver_agency_id', $agencyId)
+            ->where('is_read', false)
+            ->count();
+
+        $latestUnreadMessage = \App\Models\Message::with(['sender', 'inquiry.post'])
+            ->where('receiver_agency_id', $agencyId)
+            ->where('is_read', false)
+            ->latest()
+            ->first();
+
         $unreadNotif = $notifications->firstWhere('is_read', false);
 
         return response()->json([
             'count' => $unreadCount,
+            'unread_messages_count' => $unreadMessagesCount,
+            'latest_message' => $latestUnreadMessage ? [
+                'id' => $latestUnreadMessage->id,
+                'inquiry_id' => $latestUnreadMessage->post_inquiry_id,
+                'sender_name' => $latestUnreadMessage->sender ? $latestUnreadMessage->sender->agency_name : 'Partner Agency',
+                'message' => $latestUnreadMessage->message,
+                'time_ago' => $latestUnreadMessage->created_at->diffForHumans(),
+            ] : null,
             'verification_status' => Auth::user()->verification_status,
             'rejection_reason' => Auth::user()->rejection_reason,
             'latest_unread' => $unreadNotif ? [

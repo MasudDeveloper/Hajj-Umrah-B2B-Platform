@@ -30,7 +30,7 @@ class OtpService
             try {
                 $payload = [
                     'api_key' => $apiToken,
-                    'msg'     => "আপনার B2B Hajj Umrah ওটিপি ভেরিফিকেশন কোড: {$otpCode}। এটি কারও সাথে শেয়ার করবেন না।",
+                    'msg'     => "আপনার B2B Hajj Umrah Platform ওটিপি ভেরিফিকেশন কোড: {$otpCode}। এটি কারও সাথে শেয়ার করবেন না।",
                     'to'      => $formattedPhone,
                 ];
 

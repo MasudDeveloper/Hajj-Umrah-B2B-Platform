@@ -8,6 +8,7 @@ use App\Models\PostInquiry;
 use App\Models\Transaction;
 use App\Models\Subscription;
 use App\Models\Notification;
+use App\Models\PostReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -534,7 +535,42 @@ class PostController extends Controller
             ->orderBy('ends_at', 'desc')
             ->first();
 
-        return view('dashboard.index', compact('agency', 'myPosts', 'myInquiries', 'sentInquiries', 'myTransactions', 'activeSubscription'));
+        // Agency Business Metrics & Analytics
+        $totalSeatsOffered = $myPosts->sum('total_group_size');
+        $totalSeatsAvailable = $myPosts->sum('available_seats');
+        $totalSeatsSold = max(0, $totalSeatsOffered - $totalSeatsAvailable);
+        
+        $completedDealsCount = $myInquiries->where('status', 'completed')->count() + $sentInquiries->where('status', 'completed')->count();
+        $inNegotiationCount = $myInquiries->whereIn('status', ['pending', 'accepted'])->count();
+        
+        // Category Breakdown for the Agency
+        $categoryBreakdown = [
+            'group_seats' => $myPosts->where('post_category', 'group_seats')->count(),
+            'ticket_only' => $myPosts->where('post_category', 'ticket_only')->count(),
+            'hotel_share' => $myPosts->where('post_category', 'hotel_share')->count(),
+        ];
+
+        // Overall estimated deal volume (BDT)
+        $totalDealVolume = $myInquiries->where('status', 'completed')->sum(function($inq) {
+            $rate = $inq->offered_price_per_seat ?: ($inq->post ? $inq->post->price_per_seat : 0);
+            return $inq->requested_seats * $rate;
+        });
+
+        return view('dashboard.index', compact(
+            'agency',
+            'myPosts',
+            'myInquiries',
+            'sentInquiries',
+            'myTransactions',
+            'activeSubscription',
+            'totalSeatsOffered',
+            'totalSeatsAvailable',
+            'totalSeatsSold',
+            'completedDealsCount',
+            'inNegotiationCount',
+            'categoryBreakdown',
+            'totalDealVolume'
+        ));
     }
 
     public function updateStatus(Request $request, $id)
@@ -574,5 +610,80 @@ class PostController extends Controller
         $post->save();
 
         return back()->with('success', 'সিট সংখ্যা সফলভাবে আপডেট/এডজাস্ট করা হয়েছে!');
+    }
+
+    /**
+     * Submit Report / Dispute against a suspicious or duplicate post
+     */
+    public function reportPost(Request $request)
+    {
+        if (!Auth::check()) {
+            return back()->with('error', 'রিপোর্ট করতে প্রথমে আপনার এজেন্সিতে লগইন করুন।');
+        }
+
+        $request->validate([
+            'post_id' => 'required|exists:posts,id',
+            'reason' => 'required|string|in:unauthorized_resale,ghost_seats,misleading_info,price_gouging,other',
+            'details' => 'required|string|min:10|max:2500',
+            'original_post_id' => 'nullable|exists:posts,id',
+            'proof_file' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+        ]);
+
+        $post = Post::with('agency')->findOrFail($request->post_id);
+        $currentAgency = Auth::user();
+
+        if ($post->agency_id === $currentAgency->id) {
+            return back()->with('error', 'আপনি নিজের পোস্টের বিরুদ্ধে রিপোর্ট করতে পারবেন না।');
+        }
+
+        // Check if already reported by this agency
+        $existingReport = PostReport::where('post_id', $post->id)
+            ->where('reporter_agency_id', $currentAgency->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingReport) {
+            return back()->with('error', 'এই পোস্টটির বিরুদ্ধে আপনার একটি অভিযোগ ইতোমধ্যে প্রক্রিয়াধীন রয়েছে।');
+        }
+
+        $proofPath = null;
+        if ($request->hasFile('proof_file')) {
+            $file = $request->file('proof_file');
+            $filename = 'proof_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $destination = public_path('uploads/report_proofs');
+            if (!file_exists($destination)) {
+                mkdir($destination, 0777, true);
+            }
+            $file->move($destination, $filename);
+            $proofPath = 'uploads/report_proofs/' . $filename;
+        }
+
+        PostReport::create([
+            'post_id' => $post->id,
+            'reporter_agency_id' => $currentAgency->id,
+            'offending_agency_id' => $post->agency_id,
+            'original_post_id' => $request->original_post_id,
+            'reason' => $request->reason,
+            'details' => $request->details,
+            'proof_file' => $proofPath,
+            'status' => 'pending',
+        ]);
+
+        // Mark post as reported
+        $post->update(['is_reported' => true]);
+
+        // Notify Admins
+        $admins = Agency::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Notification::send(
+                $admin->id,
+                'dispute_alert',
+                'নতুন পোস্ট অভিযোগ: ' . $currentAgency->agency_name,
+                "পোস্ট #{$post->id} এর বিরুদ্ধে ডুপ্লিকেট/ফেক সিটের অভিযোগ এসেছে।",
+                route('admin.reports')
+            );
+        }
+
+        return back()->with('success', 'আপনার অভিযোগটি সফলভাবে সুপার অ্যাডমিনের নিকট জমা দেওয়া হয়েছে। প্রশাসন উভয় পক্ষের তথ্য যাচাই করে দ্রুত ব্যবস্থা গ্রহণ করবে।');
     }
 }

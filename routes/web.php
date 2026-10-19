@@ -72,6 +72,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/agency/{id}', [AdminController::class, 'agencyDetails'])->name('agency.details');
     Route::post('/cleanup', [AdminController::class, 'runCleanup'])->name('cleanup');
     Route::post('/platform-mode', [AdminController::class, 'togglePlatformMode'])->name('platform.mode');
+
+    // Disputes & Ghost/Duplicate Seat Reports Governance
+    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+    Route::post('/reports/{id}/approve', [AdminController::class, 'approveReport'])->name('reports.approve');
+    Route::post('/reports/{id}/dismiss', [AdminController::class, 'dismissReport'])->name('reports.dismiss');
 });
 
 // 4. Multi-Category B2B Posts (Group Seats, Tickets, Hotel Share)
@@ -81,6 +86,7 @@ Route::prefix('posts')->name('posts.')->group(function () {
     Route::post('/', [PostController::class, 'store'])->name('store');
     Route::get('/{id}', [PostController::class, 'show'])->name('show');
     Route::get('/{id}/quotation', [PostController::class, 'quotation'])->name('quotation');
+    Route::post('/report', [PostController::class, 'reportPost'])->name('report');
     Route::post('/inquiry', [PostController::class, 'storeInquiry'])->name('inquiry');
     Route::post('/inquiry/{id}/respond', [PostController::class, 'respondInquiry'])->name('inquiry.respond');
     Route::post('/inquiry/{id}/confirm-deal', [PostController::class, 'confirmDeal'])->name('inquiry.confirm_deal');

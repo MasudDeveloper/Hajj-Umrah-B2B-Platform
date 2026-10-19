@@ -9,6 +9,7 @@ use App\Models\SiteSetting;
 use App\Models\Transaction;
 use App\Models\Subscription;
 use App\Models\Notification;
+use App\Models\PostReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
@@ -32,6 +33,8 @@ class AdminController extends Controller
         $totalPendingTransactions = Transaction::where('status', 'pending')->count();
         $totalRevenue = Transaction::where('status', 'approved')->sum('amount');
         $currentPlatformMode = SiteSetting::get('platform_monetization_mode', 'free');
+        $totalReportsCount = PostReport::count();
+        $pendingReportsCount = PostReport::where('status', 'pending')->count();
 
         // Analytics Data Breakdowns for Visual Charts
         $verificationChart = [
@@ -46,12 +49,17 @@ class AdminController extends Controller
             'hotel_share' => Post::where('post_category', 'hotel_share')->count(),
         ];
 
-        $cityChart = [
-            'Dhaka' => Agency::where('city', 'Dhaka')->where('is_admin', false)->count(),
-            'Chittagong' => Agency::where('city', 'Chittagong')->where('is_admin', false)->count(),
-            'Sylhet' => Agency::where('city', 'Sylhet')->where('is_admin', false)->count(),
-            'Others' => Agency::whereNotIn('city', ['Dhaka', 'Chittagong', 'Sylhet'])->where('is_admin', false)->count(),
-        ];
+        // Dynamic Division & District Distribution of Registered Agencies
+        $divisions = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barisal', 'Rangpur', 'Mymensingh'];
+        $divisionStats = [];
+        foreach ($divisions as $div) {
+            $divisionStats[$div] = Agency::where(function($q) use ($div) {
+                $q->where('city', $div)
+                  ->orWhere('city', 'like', "%{$div}%")
+                  ->orWhere('address', 'like', "%{$div}%");
+            })->where('is_admin', false)->count();
+        }
+        $cityChart = $divisionStats;
 
         // Recent Activity Feed
         $recentRegistrations = Agency::where('is_admin', false)->orderBy('created_at', 'desc')->take(5)->get();
@@ -64,15 +72,17 @@ class AdminController extends Controller
             'totalRejectedCount',
             'totalPostsCount',
             'totalInquiriesCount',
+            'totalCompletedDeals',
+            'totalPendingTransactions',
+            'totalRevenue',
+            'totalReportsCount',
+            'pendingReportsCount',
+            'currentPlatformMode',
             'verificationChart',
             'categoryChart',
             'cityChart',
             'recentRegistrations',
-            'recentPosts',
-            'totalCompletedDeals',
-            'totalPendingTransactions',
-            'totalRevenue',
-            'currentPlatformMode'
+            'recentPosts'
         ));
     }
 
@@ -420,5 +430,121 @@ class AdminController extends Controller
     {
         Artisan::call('platform:cleanup');
         return back()->with('success', 'প্ল্যাটফর্মের অটোমেটেড ক্লিনআপ (মেয়াদোত্তীর্ণ পোস্ট ও স্টেল প্রস্তাব বাতিল) সফলভাবে সম্পন্ন হয়েছে!');
+    }
+
+    /**
+     * Disputes & Post Reports Governance Center
+     */
+    public function reports(Request $request)
+    {
+        $status = $request->get('status', 'all');
+
+        $query = PostReport::with(['post.agency', 'reporterAgency', 'offendingAgency', 'originalPost', 'reviewer'])
+            ->latest();
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $reports = $query->paginate(15)->withQueryString();
+
+        $metrics = [
+            'total' => PostReport::count(),
+            'pending' => PostReport::where('status', 'pending')->count(),
+            'resolved' => PostReport::where('status', 'resolved_removed')->count(),
+            'dismissed' => PostReport::where('status', 'dismissed')->count(),
+        ];
+
+        return view('admin.reports', compact('reports', 'metrics', 'status'));
+    }
+
+    /**
+     * Approve Report: Suspend offending post & penalize offending agency
+     */
+    public function approveReport(Request $request, $id)
+    {
+        $report = PostReport::with(['post', 'offendingAgency', 'reporterAgency'])->findOrFail($id);
+
+        $adminNotes = $request->input('admin_notes', 'ডুপ্লিকেট ও অননুমোদিত সিটের অভিযোগ প্রমাণিত হওয়ায় পোস্টটি বাতিল করা হয়েছে।');
+
+        // Suspend the reported post
+        if ($report->post) {
+            $report->post->update([
+                'status' => 'suspended',
+                'is_reported' => true,
+            ]);
+        }
+
+        // Add strike to offending agency
+        if ($report->offendingAgency) {
+            $report->offendingAgency->increment('strike_count');
+        }
+
+        // Update report status
+        $report->update([
+            'status' => 'resolved_removed',
+            'admin_notes' => $adminNotes,
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+        ]);
+
+        // Send alert notification to offending agency
+        Notification::send(
+            $report->offending_agency_id,
+            'strike_warning',
+            '⚠️ সতর্কবার্তা: আপনার পোস্টটি স্থগিত করা হয়েছে',
+            "পোস্ট #{$report->post_id} ডুপ্লিকেট/অনুমতিহীন হওয়ায় সুপার এডমিন কর্তৃক বাতিল করা হয়েছে এবং আপনার অ্যাকাউন্টে ১টি স্ট্রাইক যোগ হয়েছে। (বর্তমান স্ট্রাইক: {$report->offendingAgency->strike_count})",
+            route('dashboard.index')
+        );
+
+        // Send confirmation notification to reporter agency
+        Notification::send(
+            $report->reporter_agency_id,
+            'dispute_resolved',
+            '✅ আপনার অভিযোগটি কার্যকর হয়েছে',
+            "পোস্ট #{$report->post_id} এর বিরুদ্ধে আপনার রিপোর্টটি সত্য প্রমাণিত হয়েছে এবং উক্ত ডুপ্লিকেট পোস্টটি মার্কেটপ্লেস থেকে প্রত্যাহার করা হয়েছে।",
+            route('dashboard.index')
+        );
+
+        return back()->with('success', "অভিযোগটি সফলভাবে কার্যকর হয়েছে! পোস্ট #{$report->post_id} সাসপেন্ড করা হয়েছে এবং অভিযুক্ত এজেন্সিকে ১টি স্ট্রাইক দেওয়া হয়েছে।");
+    }
+
+    /**
+     * Dismiss Report: Dismiss false/unfounded report & keep post live
+     */
+    public function dismissReport(Request $request, $id)
+    {
+        $report = PostReport::with(['post', 'reporterAgency'])->findOrFail($id);
+
+        $adminNotes = $request->input('admin_notes', 'যাচাই শেষে অভিযোগটি ভিত্তিহীন বা অপ্রমাণিত পাওয়ায় খারিজ করা হলো।');
+
+        $report->update([
+            'status' => 'dismissed',
+            'admin_notes' => $adminNotes,
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+        ]);
+
+        // If no other pending reports for this post, clear is_reported flag
+        if ($report->post) {
+            $hasOtherPending = PostReport::where('post_id', $report->post_id)
+                ->where('status', 'pending')
+                ->exists();
+
+            if (!$hasOtherPending) {
+                $report->post->update(['is_reported' => false]);
+            }
+        }
+
+        // Notify reporter agency
+        Notification::send(
+            $report->reporter_agency_id,
+            'dispute_dismissed',
+            'আপনার অভিযোগ পর্যালোচনা সম্পন্ন হয়েছে',
+            "পোস্ট #{$report->post_id} এর বিরুদ্ধে আপনার অভিযোগটি অ্যাডমিন কর্তৃক পর্যালোচনায় খারিজ করা হয়েছে। নোট: {$adminNotes}",
+            route('dashboard.index')
+        );
+
+        return back()->with('success', "রিপোর্টটি সফলভাবে খারিজ করা হয়েছে এবং পোস্টটি লাইভ রাখা হয়েছে।");
     }
 }

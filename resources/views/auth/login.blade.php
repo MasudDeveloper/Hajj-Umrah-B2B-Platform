@@ -9,7 +9,7 @@
                 <i class="fa-solid fa-kaaba"></i>
             </div>
             <h1 class="font-heading" style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.25rem;">Verified Agency Login</h1>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Access exclusive B2B Hajj Umrah deals, group shortages, and partner contacts.</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Access exclusive B2B Hajj Umrah Platform deals, group shortages, and partner contacts.</p>
         </div>
 
         @if ($errors->any())
